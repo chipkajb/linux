@@ -19,3 +19,8 @@ alias grep='grep --color=always'
 
 # more customizations
 export EDITOR=vim
+
+# git configurations
+git config --global user.name "chipkajb"
+git config --global user.email "jbc274@cornell.edu"
+git config --global push.default simple
