@@ -45,7 +45,7 @@ Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 " Put Vundle plugins here
 " Nerd tree
 Plugin 'scrooloose/nerdtree'
-nnoremap \ :NERDTree<enter>
+nnoremap \\ :NERDTree<enter>
 " Nerd commenter
 Plugin 'preservim/nerdcommenter'
 let g:NERDSpaceDelims = 1
@@ -115,13 +115,14 @@ nnoremap k gk
 " highlight last inserted text
 nnoremap gV `[v`]
 
-" Leader shortcuts / other re-mappings
-let mapleader="," " leader is comma
+" Leader shortcuts / other re-mappings (leader is \ by default)
+"nnoremap <SPACE> <Nop>
+"let mapleader="\<SPACE>" " leader is forward spacebar
 " jk is escape (e.g. to exit insert mode)
 inoremap jj <esc>
 
 " C++ / Python configuration
 set comments=sl:/*,mb:\ *,elx:\ */
 
-" Miscellaneou
+" Miscellaneous
 set pastetoggle=<F2>
