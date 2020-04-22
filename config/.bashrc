@@ -19,6 +19,9 @@ alias grep='grep --color=always'
 
 # more customizations
 export EDITOR=vim
+export HISTTIMEFORMAT="%h %d %H:%M:%S " # show date and time in history
+export HISTSIZE=10000 # increase history size
+export HISTFILESIZE=10000
 
 # git configurations
 git config --global user.name "chipkajb"
