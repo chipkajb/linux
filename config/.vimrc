@@ -87,6 +87,7 @@ filetype indent on " load filetype-specific indent files (turns on filetype dete
 set wildmenu " visual autocomplete for command menu
 set lazyredraw " redraw only when we need to (faster macros)
 set showmatch " highlight matching parentheses
+set relativenumber " enable relative line numbers
 
 " Searching
 set incsearch " search as characters are entered
@@ -117,3 +118,5 @@ inoremap jj <esc>
 " C++ / Python configuration
 set comments=sl:/*,mb:\ *,elx:\ */
 
+" Miscellaneou
+set pastetoggle=<F2>
