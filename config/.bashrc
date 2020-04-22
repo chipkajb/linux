@@ -62,6 +62,9 @@ alias tree='tree -CAhF --dirsfirst'
 alias treed='tree -CAFd'
 alias mountedinfo='df -hT'
 
+## Show hidden files ##
+alias l.='ls -d .* --color=auto'
+
 # Extracts any archive(s) (if unp isn't installed)
 extract () {
 	for archive in $*; do
