@@ -93,6 +93,8 @@ set wildmenu " visual autocomplete for command menu
 set lazyredraw " redraw only when we need to (faster macros)
 set showmatch " highlight matching parentheses
 set relativenumber " enable relative line numbers
+set laststatus=2 " show status line always
+set statusline=[%n]\ %<%f%h%m " custom status line
 
 " Searching
 set incsearch " search as characters are entered
