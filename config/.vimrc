@@ -1,47 +1,9 @@
-" ~/.vimrc (configuration file for vim only)
-" skeletons
-function! SKEL_spec()
-	0r /usr/share/vim/current/skeletons/skeleton.spec
-	language time en_US
-	let login = system('whoami')
-	if v:shell_error
-	   let login = 'unknown'
-	else
-	   let newline = stridx(login, "\n")
-	   if newline != -1
-		let login = strpart(login, 0, newline)
-	   endif
-	endif
-	let hostname = system('hostname -f')
-	if v:shell_error
-	    let hostname = 'localhost'
-	else
-	    let newline = stridx(hostname, "\n")
-	    if newline != -1
-		let hostname = strpart(hostname, 0, newline)
-	    endif
-	endif
-	exe "%s/specRPM_CREATION_DATE/" . strftime("%a\ %b\ %d\ %Y") . "/ge"
-	exe "%s/specRPM_CREATION_AUTHOR_MAIL/" . login . "@" . hostname . "/ge"
-	exe "%s/specRPM_CREATION_NAME/" . expand("%:t:r") . "/ge"
-endfunction
-autocmd BufNewFile	*.spec	call SKEL_spec()
-" basic ~/.vimrc ends here
-
-
-
-
-""""""""""""""""""""""""""""""""""""""
-" More things added by Jordan Chipka
-""""""""""""""""""""""""""""""""""""""
-
 " Vundle setup
 set nocompatible " disable vi compatibility (emulation of old bugs)
 filetype off " required for Vundle
 set rtp+=~/.vim/bundle/Vundle.vim " set runtime path to include Vundle
 call vundle#begin() " initializ Vundle
 Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
-
 " Put Vundle plugins here
 " Nerd tree
 Plugin 'scrooloose/nerdtree'
@@ -57,14 +19,12 @@ let g:rainbow_active = 1
 Plugin 'octol/vim-cpp-enhanced-highlight'
 " Super tab (completion)
 Plugin 'ervandew/supertab'
-" YouCompletMe
-Plugin 'valloric/youcompleteme'
 " ctrlp (fuzzy finder)
+Plugin 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
-
 " Ending Vundle
 call vundle#end() " required
 filetype plugin indent on " required
@@ -83,6 +43,7 @@ set shiftwidth=4 " indent with 4 spaces
 set autoindent " use indentation of previous line
 set smartindent " use intelligent indentation for C
 set textwidth=120 " wrap lines at 120 characters
+set colorcolumn=120
 
 " UI Config
 set number " show line numbers
@@ -99,8 +60,9 @@ set statusline=[%n]\ %<%f%h%m " custom status line
 " Searching
 set incsearch " search as characters are entered
 set hlsearch " highlight matches
-" turn off search highlight (leader is comma)
+" turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
+set smartcase " no case-sensitive search unless specified
 
 " Folding 
 set foldenable " enable folding (hiding parts of the file)
@@ -118,13 +80,12 @@ nnoremap k gk
 nnoremap gV `[v`]
 
 " Leader shortcuts / other re-mappings (leader is \ by default)
-"nnoremap <SPACE> <Nop>
-"let mapleader="\<SPACE>" " leader is forward spacebar
-" jk is escape (e.g. to exit insert mode)
-inoremap jj <esc>
+inoremap <C-c> <esc>
 
 " C++ / Python configuration
 set comments=sl:/*,mb:\ *,elx:\ */
 
 " Miscellaneous
 set pastetoggle=<F2>
+set cmdheight=2 " give more space for displaying messages
+set updatetime=50 " shorten update time
