@@ -1,5 +1,12 @@
 #! /bin/bash
 
+# DIRECTIONS:
+# 1. Run this script (./install_vim.sh)
+# 2. Open up ~/.vimrc
+# 3. Install all plugins (:PluginInstall)
+# 4. Make sure libclang is installed (sudo apt-get install -y libclang-dev)
+# 5. Change the path to libclang.so to the proper path in ~/.vimrc
+
 rm -rf /home/$USER/.vim
 rm -rf /home/$USER/.vimrc
 

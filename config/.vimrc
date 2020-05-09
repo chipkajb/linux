@@ -25,6 +25,21 @@ set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
+" jedi-vim
+Plugin 'davidhalter/jedi-vim'
+let g:jedi#goto_command = "<leader>d"
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_stubs_command = "<leader>s"
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = "2"
+" clang complete
+Plugin 'rip-rip/clang_complete'
+let g:clang_library_path='/usr/lib/llvm-6.0/lib/libclang.so' " CHANGE THIS TO CORRECT PATH!
 " Ending Vundle
 call vundle#end() " required
 filetype plugin indent on " required
