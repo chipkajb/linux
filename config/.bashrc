@@ -37,8 +37,10 @@ shopt -s checkwinsize # comment out for zshrc
 git config --global user.name "chipkajb"
 git config --global user.email "jbc274@cornell.edu"
 git config --global push.default simple
-# git config --add oh-my-zsh.hide-status 1
-# git config --add oh-my-zsh.hide-dirty 1
+git_no_status_check () {
+    git config --add oh-my-zsh.hide-status 1
+    git config --add oh-my-zsh.hide-dirty 1
+}
 
 # add color to man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
