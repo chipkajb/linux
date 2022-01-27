@@ -15,6 +15,7 @@ alias .....='cd ..; cd ..; cd ..; cd ..'
 alias o=xdg-open
 alias vimrc='vim ~/.vimrc'
 alias bashrc='vim ~/.bashrc'
+alias zshrc='vim ~/.zshrc'
 alias grep='grep --color=always'
 
 # set default editor
