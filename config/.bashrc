@@ -1,5 +1,4 @@
 
-
 ############################################################################################
 ######################## CUSTOM CONFIGURATION ADDED BY JORDAN CHIPKA #######################
 ############################################################################################
@@ -28,16 +27,20 @@ export HISTSIZE=10000 # increase history size
 export HISTFILESIZE=10000
 export HISTCONTROL=erasedups:ignoredups:ignorespace # no duplicate lines of lines that start with a space
 # append rather than overwrite history, so if you start a new terminal, you have old session history
-shopt -s histappend
+shopt -s histappend # comment out for zshrc
 PROMPT_COMMAND='history -a'
 
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS
-shopt -s checkwinsize
+shopt -s checkwinsize # comment out for zshrc
 
 # git configurations
 git config --global user.name "chipkajb"
 git config --global user.email "jbc274@cornell.edu"
 git config --global push.default simple
+git_no_status_check () {
+    git config --add oh-my-zsh.hide-status 1
+    git config --add oh-my-zsh.hide-dirty 1
+}
 
 # add color to man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
