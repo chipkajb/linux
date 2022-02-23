@@ -23,8 +23,8 @@ export VISUAL=vim
 
 # customize history
 export HISTTIMEFORMAT="%h %d %H:%M:%S " # show date and time in history
-export HISTSIZE=10000 # increase history size
-export HISTFILESIZE=10000
+export HISTSIZE=1000 # increase history size
+export HISTFILESIZE=2000
 export HISTCONTROL=erasedups:ignoredups:ignorespace # no duplicate lines of lines that start with a space
 # append rather than overwrite history, so if you start a new terminal, you have old session history
 shopt -s histappend # comment out for zshrc
