@@ -23,8 +23,8 @@ export VISUAL=vim
 
 # customize history
 export HISTTIMEFORMAT="%h %d %H:%M:%S " # show date and time in history
-export HISTSIZE=1000 # increase history size
-export HISTFILESIZE=2000
+export HISTSIZE=10000 # increase history size
+export HISTFILESIZE=10000
 export HISTCONTROL=erasedups:ignoredups:ignorespace # no duplicate lines of lines that start with a space
 # append rather than overwrite history, so if you start a new terminal, you have old session history
 shopt -s histappend # comment out for zshrc
@@ -65,6 +65,10 @@ alias mountedinfo='df -hT'
 
 ## Show hidden files ##
 alias l.='ls -d .* --color=auto'
+
+# change default terminal (less crashes)
+export TERMINAL="sterminal"
+export TERM="st-256color"
 
 # Extracts any archive(s) (if unp isn't installed)
 extract () {
