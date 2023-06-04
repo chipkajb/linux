@@ -43,6 +43,8 @@ git_no_status_check () {
     git config --add oh-my-zsh.hide-status 1
     git config --add oh-my-zsh.hide-dirty 1
 }
+git config --add oh-my-zsh.hide-status 1
+git config --add oh-my-zsh.hide-dirty 1
 
 # add color to man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
@@ -67,6 +69,10 @@ alias mountedinfo='df -hT'
 
 ## Show hidden files ##
 alias l.='ls -d .* --color=auto'
+
+# change default terminal (less crashes)
+export TERMINAL="sterminal"
+export TERM="st-256color"
 
 # Extracts any archive(s) (if unp isn't installed)
 extract () {
