@@ -24,5 +24,12 @@ rm -rf ~/.local/share/nvim/
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
 # move custom nvim config
+mkdir ~/.config/nvim/lua/custom
 cp ../config/nvim/custom/* ~/.config/nvim/lua/custom
 cp -r ../config/nvim/after ~/.config/nvim
+
+# install nerd font
+mkdir -p ~/software
+git clone git@github.com:ryanoasis/nerd-fonts.git
+cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
+
