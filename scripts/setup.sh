@@ -33,3 +33,5 @@ mkdir -p ~/software
 git clone git@github.com:ryanoasis/nerd-fonts.git
 cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
 
+# install ripgrep (for grep searching with Telescope)
+sudo apt-get install ripgrep
