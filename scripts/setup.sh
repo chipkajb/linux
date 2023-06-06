@@ -22,3 +22,7 @@ sudo chmod 764 /usr/bin/nvim.appimage
 mv ~/.config/nvim ~/.config/nvim.backup 2> /dev/null
 rm -rf ~/.local/share/nvim/
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+
+# move custom nvim config
+cp ../config/nvim/custom/* ~/.config/nvim/lua/custom
+cp -r ../config/nvim/after ~/.config/nvim
