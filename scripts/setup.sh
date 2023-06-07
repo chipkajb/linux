@@ -1,5 +1,7 @@
 #! /bin/bash
 
+sudo apt-get update
+
 # install zsh
 sudo apt install zsh -y
 
@@ -35,3 +37,27 @@ cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
 
 # install ripgrep (for grep searching with Telescope)
 sudo apt-get install ripgrep
+
+# install pyenv (needed for neovim python linter)
+sudo apt install python3.8-venv
+
+# install black (needed for neovim python auto-formatter)
+sudo python3 -m pip install black
+
+# install pacman
+wget https://gitlab.com/trivoxel-utils/deb-pacman/uploads/460d83f8711c1ab5e16065e57e7eeabc/deb-pacman-2.0-0.deb
+sudo dpkg -i deb-pacman-2.0-0.deb
+rm deb-pacman-2.0-0.deb
+
+# install tmux
+wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
+tar -xf tmux-3.3a.tar.gz
+rm tmux-3.3a.tar.gz
+cd tmux-3.3a && ./configure && make && sudo make install && cd ..
+mkdir -p ~/software
+mv tmux-3.3a ~/software/
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# move tmux config folder
+mkdir -p ~/.config/tmux
+cp -r ../config/tmux ~/.config/
