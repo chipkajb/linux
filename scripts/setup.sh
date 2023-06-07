@@ -26,9 +26,8 @@ rm -rf ~/.local/share/nvim/
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
 # move custom nvim config
-mkdir ~/.config/nvim/lua/custom
-cp ../config/nvim/custom/* ~/.config/nvim/lua/custom
-cp -r ../config/nvim/after ~/.config/nvim
+ln -s $PWD/../config/nvim/after ~/.config/nvim
+ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
 
 # install nerd font
 mkdir -p ~/software
@@ -59,5 +58,4 @@ mv tmux-3.3a ~/software/
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # move tmux config folder
-mkdir -p ~/.config/tmux
-cp -r ../config/tmux ~/.config/
+ln -s $PWD/../config/tmux ~/.config/
