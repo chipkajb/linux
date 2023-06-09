@@ -35,10 +35,10 @@ git clone git@github.com:ryanoasis/nerd-fonts.git
 cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
 
 # install ripgrep (for grep searching with Telescope)
-sudo apt-get install ripgrep
+sudo apt-get install ripgrep -y
 
 # install pyenv (needed for neovim python linter)
-sudo apt install python3.8-venv
+sudo apt install python3.8-venv -y
 
 # install black (needed for neovim python auto-formatter)
 sudo python3 -m pip install black
