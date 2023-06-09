@@ -36,9 +36,6 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true }, {des
 --- close buffer
 vim.keymap.set("n", "<C-w>", function() require("nvchad_ui.tabufline").close_buffer() end, {desc="Close buffer"})
 
---- remove search highlight
-vim.keymap.set("n", "<leader>n", ":nohl<CR>", {desc="Remove search highlights"})
-
 --- source file
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
