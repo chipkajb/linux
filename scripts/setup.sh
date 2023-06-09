@@ -16,9 +16,7 @@ chsh -s $(which zsh) # must enter password here
 wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
 
 # install neovim
-wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
-sudo mv ./nvim.appimage /usr/bin
-sudo chmod 764 /usr/bin/nvim.appimage
+sudo apt-get install neovim -y
 
 # install NvChad
 mv ~/.config/nvim ~/.config/nvim.backup 2> /dev/null
