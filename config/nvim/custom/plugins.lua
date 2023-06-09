@@ -17,6 +17,7 @@ local plugins = {
                 "black",
                 "pyright",
                 "ruff",
+                "mypy",
             }
         }
     },
