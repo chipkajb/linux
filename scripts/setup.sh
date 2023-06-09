@@ -51,6 +51,7 @@ rm deb-pacman-2.0-0.deb
 # install tmux
 sudo apt-get remove tmux -y
 sudo apt-get purge tmux -y
+sudo apt install libevent-dev
 wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
 tar -xf tmux-3.3a.tar.gz
 rm tmux-3.3a.tar.gz
