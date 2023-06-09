@@ -30,7 +30,7 @@ local plugins = {
     },
     {'mbbill/undotree', lazy = false},
     {'tpope/vim-fugitive', lazy = false},
-
+    {'gennaro-tedesco/nvim-jqx', lazy = true, ft={"json"}},
 }
 
 return plugins
