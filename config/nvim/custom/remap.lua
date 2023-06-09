@@ -57,9 +57,3 @@ vim.keymap.set("t", "<C-Right>", "<cmd>vertical resize +2<CR>", {desc="Adjust wi
 --- keep highlighted text on indent
 vim.keymap.set("v", "<", "<gv", {desc="Indent left"})
 vim.keymap.set("v", ">", ">gv", {desc="Indent right"})
-
---- tmux navigation
-vim.keymap.set("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", {desc="Window left"})
-vim.keymap.set("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", {desc="Window right"})
-vim.keymap.set("n", "<C-j>", "<cmd> TmuxNavigateDown<CR>", {desc="Window down"})
-vim.keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", {desc="Window up"})
