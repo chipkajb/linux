@@ -160,5 +160,5 @@
   // git
   "git.confirmSync": false,
   // terminal
-  "terminal.integrated.inheritEnv": false,
+  "terminal.integrated.inheritEnv": false
 }
