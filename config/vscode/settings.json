@@ -1,0 +1,100 @@
+{
+  // theme / display
+  "workbench.colorTheme": "Default Dark+",
+  "workbench.editor.highlightModifiedTabs": true,
+  "editor.rulers": [
+    100
+  ],
+  // formatting
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "python.formatting.blackArgs": [
+    "--line-length",
+    "100"
+  ],
+  "[python]": {
+    "editor.formatOnType": true
+  },
+  "python.formatting.provider": "black",
+  // scrolloff
+  "scrolloff.scrolloff": 8,
+  // vim
+  "vim.easymotion": true,
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.ignorecase": true,
+  "vim.smartcase": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "keyboard.dispatch": "keyCode",
+  "editor.lineNumbers": "relative",
+  "vim.enableNeovim": true,
+  "vim.leader": " ",
+  "vim.visualModeKeyBindings": [
+    {
+      "before": [
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ],
+      "when": "editorTextFocus && !editorReadonly"
+    },
+  ],
+  "vim.normalModeKeyBindings": [
+    {
+      "before": [
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n"
+      ],
+      "commands": [
+        ":nohl"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        ":sp"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "v"
+      ],
+      "commands": [
+        ":vsp"
+      ]
+    },
+  ],
+  // helpful stuff
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.wordBasedSuggestions": true,
+  "editor.wordBasedSuggestionsMode": "allDocuments",
+  "editor.minimap.enabled": false,
+  "explorer.confirmDelete": false,
+  "workbench.editor.untitled.hint": "hidden",
+  "workbench.settings.openDefaultKeybindings": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  // git
+  "git.confirmSync": false,
+  // terminal
+  "terminal.integrated.inheritEnv": false,
+}

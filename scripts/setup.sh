@@ -1,6 +1,8 @@
 #! /bin/bash
 
+# update and install clang
 sudo apt-get update
+sudo apt-get install -y libclang-dev
 
 # install zsh
 sudo apt install zsh -y
@@ -27,12 +29,28 @@ git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
 # move custom nvim config
 ln -s $PWD/../config/nvim/after ~/.config/nvim
+rm -rf ~/.config/nvim/lua/custom/
 ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
 
-# install nerd font
-mkdir -p ~/software
-git clone git@github.com:ryanoasis/nerd-fonts.git
-cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
+# install VS Code
+wget https://go.microsoft.com/fwlink/?LinkID=760868
+sudo dpkg -i code_*
+rm code_*
+code --install-extension vscodevim.vim
+code --install-extension Atishay-Jain.All-Autocomplete
+code --install-extension IronGeek.vscode-env
+code --install-extension ZainChen.json
+code --install-extension ms-python.vscode-pylance
+code --install-extension ms-python.python
+code --install-extension mechatroner.rainbow-csv
+code --install-extension tickleforce.scrolloff
+ln -sfn $PWD/../config/vscode/settings.json ~/.config/Code/User/
+ln -sfn $PWD/../config/vscode/keybindings.json ~/.config/Code/User/
+
+# # install nerd font
+# mkdir -p ~/software
+# git clone git@github.com:ryanoasis/nerd-fonts.git
+# cd nerd-fonts && ./install.sh && cd .. && mv nerd-fonts ~/software/
 
 # install ripgrep (for grep searching with Telescope)
 sudo apt-get install ripgrep -y
@@ -51,6 +69,7 @@ rm deb-pacman-2.0-0.deb
 # install tmux
 sudo apt-get remove tmux -y
 sudo apt-get purge tmux -y
+rm ~/.config/tmux
 wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
 tar -xf tmux-3.3a.tar.gz
 rm tmux-3.3a.tar.gz
@@ -61,3 +80,6 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # move tmux config folder
 ln -s $PWD/../config/tmux ~/.config/
+
+# clean up
+rm -rf index.* tmux* 2> /dev/null
