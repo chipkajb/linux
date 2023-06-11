@@ -19,6 +19,8 @@
   // scrolloff
   "scrolloff.scrolloff": 8,
   // vim
+  "vim.vimrc.enable": true,
+  "vim.vimrc.path": "~/.vimrc",
   "vim.easymotion": true,
   "vim.hlsearch": true,
   "vim.incsearch": true,

@@ -8,8 +8,8 @@
 rm -rf /home/$USER/.vim
 rm -rf /home/$USER/.vimrc
 
-cp -r ../config/.vim /home/$USER 2>/dev/null 
-cp ../config/.vimrc /home/$USER 2>/dev/null 
+ln -s $PWD/../config/.vim /home/$USER
+ln -s $PWD/../config/.vimrc /home/$USER
 
 rm -rf /home/$USER/.vim/bundle
 git clone https://github.com/VundleVim/Vundle.vim.git /home/$USER/.vim/bundle/Vundle.vim

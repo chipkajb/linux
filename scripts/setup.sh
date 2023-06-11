@@ -7,6 +7,9 @@ sudo apt-get install -y libclang-dev
 # install zsh
 sudo apt install zsh -y
 
+# install vim
+./install_vim.sh
+
 # # To change the default shell for root, run the following commands:
 # sudo -s
 # chsh -s /bin/zsh root
