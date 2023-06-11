@@ -36,9 +36,6 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true }, {des
 --- close buffer
 vim.keymap.set("n", "<C-w>", function() require("nvchad_ui.tabufline").close_buffer() end, {desc="Close buffer"})
 
---- remove search highlight
-vim.keymap.set("n", "<leader>n", ":nohl<CR>", {desc="Remove search highlights"})
-
 --- source file
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
@@ -57,9 +54,3 @@ vim.keymap.set("t", "<C-Right>", "<cmd>vertical resize +2<CR>", {desc="Adjust wi
 --- keep highlighted text on indent
 vim.keymap.set("v", "<", "<gv", {desc="Indent left"})
 vim.keymap.set("v", ">", ">gv", {desc="Indent right"})
-
---- tmux navigation
-vim.keymap.set("n", "<C-h>", "<cmd> TmuxNavigateLeft<CR>", {desc="Window left"})
-vim.keymap.set("n", "<C-l>", "<cmd> TmuxNavigateRight<CR>", {desc="Window right"})
-vim.keymap.set("n", "<C-j>", "<cmd> TmuxNavigateDown<CR>", {desc="Window down"})
-vim.keymap.set("n", "<C-k>", "<cmd> TmuxNavigateUp<CR>", {desc="Window up"})
