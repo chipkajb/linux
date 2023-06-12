@@ -82,6 +82,10 @@
     {
       "before": ["<leader>", "v"],
       "commands": [":vsp"]
+    },
+    {
+      "before": ["Y"],
+      "after": ["y", "$"]
     }
   ],
   // helpful stuff
