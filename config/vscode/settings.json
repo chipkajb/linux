@@ -18,6 +18,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "ruff.args": ["--max-line-length=120"],
   // linting
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
