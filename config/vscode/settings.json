@@ -48,6 +48,14 @@
     {
       "before": [">"],
       "after": [">", "g", "v"]
+    },
+    {
+      "before": ["<C-Space>"],
+      "commands": ["editor.action.smartSelect.expand"]
+    },
+    {
+      "before": ["<C-BS>"],
+      "commands": ["editor.action.smartSelect.shrink"]
     }
   ],
   "vim.normalModeKeyBindings": [
@@ -86,6 +94,14 @@
     {
       "before": ["Y"],
       "after": ["y", "$"]
+    },
+    {
+      "before": ["<C-Space>"],
+      "commands": ["editor.action.smartSelect.expand"]
+    },
+    {
+      "before": ["<C-BS>"],
+      "commands": ["editor.action.smartSelect.shrink"]
     }
   ],
   // helpful stuff
