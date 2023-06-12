@@ -39,14 +39,16 @@ ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
 wget https://go.microsoft.com/fwlink/?LinkID=760868
 sudo dpkg -i code_*
 rm code_*
-code --install-extension vscodevim.vim
 code --install-extension Atishay-Jain.All-Autocomplete
+code --install-extension ms-python.black-formatter
 code --install-extension IronGeek.vscode-env
 code --install-extension ZainChen.json
+code --install-extension esbenp.prettier-vscode
 code --install-extension ms-python.vscode-pylance
 code --install-extension ms-python.python
 code --install-extension mechatroner.rainbow-csv
 code --install-extension tickleforce.scrolloff
+code --install-extension vscodevim.vim
 ln -sfn $PWD/../config/vscode/settings.json ~/.config/Code/User/
 ln -sfn $PWD/../config/vscode/keybindings.json ~/.config/Code/User/
 
@@ -69,6 +71,9 @@ wget https://gitlab.com/trivoxel-utils/deb-pacman/uploads/460d83f8711c1ab5e16065
 sudo dpkg -i deb-pacman-2.0-0.deb
 rm deb-pacman-2.0-0.deb
 
+# install mypy
+sudo pip install mypy
+
 # install json parser/formatter
 sudo apt-get install install jq -y
 
@@ -82,7 +87,9 @@ tar -xf tmux-3.3a.tar.gz
 rm tmux-3.3a.tar.gz
 cd tmux-3.3a && ./configure && make && sudo make install && cd ..
 mkdir -p ~/software
+rm -rf ~/software/tmux-3.3a 2> /dev/null
 mv tmux-3.3a ~/software/
+rm -rf ~/.tmux/plugins/tpm 2> /dev/null
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # move tmux config folder

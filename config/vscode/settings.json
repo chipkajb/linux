@@ -2,9 +2,7 @@
   // theme / display
   "workbench.colorTheme": "Default Dark+",
   "workbench.editor.highlightModifiedTabs": true,
-  "editor.rulers": [
-    100
-  ],
+  "editor.rulers": [120],
   // formatting
   "editor.formatOnPaste": true,
   "editor.formatOnSaveMode": "file",
@@ -12,14 +10,14 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
-  "python.formatting.blackArgs": [
-    "--line-length",
-    "100"
-  ],
+  "python.formatting.blackArgs": ["--line-length", "120"],
   "[python]": {
     "editor.formatOnType": true
   },
   "python.formatting.provider": "black",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   // linting
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
@@ -41,122 +39,57 @@
   "vim.leader": " ",
   "vim.visualModeKeyBindings": [
     {
-      "before": [
-        "<leader>",
-        "c"
-      ],
-      "commands": [
-        "editor.action.commentLine"
-      ],
+      "before": ["<leader>", "c"],
+      "commands": ["editor.action.commentLine"],
       "when": "editorTextFocus && !editorReadonly"
     },
     {
-      "before": [
-        "<"
-      ],
-      "after": [
-        "<",
-        "g",
-        "v"
-      ]
+      "before": ["<"],
+      "after": ["<", "g", "v"]
     },
     {
-      "before": [
-        ">"
-      ],
-      "after": [
-        ">",
-        "g",
-        "v"
-      ]
+      "before": [">"],
+      "after": [">", "g", "v"]
     }
   ],
   "vim.normalModeKeyBindings": [
     {
-      "before": [
-        "<C-u>"
-      ],
-      "after": [
-        "<C-u>",
-        "z",
-        "z"
-      ]
+      "before": ["<C-u>"],
+      "after": ["<C-u>", "z", "z"]
     },
     {
-      "before": [
-        "<C-d>"
-      ],
-      "after": [
-        "<C-d>",
-        "z",
-        "z"
-      ]
+      "before": ["<C-d>"],
+      "after": ["<C-d>", "z", "z"]
     },
     {
-      "before": [
-        "N"
-      ],
-      "after": [
-        "N",
-        "z",
-        "z",
-        "z",
-        "v"
-      ]
+      "before": ["N"],
+      "after": ["N", "z", "z", "z", "v"]
     },
     {
-      "before": [
-        "n"
-      ],
-      "after": [
-        "n",
-        "z",
-        "z",
-        "z",
-        "v"
-      ]
+      "before": ["n"],
+      "after": ["n", "z", "z", "z", "v"]
     },
     {
-      "before": [
-        "<leader>",
-        "c"
-      ],
-      "commands": [
-        "editor.action.commentLine"
-      ]
+      "before": ["<leader>", "c"],
+      "commands": ["editor.action.commentLine"]
     },
     {
-      "before": [
-        "<leader>",
-        "n"
-      ],
-      "commands": [
-        ":nohl"
-      ]
+      "before": ["<leader>", "n"],
+      "commands": [":nohl"]
     },
     {
-      "before": [
-        "<leader>",
-        "h"
-      ],
-      "commands": [
-        ":sp"
-      ]
+      "before": ["<leader>", "h"],
+      "commands": [":sp"]
     },
     {
-      "before": [
-        "<leader>",
-        "v"
-      ],
-      "commands": [
-        ":vsp"
-      ]
+      "before": ["<leader>", "v"],
+      "commands": [":vsp"]
     }
   ],
   // helpful stuff
   "editor.quickSuggestions": {
     "other": true,
-    "comments": false,
+    "comments": true,
     "strings": true
   },
   "editor.wordBasedSuggestions": true,
@@ -169,5 +102,7 @@
   // git
   "git.confirmSync": false,
   // terminal
-  "terminal.integrated.inheritEnv": false
+  "terminal.integrated.inheritEnv": false,
+  //tabnine
+  "tabnine.experimentalAutoImports": true
 }
