@@ -71,9 +71,6 @@ wget https://gitlab.com/trivoxel-utils/deb-pacman/uploads/460d83f8711c1ab5e16065
 sudo dpkg -i deb-pacman-2.0-0.deb
 rm deb-pacman-2.0-0.deb
 
-# install mypy
-sudo pip install mypy
-
 # install json parser/formatter
 sudo apt-get install install jq -y
 

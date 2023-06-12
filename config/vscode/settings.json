@@ -7,9 +7,6 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSaveMode": "file",
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  },
   "python.formatting.blackArgs": ["--line-length", "120"],
   "[python]": {
     "editor.formatOnType": true
