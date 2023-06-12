@@ -26,5 +26,13 @@
     "key": "shift+k",
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly && vim.active && (vim.mode == 'Visual' || vim.mode == 'VisualLine' || vim.mode == 'VisualBlock')"
+  },
+  {
+    "key": "tab",
+    "command": "workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "shift+tab",
+    "command": "workbench.action.previousEditorInGroup"
   }
 ]
