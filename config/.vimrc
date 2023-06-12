@@ -106,4 +106,4 @@ set cmdheight=2 " give more space for displaying messages
 set updatetime=50 " shorten update time
 
 " keep cursor still
-nnoremap J  mzJ`z"
+nnoremap J  mzJ`z
