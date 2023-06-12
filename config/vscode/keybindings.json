@@ -28,11 +28,11 @@
     "when": "editorTextFocus && !editorReadonly && vim.active && (vim.mode == 'Visual' || vim.mode == 'VisualLine' || vim.mode == 'VisualBlock')"
   },
   {
-    "key": "tab",
+    "key": "ctrl+tab",
     "command": "workbench.action.nextEditorInGroup"
   },
   {
-    "key": "shift+tab",
+    "key": "ctrl+shift+tab",
     "command": "workbench.action.previousEditorInGroup"
   }
 ]
