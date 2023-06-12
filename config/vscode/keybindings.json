@@ -34,5 +34,15 @@
   {
     "key": "ctrl+shift+tab",
     "command": "workbench.action.previousEditorInGroup"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "editorHasCompletionItemProvider && suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPrevSuggestion",
+    "when": "editorHasCompletionItemProvider && suggestWidgetVisible"
   }
 ]
