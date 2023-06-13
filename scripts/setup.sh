@@ -92,5 +92,8 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # move tmux config folder
 ln -s $PWD/../config/tmux ~/.config/
 
+# install i3
+sudo apt-get install i3 -y
+
 # clean up
 rm -rf index.* tmux* 2> /dev/null
