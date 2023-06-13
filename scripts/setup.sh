@@ -95,5 +95,9 @@ ln -s $PWD/../config/tmux ~/.config/
 # install i3
 sudo apt-get install i3 -y
 
+# install terminator
+sudo apt-get install terminator -y
+ln -s $PWD/../config/terminator ~/.config/
+
 # clean up
 rm -rf index.* tmux* 2> /dev/null
