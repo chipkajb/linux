@@ -7,7 +7,7 @@ Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 " Put Vundle plugins here
 " Nerd tree
 Plugin 'scrooloose/nerdtree'
-nnoremap \\ :NERDTree<enter>
+" nnoremap \\ :NERDTree<enter>
 " Nerd commenter
 Plugin 'preservim/nerdcommenter'
 let g:NERDSpaceDelims = 1
@@ -76,7 +76,7 @@ set statusline=[%n]\ %<%f%h%m " custom status line
 set incsearch " search as characters are entered
 set hlsearch " highlight matches
 " turn off search highlight
-nnoremap <leader><space> :nohlsearch<CR>
+" nnoremap <leader><space> :nohlsearch<CR>
 set smartcase " no case-sensitive search unless specified
 
 " Folding 
@@ -84,15 +84,15 @@ set foldenable " enable folding (hiding parts of the file)
 set foldlevelstart=10 " open most folds by default (only fold very nested blocks of code)
 set foldnestmax=10 " 10 nested fold max
 " space open/closes folds
-nnoremap <space> za
+" nnoremap <space> za
 set foldmethod=indent " fold based on indent level
 
 " Movement
 "move vertically by visual line (for very long lines that wrap around)
-nnoremap j gj
-nnoremap k gk
+" nnoremap j gj
+" nnoremap k gk
 " highlight last inserted text
-nnoremap gV `[v`]
+" nnoremap gV `[v`]
 
 " Leader shortcuts / other re-mappings (leader is \ by default)
 inoremap <C-c> <esc>
