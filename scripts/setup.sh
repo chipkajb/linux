@@ -2,7 +2,7 @@
 
 # define script parameters
 ACTION_LIST=(0 1 2 3 4 5 6 7 8)
-DESC_LIST=("Exit" "Install dependencies" "Install zsh" "Install vim" "Install neovim" "Install VS Code" "Install tmux" "Install i3" "Install terminator")
+DESC_LIST=("Exit" "Install dependencies" "Install zsh" "Install vim" "Install neovim" "Install VS Code" "Install tmux" "Install i3" "Install alacritty")
 
 # define text colors
 CYAN='\033[0;36m'
@@ -161,13 +161,13 @@ install_i3() {
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
-# install terminator
-install_terminater() {
-    printf "Installing terminator...\n"
+# install alacritty
+install_alacritty() {
+    printf "Installing alacritty...\n"
     sudo apt-get update
-    sudo apt-get install terminator -y
-    ln -s $PWD/../config/terminator ~/.config/
-    printf "${GREEN}DONE${NC} -- terminator installed to ${YELLOW}$(which terminator)${NC} -- ${YELLOW}$(terminator --version)${NC}\n"
+    sudo add-apt-repository ppa:aslatter/ppa -y
+    sudo apt install alacritty -y
+    printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
 }
 
 # main loop
@@ -222,9 +222,9 @@ while [ "$exit_condition" = false ]; do
             install_i3
         fi
 
-        # install terminator
+        # install alacritty
         if [[ "$user_input" -eq 8 ]]; then
-            install_terminater
+            install_alacritty
         fi
 
     fi
