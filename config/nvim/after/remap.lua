@@ -1,5 +1,5 @@
 --- remove search highlight
-vim.keymap.set("n", "//", ":nohl<CR>", {desc="Remove search highlights"})
+vim.keymap.set("n", "<leader>n", ":nohl<CR>", {desc="Remove search highlights"})
 
 --- split buffer
 vim.keymap.set("n", "<leader>v", ":vsp<CR>", {silent=true, desc="Split buffer vertically"})
