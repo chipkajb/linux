@@ -18,8 +18,8 @@
   },
   "ruff.args": ["--max-line-length=120"],
   // linting
-  "python.linting.pylintEnabled": true,
-  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": false,
   // scrolloff
   "scrolloff.scrolloff": 8,
   // vim
