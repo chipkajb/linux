@@ -45,7 +45,8 @@ call vundle#end() " required
 filetype plugin indent on " required
 
 " Colors
-colors molokai " better color scheme
+colors gruvbox " better color scheme
+set bg=dark
 syntax enable " enable syntax processing
 set t_Co=256 " turn on syntax highlighting
 syntax on " (for previous line)
