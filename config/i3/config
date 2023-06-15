@@ -184,4 +184,4 @@ bar {
 bindsym $mod+shift+x exec i3lock
 
 # wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/background.jpg
+exec_always --no-startup-id feh --bg-scale --zoom fill ~/Pictures/background.jpg
