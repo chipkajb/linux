@@ -1,8 +1,17 @@
 #! /bin/bash
 
 # define script parameters
-ACTION_LIST=(0 1 2 3 4 5 6 7 8)
-DESC_LIST=("Exit" "Install dependencies" "Install zsh" "Install vim" "Install neovim" "Install VS Code" "Install tmux" "Install i3" "Install alacritty")
+ACTION_LIST=(0 1 2 3 4 5 6 7)
+DESC_LIST=(
+    "Exit" 
+    "Install zsh"
+    "Install vim" 
+    "Install neovim"
+    "Install VS Code" 
+    "Install tmux" 
+    "Install i3" 
+    "Install alacritty"
+)
 
 # define text colors
 CYAN='\033[0;36m'
@@ -62,14 +71,6 @@ prompt_user() {
     printf "]${NC}: "
 }
 
-# install dependencies
-install_dependencies() {
-    printf "Installing dependencies...\n"
-    sudo apt-get update
-    sudo apt-get install -y libclang-dev
-    printf "${GREEN}DONE${NC} -- Dependecies installed\n"
-}
-
 # install zsh
 install_zsh() {
     printf "Installing zsh...\n"
@@ -77,13 +78,32 @@ install_zsh() {
     sudo apt install zsh -y
     chsh -s $(which zsh)
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
+    python utils/append_zshrc.py
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
 # install vim
 install_vim() {
     printf "Installing vim...\n"
-    ./install_vim.sh
+    sudo apt-get update
+    sudo apt-get install -y libclang-dev
+    rm -rf /home/$USER/.viminfo 2> /dev/null
+    rm -rf /home/$USER/.vim 2> /dev/null
+    rm -rf /home/$USER/.vimrc 2> /dev/null
+
+    ln -s $PWD/config/vim /home/$USER/.vim
+    ln -s $PWD/config/vimrc /home/$USER/.vimrc
+
+    rm -rf /home/$USER/.vim/bundle
+    mkdir -p ~/.vim/bundle
+    git clone https://github.com/VundleVim/Vundle.vim.git /home/$USER/.vim/bundle/Vundle.vim
+    vim +PluginInstall +qall > /dev/null
+
+    printf "\nRemember to change path to libclang.so in ~/.vimrc"
+    printf "\nCurrent path is:\n"
+    cat ~/.vimrc | grep libclang.so | awk '{print $2}' | cut -c 23- | head -c-2
+    printf "\nCorrect path is:\n"
+    find /usr/lib/ -iname libclang.so
     printf "${GREEN}DONE${NC} -- vim installed, vimrc file located at ${YELLOW}$(ls ~/.vimrc)${NC}\n"
 }
 
@@ -93,16 +113,16 @@ install_neovim() {
     wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     sudo mv ./nvim.appimage /usr/bin
     sudo chmod 764 /usr/bin/nvim.appimage
-    mv ~/.config/nvim ~/.config/nvim.backup 2> /dev/null
     rm -rf ~/.local/share/nvim/ 2> /dev/null
+    rm -rf ~/.config/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
     rm -rf ~/.config/nvim/after 2> /dev/null
-    ln -s $PWD/../config/nvim/after ~/.config/nvim
+    ln -s $PWD/config/nvim/after ~/.config/nvim
     rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
-    ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
+    ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/
     sudo apt-get install ripgrep -y
-    sudo apt install python3.8-venv -y
-    sudo apt-get install install jq -y
+    sudo apt-get install python3.8-venv -y
+    sudo apt-get install jq -y
     sudo python3 -m pip install black
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim.appimage --version | head -n 1)${NC}\n"
 }
@@ -126,8 +146,8 @@ install_vscode() {
     code --install-extension tickleforce.scrolloff
     code --install-extension vscodevim.vim
     code --install-extension Ransh.ransh
-    ln -sfn $PWD/../config/vscode/settings.json ~/.config/Code/User/
-    ln -sfn $PWD/../config/vscode/keybindings.json ~/.config/Code/User/
+    ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
+    ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
 }
 
@@ -148,7 +168,7 @@ install_tmux() {
     mv tmux-3.3a ~/software/
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-    ln -s $PWD/../config/tmux ~/.config/
+    ln -s $PWD/config/tmux ~/.config/
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
 }
@@ -160,8 +180,8 @@ install_i3() {
     sudo apt-get install i3 feh -y
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.jpg 2> /dev/null
-    ln -s $PWD/../config/i3 ~/.config/
-    ln -s $PWD/../assets/background.jpg ~/Pictures/
+    ln -s $PWD/config/i3 ~/.config/
+    ln -s $PWD/assets/background.jpg ~/Pictures/
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
@@ -173,7 +193,7 @@ install_alacritty() {
     sudo apt install alacritty -y
     sudo update-alternatives --config x-terminal-emulator
     rm -rf ~/.config/alacritty 2> /dev/null
-    ln -s $PWD/../config/alacritty ~/.config/
+    ln -s $PWD/config/alacritty ~/.config/
     mkdir -p ~/.config/alacritty/themes
     git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
     printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
@@ -196,43 +216,38 @@ while [ "$exit_condition" = false ]; do
             exit
         fi
 
-        # install dependencies
-        if [[ "$user_input" -eq 1 ]]; then
-            install_dependencies
-        fi
-
         # install zsh
-        if [[ "$user_input" -eq 2 ]]; then
+        if [[ "$user_input" -eq 1 ]]; then
             install_zsh
         fi
 
         # install vim
-        if [[ "$user_input" -eq 3 ]]; then
+        if [[ "$user_input" -eq 2 ]]; then
             install_vim
         fi
 
         # install neovim
-        if [[ "$user_input" -eq 4 ]]; then
+        if [[ "$user_input" -eq 3 ]]; then
             install_neovim
         fi
 
         # install vscode
-        if [[ "$user_input" -eq 5 ]]; then
+        if [[ "$user_input" -eq 4 ]]; then
             install_vscode
         fi
 
         # install tmux
-        if [[ "$user_input" -eq 6 ]]; then
+        if [[ "$user_input" -eq 5 ]]; then
             install_tmux
         fi
 
         # install i3
-        if [[ "$user_input" -eq 7 ]]; then
+        if [[ "$user_input" -eq 6 ]]; then
             install_i3
         fi
 
         # install alacritty
-        if [[ "$user_input" -eq 8 ]]; then
+        if [[ "$user_input" -eq 7 ]]; then
             install_alacritty
         fi
 
