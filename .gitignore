@@ -1,3 +1,1 @@
-config/.vim/bundle/clang_complete
-config/.vim/bundle/jedi-vim
-config/.vim/undodir
+config/vim/undodir/

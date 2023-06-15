@@ -96,6 +96,7 @@ install_neovim() {
     mv ~/.config/nvim ~/.config/nvim.backup 2> /dev/null
     rm -rf ~/.local/share/nvim/
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+    rm ~/.config/nvim/after 2> /dev/null
     ln -s $PWD/../config/nvim/after ~/.config/nvim
     rm -rf ~/.config/nvim/lua/custom/
     ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
@@ -147,6 +148,7 @@ install_tmux() {
     mv tmux-3.3a ~/software/
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    rm ~/.config/tmux 2> /dev/null
     ln -s $PWD/../config/tmux ~/.config/
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
@@ -156,8 +158,11 @@ install_tmux() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
-    sudo apt-get install i3 -y
+    sudo apt-get install i3 feh -y
+    rm ~/.config/i3 2> /dev/null
+    rm ~/Pictures/background.jpg 2> /dev/null
     ln -s $PWD/../config/i3 ~/.config/
+    ln -s $PWD/../assets/background.jpg ~/Pictures/
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
@@ -167,6 +172,11 @@ install_alacritty() {
     sudo apt-get update
     sudo add-apt-repository ppa:aslatter/ppa -y
     sudo apt install alacritty -y
+    sudo update-alternatives --config x-terminal-emulator
+    rm -rf ~/.config/alacritty 2> /dev/null
+    ln -s $PWD/../config/alacritty ~/.config/
+    mkdir -p ~/.config/alacritty/themes
+    git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
     printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
 }
 
