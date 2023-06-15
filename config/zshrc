@@ -27,11 +27,9 @@ export HISTSIZE=10000 # increase history size
 export HISTFILESIZE=10000
 export HISTCONTROL=erasedups:ignoredups:ignorespace # no duplicate lines of lines that start with a space
 # append rather than overwrite history, so if you start a new terminal, you have old session history
-shopt -s histappend # comment out for zshrc
 PROMPT_COMMAND='history -a'
 
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS
-shopt -s checkwinsize # comment out for zshrc
 
 # git configurations
 git config --global user.name "chipkajb"
