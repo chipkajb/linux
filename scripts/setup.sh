@@ -94,11 +94,11 @@ install_neovim() {
     sudo mv ./nvim.appimage /usr/bin
     sudo chmod 764 /usr/bin/nvim.appimage
     mv ~/.config/nvim ~/.config/nvim.backup 2> /dev/null
-    rm -rf ~/.local/share/nvim/
+    rm -rf ~/.local/share/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
-    rm ~/.config/nvim/after 2> /dev/null
+    rm -rf ~/.config/nvim/after 2> /dev/null
     ln -s $PWD/../config/nvim/after ~/.config/nvim
-    rm -rf ~/.config/nvim/lua/custom/
+    rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
     ln -s $PWD/../config/nvim/custom ~/.config/nvim/lua/
     sudo apt-get install ripgrep -y
     sudo apt install python3.8-venv -y
@@ -137,7 +137,7 @@ install_tmux() {
     sudo apt-get update
     sudo apt-get remove tmux -y
     sudo apt-get purge tmux -y
-    rm ~/.config/tmux
+    rm -rf ~/.config/tmux 2> /dev/null
     sudo apt install libevent-dev
     wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
     tar -xf tmux-3.3a.tar.gz
@@ -148,7 +148,6 @@ install_tmux() {
     mv tmux-3.3a ~/software/
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-    rm ~/.config/tmux 2> /dev/null
     ln -s $PWD/../config/tmux ~/.config/
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
@@ -159,7 +158,7 @@ install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
     sudo apt-get install i3 feh -y
-    rm ~/.config/i3 2> /dev/null
+    rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.jpg 2> /dev/null
     ln -s $PWD/../config/i3 ~/.config/
     ln -s $PWD/../assets/background.jpg ~/Pictures/
