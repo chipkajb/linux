@@ -1,6 +1,6 @@
 # Ubuntu
 
-Helpful Ubuntu files and commands
+Helpful Ubuntu files: setup scripts, dotfiles, config files, assets, etc.
 
 ## Setup
 
@@ -13,7 +13,4 @@ If you are setting up a new machine, you will first need to add an ssh key.
 
 ## Instructions
 
-1. `cd scripts`
-2. `./append_bashrc.sh`
-3. `./setup.sh`
-4. `python bashrc_to_zshrc.py`
+Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
