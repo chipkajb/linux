@@ -64,10 +64,6 @@ alias mountedinfo='df -hT'
 ## Show hidden files ##
 alias l.='ls -d .* --color=auto'
 
-# change default terminal (less crashes)
-export TERMINAL="sterminal"
-export TERM="st-256color"
-
 # Extracts any archive(s) (if unp isn't installed)
 extract () {
     for archive in $*; do
