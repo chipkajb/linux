@@ -90,7 +90,7 @@ bindsym $mod+a focus parent
 set $workspace1 "1: Web  "
 set $workspace2 "2: Terminal  "
 set $workspace3 "3: Code  "
-set $workspace4 "4: Message  "
+set $workspace4 "4: Messages  "
 set $workspace5 "5: Files  "
 set $workspace6 "6: Notes  "
 set $workspace7 "7: Music  "
