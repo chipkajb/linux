@@ -105,7 +105,7 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
+set $workspace1 "Terminals"
 set $ws2 "2"
 set $ws3 "3"
 set $ws4 "4"
@@ -117,7 +117,7 @@ set $ws9 "9"
 set $ws10 "10"
 
 # switch to workspace
-bindsym $mod+1 workspace number $ws1
+bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace number $ws2
 bindsym $mod+3 workspace number $ws3
 bindsym $mod+4 workspace number $ws4
@@ -129,7 +129,7 @@ bindsym $mod+9 workspace number $ws9
 bindsym $mod+0 workspace number $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace number $ws2
 bindsym $mod+Shift+3 move container to workspace number $ws3
 bindsym $mod+Shift+4 move container to workspace number $ws4
@@ -184,7 +184,10 @@ bar {
 bindsym $mod+Shift+x exec i3lock
 
 # wallpaper
-exec_always --no-startup-id feh --bg-scale --zoom fill ~/Pictures/background.jpg
+exec_always --no-startup-id feh --bg-fill --zoom fill ~/Pictures/background.jpg
 
 # map caps lock to escape
 exec_always --no-startup-id setxkbmap -layout us -option caps:escape
+
+# monitor layout
+exec_always xrandr --output eDP-1 --primary --mode 1920x1080 --pos 1050x1080 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-1-0 --off --output DP-1-1 --off --output HDMI-1-0 --mode 1920x1080 --pos 1050x0 --rotate normal --output DP-1-2 --mode 1920x1080 --pos 2970x448 --rotate normal --output DP-1-3 --off --output DP-1-0.8 --mode 1680x1050 --pos 0x218 --rotate left
