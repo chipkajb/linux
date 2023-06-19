@@ -183,6 +183,7 @@ install_i3() {
     rm ~/Pictures/background.jpg 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
     ln -s $PWD/assets/background.jpg ~/Pictures/
+    ln -s $PWD/assets/fonts ~/.fonts
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
