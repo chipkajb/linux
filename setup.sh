@@ -180,9 +180,9 @@ install_i3() {
     sudo apt-get update
     sudo apt-get install i3 feh arandr blueman -y
     rm -rf ~/.config/i3 2> /dev/null
-    rm ~/Pictures/background.jpg 2> /dev/null
+    rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
-    ln -s $PWD/assets/background.jpg ~/Pictures/
+    ln -s $PWD/assets/background.png ~/Pictures/
     ln -s $PWD/assets/fonts ~/.fonts
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
