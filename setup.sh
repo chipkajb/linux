@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # define script parameters
-ACTION_LIST=(0 1 2 3 4 5 6 7)
+ACTION_LIST=(0 1 2 3 4 5 6 7 8)
 DESC_LIST=(
     "Exit" 
     "Install zsh"
@@ -11,6 +11,7 @@ DESC_LIST=(
     "Install tmux" 
     "Install i3" 
     "Install alacritty"
+    "Install all"
 )
 
 # define text colors
@@ -248,6 +249,17 @@ while [ "$exit_condition" = false ]; do
 
         # install alacritty
         if [[ "$user_input" -eq 7 ]]; then
+            install_alacritty
+        fi
+       
+        # install all
+        if [[ "$user_input" -eq 8 ]]; then
+            install_zsh
+            install_vim
+            install_neovim
+            install_vscode
+            install_tmux
+            install_i3
             install_alacritty
         fi
 
