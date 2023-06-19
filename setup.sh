@@ -178,7 +178,7 @@ install_tmux() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
-    sudo apt-get install i3 feh arandr -y
+    sudo apt-get install i3 feh arandr blueman -y
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.jpg 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/

@@ -131,6 +131,7 @@ assign [class="Org.gnome.Nautilus"] $workspace5
 assign [class="Gedit"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
+assign [class="Blueman-manager"] $workspace7
 assign [class="Gnome-control-center"] $workspace0
 
 # reload the configuration file
