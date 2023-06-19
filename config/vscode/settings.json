@@ -85,11 +85,11 @@
       "commands": [":nohl"]
     },
     {
-      "before": ["<leader>", "h"],
+      "before": ["<leader>", "v"],
       "commands": [":sp"]
     },
     {
-      "before": ["<leader>", "v"],
+      "before": ["<leader>", ";"],
       "commands": [":vsp"]
     },
     {
