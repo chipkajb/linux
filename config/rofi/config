@@ -1,0 +1,13 @@
+configuration {
+    show-icons: true;
+    lines: 3;
+    eh: 2;
+    width: 100;
+    padding: 800;
+    opacity: 85;
+    bw: 0;
+    rofi.color-enabled: true;
+    rofi.color-window: #d9282828, #00000000, #fbf1c7
+    rofi.color-normal: #3c3836, #fbf1c7, #504945, #458588, #282828
+}
+

@@ -205,7 +205,7 @@ bindsym $mod+greater move workspace to output right
 bindsym $mod+less move workspace to output left
 
 # start rofi (a program launcher)
-bindsym $mod+d exec rofi -show drun -lines 3 -eh 2 -width 100 -padding 800 -opacity "85" -bw 0 -bc "$bg-color" -bg "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18"
+bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config -show-icons -lines 5 -eh 2 -width 100 -padding 800 -font "System San Francisco Display 18"
 exec compton
 
 # setup-specific settings

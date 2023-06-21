@@ -186,6 +186,7 @@ install_i3() {
     ln -s $PWD/assets/fonts ~/.fonts
     ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
+    ln -sfn $PWD/config/rofi ~/.config/
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
