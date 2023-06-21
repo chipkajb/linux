@@ -3,9 +3,9 @@ set $mod Mod1
 
 # setup-specific settings
 ##### home #####
-#font pango:DejaVu Sans Mono 13
+#font pango:System San Francisco Display 13
 ##### office #####
-font pango:DejaVu Sans Mono 8
+font pango:System San Francisco Display 8
 
 # set up screen lock before suspend/hibernate
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -28,9 +28,6 @@ bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
-
-# start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
 
 # change focus
 bindsym $mod+h focus left
@@ -84,16 +81,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $workspace1 "1: Web  "
-set $workspace2 "2: Terminal  "
-set $workspace3 "3: Code  "
-set $workspace4 "4: Messages  "
-set $workspace5 "5: Files  "
-set $workspace6 "6: Notes  "
-set $workspace7 "7: Music  "
-set $workspace8 "8: Misc 1 "
-set $workspace9 "9: Misc 2"
-set $workspace10 "0: Settings  "
+set $workspace1 "1: Web   "
+set $workspace2 "2: Terminal   "
+set $workspace3 "3: Code   "
+set $workspace4 "4: Messages   "
+set $workspace5 "5: Files   "
+set $workspace6 "6: Notes   "
+set $workspace7 "7: Music   "
+set $workspace8 "8: Misc 1  "
+set $workspace9 "9: Misc 2  "
+set $workspace10 "10: Settings   "
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -129,7 +126,7 @@ assign [class="Gedit"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
-assign [class="Gnome-control-center"] $workspace0
+assign [class="Gnome-control-center"] $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -165,10 +162,33 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# define colors
+set $bg-color              #282828
+set $inactive-bg-color     #282828
+set $text-color            #fbf1c7
+set $inactive-text-color   #a89984
+set $urgent-bg-color       #458588
+set $indicator-color       #a89984
+
+# window colors
+#                        border              background          text                  indicator
+client.focused           $bg-color           $bg-color           $text-color           $indicator-color
+client.unfocused         $inactive-bg-color  $inactive-bg-color  $inactive-text-color  $indicator-color
+client.focused_inactive  $inactive-bg-color  $inactive-bg-color  $inactive-text-color  $indicator-color
+client.urgent            $urgent-bg-color    $urgent-bg-color    $text-color           $indicator-color
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         status_command i3status
+        colors {
+            background $bg-color
+            separator #a89984
+            #                   border              background          text
+            focused_workspace   $bg-color           $bg-color           $text-color
+            inactive_workspace  $inactive-bg-color  $inactive-bg-color  $inactive-text-color
+            urgent_workspace    $urgent-bg-color    $urgent-bg-color    $text-color
+        }
 }
 
 # lock screen
@@ -183,6 +203,10 @@ exec_always --no-startup-id setxkbmap -layout us -option caps:escape
 # move workspaces between monitors
 bindsym $mod+greater move workspace to output right
 bindsym $mod+less move workspace to output left
+
+# start rofi (a program launcher)
+bindsym $mod+d exec rofi -show drun -lines 3 -eh 2 -width 100 -padding 800 -opacity "85" -bw 0 -bc "$bg-color" -bg "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18"
+exec compton
 
 # setup-specific settings
 ##### home #####
