@@ -16,7 +16,8 @@
 
 #------------------------------------------------------------------------
 
-INTERFACE="${BLOCK_INSTANCE:-wlan0}"
+#INTERFACE="${BLOCK_INSTANCE:-wlan0}"
+INTERFACE=$(ifconfig | grep wlp | cut -d ":" -f1)
 
 #------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ INTERFACE="${BLOCK_INSTANCE:-wlan0}"
 #------------------------------------------------------------------------
 
 #QUALITY=$(grep $INTERFACE /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
-QUALITY=$(cat /proc/net/wireless | grep wlp69s0 | awk '{ print int($3 * 100 / 70) }')
+QUALITY=$(cat /proc/net/wireless | grep $INTERFACE | awk '{ print int($3 * 100 / 70) }')
 
 #------------------------------------------------------------------------
 
@@ -36,12 +37,12 @@ echo $QUALITY% # full text
 echo $QUALITY% # short text
 
 # color
-if (( $(echo "$QUALITY >= 80" | bc -l) )); then
+if (( QUALITY >= 80 )); then
 	echo "#98971a"
-elif (( $(echo "$QUALITY < 80" | bc -l) && $(echo "$QUALITY >= 60" | bc -l) )); then
+elif (( QUALITY < 80 && QUALITY >= 60 )); then
 	echo "#d79921"
-elif (( $(echo "$QUALITY < 60" | bc -l) && $(echo "$QUALITY >= 40" | bc -l) )); then
+elif (( QUALITY < 60 && QUALITY >= 40 )); then
 	echo "#d65d0e"
-elif (( $(echo "$QUALITY < 40" | bc -l) )); then
+elif (( QUALITY < 40 )); then
 	echo "#cc241d"
 fi
