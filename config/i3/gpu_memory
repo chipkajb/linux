@@ -4,4 +4,16 @@ export TOTAL_MEM=$(nvidia-smi -q -d MEMORY | grep "Total" | head -n 1 | tr -s ' 
 export USED_MEM=$(nvidia-smi -q -d MEMORY | grep "Used" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
 export MEM_UTILIZATION=$(echo "scale=1; 100*$USED_MEM/$TOTAL_MEM" | bc)
 
-echo "${MEM_UTILIZATION}%"
+echo ${MEM_UTILIZATION}%
+echo ${MEM_UTILIZATION}%
+
+# color
+if (( $(echo "$MEM_UTILIZATION >= 80" | bc -l) )); then
+	echo "#cc241d"
+elif (( $(echo "$MEM_UTILIZATION < 80" | bc -l) && $(echo "$MEM_UTILIZATION >= 50" | bc -l) )); then
+	echo "#d65d0e"
+elif (( $(echo "$MEM_UTILIZATION < 50" | bc -l) && $(echo "$MEM_UTILIZATION >= 20" | bc -l) )); then
+	echo "#d79921"
+elif (( $(echo "$MEM_UTILIZATION < 20" | bc -l) )); then
+	echo "#98971a"
+fi
