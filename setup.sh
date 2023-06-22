@@ -187,6 +187,7 @@ install_i3() {
     ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/
+    sudo ln -sfn $PWD/config/i3/gpu_memory /usr/share/i3blocks
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 

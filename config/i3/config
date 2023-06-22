@@ -1,6 +1,52 @@
 # set mod key (alt)
 set $mod Mod1
 
+######
+# KEY
+######
+# a: focus parent
+# b: open bluetooth manager
+# c: open VS Code
+# c*: reload configuration
+# d: rofi drun
+# e: layout toggle split
+# e*: logout
+# f: full screen toggle
+# g: open google-chrome
+# h: focus left
+# i: <empty>
+# j: focus down
+# k: focus up
+# l: focus right
+# m: open MongoDB Compass
+# n: open nautilus
+# o: <empty>
+# p: open pithos
+# q: <empty>
+# q*: quit window
+# r: resize window
+# r*: restart i3
+# s: layout stacking
+# t: <empty>
+# u: <empty>
+# v: split vertically
+# w: layout tabbed
+# x: <empty>
+# x*: lock screen
+# y: <empty>
+# z: <empty>
+# semicolon: split horizontally
+# enter: open terminal
+# space: focus mode_toggle
+# space*: toggle floating/tiling
+# less: move workspace left
+# greater: move workspace right
+# up: focus up
+# down: focus down
+# left: focus left
+# right: focus right
+# * indicates mod+shift
+
 # setup-specific settings
 ##### home #####
 #font pango:System San Francisco Display 13
@@ -220,3 +266,11 @@ workspace $workspace1 output $monitor_left
 workspace $workspace2 output $monitor_right
 workspace $workspace3 output $monitor_center
 workspace $workspace7 output $monitor_left
+
+# open applications
+bindsym $mod+g exec google-chrome
+bindsym $mod+c exec code
+bindsym $mod+p exec pithos
+bindsym $mod+n exec nautilus
+bindsym $mod+m exec mongodb-compass
+bindsym $mod+b exec blueman-manager
