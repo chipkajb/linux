@@ -9,6 +9,7 @@ set $mod Mod1
 # c: open VS Code
 # c*: reload configuration
 # d: rofi drun
+# d*: rofi run
 # e: layout toggle split
 # e*: logout
 # f: full screen toggle
@@ -252,6 +253,7 @@ bindsym $mod+less move workspace to output left
 
 # start rofi (a program launcher)
 bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config -show-icons -lines 5 -eh 2 -width 100 -padding 800 -font "System San Francisco Display 18"
+bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config -show-icons -lines 5 -eh 2 -width 100 -padding 800 -font "System San Francisco Display 18"
 exec compton
 
 # setup-specific settings
