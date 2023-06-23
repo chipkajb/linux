@@ -187,6 +187,7 @@ install_i3() {
     ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/
+    ln -sfn $PWD/config/dunst ~/.config/
     sudo ln -sfn $PWD/config/i3/gpu_memory /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/wifi /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
