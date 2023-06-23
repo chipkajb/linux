@@ -192,7 +192,6 @@ install_i3() {
     sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/load_average /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/battery /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/org.knopwob.dunst.service /usr/share/dbus-1/services
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
 
