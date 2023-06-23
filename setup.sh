@@ -183,7 +183,7 @@ install_i3() {
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
     ln -s $PWD/assets/background.png ~/Pictures/
-    ln -s $PWD/assets/fonts ~/.fonts
+    ln -sfn $PWD/assets/fonts ~/.fonts
     ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/

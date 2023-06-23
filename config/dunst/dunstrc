@@ -66,7 +66,7 @@
     progress_bar_corner_radius = 0
 
     # Corner radius for the icon image.
-    icon_corner_radius = 0
+    icon_corner_radius = 5
 
     # Show how many messages are currently hidden (because of
     # notification_limit).
@@ -332,7 +332,7 @@
     foreground = "#ebdbb2"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
-    #default_icon = /path/to/icon
+    #default_icon = ~/.config/dunst/notification.png
 
 [urgency_critical]
     background = "#900000"
@@ -343,7 +343,6 @@
     #default_icon = /path/to/icon
 
 [shortcuts]
-
     close = ctrl+space
     close_all = ctrl+shift+space
     # grave = tick mark
