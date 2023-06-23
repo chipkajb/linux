@@ -24,26 +24,25 @@
     # dynamic width from 0 to 300
     # width = (0, 300)
     # constant width of 300
-    #width = 300
+    geometry = "400x0-30+20"
+    width = 0
 
-    geometry = "0x0-30+20"
+    # The maximum height of a single notification, excluding the frame.
+    height = 0
 
-    # # The maximum height of a single notification, excluding the frame.
-    # height = 300
+    # Position the notification in the top right corner
+    origin = top-right
 
-    # # Position the notification in the top right corner
-    # origin = top-right
+    # Offset from the origin
+    offset = 10x50
 
-    # # Offset from the origin
-    # offset = 10x50
+    # Scale factor. It is auto-detected if value is 0.
+    scale = 0
 
-    # # Scale factor. It is auto-detected if value is 0.
-    # scale = 0
+    # Maximum number of notification (0 means no limit)
+    notification_limit = 20
 
-    # # Maximum number of notification (0 means no limit)
-    # notification_limit = 20
-
-    # ### Progress bar ###
+    ### Progress bar ###
 
     # Turn on the progess bar. It appears when a progress hint is passed with
     # for example dunstify -h int:value:12
@@ -77,9 +76,7 @@
     # The transparency of the window.  Range: [0; 100].
     # This option will only work if a compositing window manager is
     # present (e.g. xcompmgr, compiz, etc.). (X11 only)
-    transparency = 100
-
-    notification_height = 0
+    transparency = 20
 
     # Draw a line of "separator_height" pixel height between two
     # notifications.
@@ -93,15 +90,15 @@
     # Horizontal padding.
     horizontal_padding = 8
 
-    # # Padding between text and icon.
-    # text_icon_padding = 0
+    # Padding between text and icon.
+    text_icon_padding = 5
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
     frame_width = 3
 
     # Defines color of the frame around the notification window.
-    frame_color = "#d5c4a1"
+    frame_color = "#458588"
 
     # Size of gap to display between notifications - requires a compositor.
     # If value is greater than 0, separator_height will be ignored and a border
@@ -200,7 +197,7 @@
     hide_duplicate_count = false
 
     # Display indicators for URLs (U) and actions (A).
-    show_indicators = yes
+    show_indicators = no
 
     ### Icons ###
 
@@ -222,7 +219,7 @@
     min_icon_size = 32
 
     # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 128
+    max_icon_size = 32
 
     # Paths to default icons (only neccesary when not using recursive icon lookup)
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
@@ -331,8 +328,7 @@
     background = "#282828"
     foreground = "#ebdbb2"
     timeout = 10
-    # Icon for notifications with normal urgency, uncomment to enable
-    #default_icon = ~/.config/dunst/notification.png
+    #icon = ~/.config/dunst/notification.png
 
 [urgency_critical]
     background = "#900000"
