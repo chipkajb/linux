@@ -28,7 +28,7 @@ set $mod Mod1
 # r: resize window
 # r*: restart i3
 # s: layout stacking
-# t: <empty>
+# t: open tmux session
 # u: <empty>
 # v: split vertically
 # w: layout tabbed
@@ -286,3 +286,4 @@ bindsym $mod+p exec pithos
 bindsym $mod+n exec nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
+bindsym $mod+t exec alacritty -e tmux new-session
