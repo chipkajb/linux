@@ -50,9 +50,9 @@ set $mod Mod1
 
 # setup-specific settings
 ##### home #####
-#font pango:System San Francisco Display 13
+font pango:System San Francisco Display 13
 ##### office #####
-font pango:System San Francisco Display 8
+#font pango:System San Francisco Display 8
 
 # set up screen lock before suspend/hibernate
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -268,7 +268,6 @@ exec compton
 #workspace $workspace3 output $monitor_top
 #workspace $workspace4 output $monitor_left
 #workspace $workspace7 output $monitor_right
-#exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 ##### office #####
 set $monitor_left "DP-2"
 set $monitor_center "DP-4"
@@ -278,7 +277,8 @@ workspace $workspace1 output $monitor_left
 workspace $workspace2 output $monitor_right
 workspace $workspace3 output $monitor_center
 workspace $workspace4 output $monitor_left
-workspace $workspace7 output $monitor_left
+workspace $workspace7 output $monitor_right
+exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 
 # open applications
 bindsym $mod+g exec google-chrome
