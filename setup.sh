@@ -160,7 +160,7 @@ install_tmux() {
     sudo apt-get remove tmux -y
     sudo apt-get purge tmux -y
     rm -rf ~/.config/tmux 2> /dev/null
-    sudo apt-get install libevent-dev xclip -y
+    sudo apt-get install libevent-dev xclip ncurses-dev -y
     wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
     tar -xf tmux-3.3a.tar.gz
     rm tmux-3.3a.tar.gz

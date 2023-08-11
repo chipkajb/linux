@@ -268,6 +268,7 @@ exec compton
 #workspace $workspace3 output $monitor_top
 #workspace $workspace4 output $monitor_left
 #workspace $workspace7 output $monitor_right
+#exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 ##### office #####
 set $monitor_left "DP-2"
 set $monitor_center "DP-4"
