@@ -147,6 +147,7 @@ install_vscode() {
     code --install-extension tickleforce.scrolloff
     code --install-extension vscodevim.vim
     code --install-extension Ransh.ransh
+    code --install-extension tomphilbin.gruvbox-themes
     ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
@@ -159,7 +160,7 @@ install_tmux() {
     sudo apt-get remove tmux -y
     sudo apt-get purge tmux -y
     rm -rf ~/.config/tmux 2> /dev/null
-    sudo apt-get install libevent-dev xclip -y
+    sudo apt-get install libevent-dev xclip ncurses-dev -y
     wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
     tar -xf tmux-3.3a.tar.gz
     rm tmux-3.3a.tar.gz
