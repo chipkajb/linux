@@ -193,6 +193,7 @@ install_i3() {
     sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/load_average /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/battery /usr/share/i3blocks
+    sudo ln -sfn $PWD/config/i3/temperature /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/x11-common /etc/X11/Xresources
     mkdir ~/.icons
     ln -sfn /usr/share/icons/Yaru ~/.icons/default
