@@ -57,6 +57,10 @@
     {
       "before": ["<C-BS>"],
       "commands": ["editor.action.smartSelect.shrink"]
+    },
+    {
+        "before": ["<C-p>"],
+        "commands": ["workbench.action.showCommands"]
     }
   ],
   "vim.normalModeKeyBindings": [
@@ -103,6 +107,10 @@
     {
       "before": ["<C-BS>"],
       "commands": ["editor.action.smartSelect.shrink"]
+    },
+    {
+        "before": ["<C-p>"],
+        "commands": ["workbench.action.showCommands"]
     }
   ],
   // helpful stuff
@@ -123,5 +131,6 @@
   // terminal
   "terminal.integrated.inheritEnv": false,
   //tabnine
-  "tabnine.experimentalAutoImports": true
+  "tabnine.experimentalAutoImports": true,
+  "workbench.startupEditor": "none"
 }
