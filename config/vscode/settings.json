@@ -60,7 +60,7 @@
     },
     {
         "before": ["<C-p>"],
-        "commands": ["workbench.action.showCommands"]
+        "commands": ["workbench.action.quickOpen"]
     }
   ],
   "vim.normalModeKeyBindings": [
@@ -110,7 +110,7 @@
     },
     {
         "before": ["<C-p>"],
-        "commands": ["workbench.action.showCommands"]
+        "commands": ["workbench.action.quickOpen"]
     }
   ],
   // helpful stuff
