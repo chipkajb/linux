@@ -1,6 +1,6 @@
 {
   // theme / display
-  "workbench.colorTheme": "Gruvbox Dark Hard",
+  "workbench.colorTheme": "Gruvbox Dark (Hard)",
   "workbench.editor.highlightModifiedTabs": true,
   "editor.rulers": [120],
   // formatting
