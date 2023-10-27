@@ -59,8 +59,8 @@
       "commands": ["editor.action.smartSelect.shrink"]
     },
     {
-        "before": ["<C-p>"],
-        "commands": ["workbench.action.quickOpen"]
+      "before": ["<C-p>"],
+      "commands": ["workbench.action.quickOpen"]
     }
   ],
   "vim.normalModeKeyBindings": [
@@ -109,8 +109,8 @@
       "commands": ["editor.action.smartSelect.shrink"]
     },
     {
-        "before": ["<C-p>"],
-        "commands": ["workbench.action.quickOpen"]
+      "before": ["<C-p>"],
+      "commands": ["workbench.action.quickOpen"]
     }
   ],
   // helpful stuff
