@@ -79,7 +79,7 @@ install_zsh() {
     sudo apt install zsh -y
     chsh -s $(which zsh)
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-    python utils/append_zshrc.py
+    python3 utils/append_zshrc.py
     sudo ln -sf $PWD/scripts/* /usr/local/bin/
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
@@ -88,7 +88,7 @@ install_zsh() {
 install_vim() {
     printf "Installing vim...\n"
     sudo apt-get update
-    sudo apt-get install -y libclang-dev
+    sudo apt-get install -y libclang-dev vim
     rm -rf /home/$USER/.viminfo 2> /dev/null
     rm -rf /home/$USER/.vim 2> /dev/null
     rm -rf /home/$USER/.vimrc 2> /dev/null
@@ -112,6 +112,8 @@ install_vim() {
 # install neovim
 install_neovim() {
     printf "Installing neovim...\n"
+    sudo apt-get update
+    sudo apt-get install -y libfuse2 python3-pip
     wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     sudo mv ./nvim.appimage /usr/bin
     sudo chmod 764 /usr/bin/nvim.appimage
