@@ -80,6 +80,7 @@ install_zsh() {
     chsh -s $(which zsh)
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
     python utils/append_zshrc.py
+    sudo ln -sf $PWD/scripts/* /usr/local/bin/
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
