@@ -256,8 +256,8 @@ bindsym $mod+plus move workspace to output up
 bindsym $mod+minus move workspace to output down
 
 # start rofi (a program launcher)
-bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config -show-icons -lines 5 -eh 2 -width 100 -padding 800 -font "System San Francisco Display 18"
-bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config -show-icons -lines 5 -eh 2 -width 100 -padding 800 -font "System San Francisco Display 18"
+bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config
+bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config
 exec compton
 
 # setup-specific settings
@@ -272,7 +272,7 @@ exec compton
 # workspace $workspace3 output $monitor_top
 # workspace $workspace4 output $monitor_left
 # workspace $workspace7 output $monitor_right
-# exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
+# exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1 # xinput | grep Touch
 #### office #####
 set $monitor_left "DP-2"
 set $monitor_center "DP-4"
