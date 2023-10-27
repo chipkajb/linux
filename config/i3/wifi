@@ -17,6 +17,7 @@
 #------------------------------------------------------------------------
 
 #INTERFACE="${BLOCK_INSTANCE:-wlan0}"
+# check to see what value to plug in here with "ifconfig | grep RUNNING | grep BROADCAST"
 INTERFACE=$(ifconfig | grep wlp | cut -d ":" -f1)
 
 #------------------------------------------------------------------------

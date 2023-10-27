@@ -182,7 +182,7 @@ install_tmux() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
-    sudo apt-get install i3 feh arandr blueman lxappearance rofi compton i3blocks -y
+    sudo apt-get install i3 feh arandr blueman lxappearance rofi compton i3blocks net-tools -y
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
@@ -199,7 +199,7 @@ install_i3() {
     sudo ln -sfn $PWD/config/i3/battery /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/temperature /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/x11-common /etc/X11/Xresources
-    mkdir ~/.icons
+    mkdir -p ~/.icons
     ln -sfn /usr/share/icons/Yaru ~/.icons/default
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
