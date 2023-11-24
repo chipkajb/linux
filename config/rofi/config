@@ -1,7 +1,0 @@
-configuration {
-    show-icons: true;
-    eh: 1;
-    font: "System San Francisco Display 18";
-}
-
-@theme "gruvbox-dark"

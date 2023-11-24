@@ -256,8 +256,8 @@ bindsym $mod+plus move workspace to output up
 bindsym $mod+minus move workspace to output down
 
 # start rofi (a program launcher)
-bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config
-bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config
+bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config.rasi
+bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config.rasi
 exec compton
 
 # setup-specific settings
