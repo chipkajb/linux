@@ -79,7 +79,8 @@ install_zsh() {
     sudo apt install zsh -y
     chsh -s $(which zsh)
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-    python utils/append_zshrc.py
+    python3 utils/append_zshrc.py
+    sudo ln -sf $PWD/scripts/* /usr/local/bin/
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
@@ -87,7 +88,7 @@ install_zsh() {
 install_vim() {
     printf "Installing vim...\n"
     sudo apt-get update
-    sudo apt-get install -y libclang-dev
+    sudo apt-get install -y libclang-dev vim
     rm -rf /home/$USER/.viminfo 2> /dev/null
     rm -rf /home/$USER/.vim 2> /dev/null
     rm -rf /home/$USER/.vimrc 2> /dev/null
@@ -111,6 +112,8 @@ install_vim() {
 # install neovim
 install_neovim() {
     printf "Installing neovim...\n"
+    sudo apt-get update
+    sudo apt-get install -y libfuse2 python3-pip
     wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     sudo mv ./nvim.appimage /usr/bin
     sudo chmod 764 /usr/bin/nvim.appimage
@@ -179,7 +182,7 @@ install_tmux() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
-    sudo apt-get install i3 feh arandr blueman lxappearance rofi compton i3blocks -y
+    sudo apt-get install i3 feh arandr blueman lxappearance rofi compton i3blocks net-tools -y
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
@@ -196,7 +199,7 @@ install_i3() {
     sudo ln -sfn $PWD/config/i3/battery /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/temperature /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/x11-common /etc/X11/Xresources
-    mkdir ~/.icons
+    mkdir -p ~/.icons
     ln -sfn /usr/share/icons/Yaru ~/.icons/default
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
 }
