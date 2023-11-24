@@ -4,22 +4,17 @@
   "workbench.editor.highlightModifiedTabs": true,
   "editor.rulers": [120],
   // formatting
+  "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSaveMode": "file",
-  "editor.formatOnSave": true,
-  "python.formatting.blackArgs": ["--line-length", "120"],
+  "black-formatter.args": ["--line-length", "120"],
   "[python]": {
     "editor.formatOnType": true,
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "python.formatting.provider": "black",
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "ruff.args": ["--max-line-length=120"],
-  // linting
-  "python.linting.pylintEnabled": false,
-  "python.linting.enabled": false,
   // scrolloff
   "scrolloff.scrolloff": 8,
   // vim
@@ -113,6 +108,12 @@
       "commands": ["workbench.action.quickOpen"]
     }
   ],
+  // git
+  "git.confirmSync": false,
+  // terminal
+  "terminal.integrated.inheritEnv": false,
+  // tabnine
+  "tabnine.experimentalAutoImports": true,
   // helpful stuff
   "editor.quickSuggestions": {
     "other": true,
@@ -123,14 +124,9 @@
   "editor.wordBasedSuggestionsMode": "allDocuments",
   "editor.minimap.enabled": false,
   "explorer.confirmDelete": false,
-  "workbench.editor.untitled.hint": "hidden",
   "workbench.settings.openDefaultKeybindings": true,
   "security.workspace.trust.untrustedFiles": "open",
-  // git
-  "git.confirmSync": false,
-  // terminal
-  "terminal.integrated.inheritEnv": false,
-  //tabnine
-  "tabnine.experimentalAutoImports": true,
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "workbench.editor.empty.hint": "hidden"
+  // other stuff
 }
