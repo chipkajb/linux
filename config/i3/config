@@ -275,12 +275,12 @@ workspace $workspace1 output $monitor_left
 workspace $workspace2 output $monitor_bottom
 workspace $workspace3 output $monitor_top
 workspace $workspace4 output $monitor_right
-workspace $workspace5 output $monitor_left
+workspace $workspace5 output $monitor_right
 workspace $workspace6 output $monitor_bottom
-workspace $workspace7 output $monitor_right
+workspace $workspace7 output $monitor_left
 workspace $workspace8 output $monitor_bottom
 workspace $workspace9 output $monitor_top
-workspace $workspace10 output $monitor_right
+workspace $workspace10 output $monitor_left
 exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 
 # open applications
