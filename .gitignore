@@ -1,2 +1,7 @@
 config/vim/undodir/
 config/vim/bundle/Vundle.vim/
+config/alacritty/themes
+config/vim/bundle/clang_complete
+config/vim/bundle/jedi-vim
+config/vim/bundle/nerdcommenter
+config/vim/bundle/nerdtree
