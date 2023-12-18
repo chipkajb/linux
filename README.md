@@ -14,3 +14,30 @@ If you are setting up a new machine, you will first need to add an ssh key.
 ## Instructions
 
 Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
+
+## CUDA Setup
+
+```
+# download cuda toolkit runfile
+wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run
+
+# disable nouveau drivers
+touch /usr/lib/modprobe.d/blacklist-nouveau.conf
+echo "blacklist nouveau" >> /usr/lib/modprobe.d/blacklist-nouveau.conf
+echo "options nouveau modeset=0" >> /usr/lib/modprobe.d/blacklist-nouveau.conf
+sudo update-initramfs -u
+
+# reboot into text mode (i.e. without graphics interface)
+
+# stop display manager
+sudo service lightdm stop
+
+# install cuda toolkit
+sudo sh cuda_11.7.1_515.65.01_linux.run
+
+# start display manager
+sudo service lightdm start
+
+# reboot
+reboot
+```
