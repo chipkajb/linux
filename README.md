@@ -30,13 +30,13 @@ sudo update-initramfs -u
 # reboot into text mode (i.e. without graphics interface)
 
 # stop display manager
-sudo service lightdm stop
+sudo service gdm stop
 
 # install cuda toolkit
 sudo sh cuda_11.7.1_515.65.01_linux.run
 
 # start display manager
-sudo service lightdm start
+sudo service gdm start
 
 # reboot
 reboot
