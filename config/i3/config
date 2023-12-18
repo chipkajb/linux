@@ -246,6 +246,9 @@ exec_always --no-startup-id feh --bg-fill --zoom fill ~/Pictures/background.png
 # map caps lock to escape
 exec_always --no-startup-id setxkbmap -layout us -option caps:escape
 
+# enable numlock
+exec_always --no-startup-id numlockx on
+
 # move workspaces between monitors
 bindsym $mod+greater move workspace to output right
 bindsym $mod+less move workspace to output left

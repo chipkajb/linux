@@ -182,7 +182,37 @@ install_tmux() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
-    sudo apt-get install i3 feh arandr blueman lxappearance compton i3blocks net-tools bison flex libxcb-ewmh2 libglib2.0-dev libxcb1-dev libxcb1 libxcb-xkb-dev libxcb-ewmh-dev libxcb-xkb-dev libxcb-xkb1 libxcb-icccm4 libxcb-icccm4-dev libxcb-cursor-dev libxcb-xinerama0-dev libxcb-randr0-dev libxkbcommon-dev libxkbcommon-x11-dev libxcb-util-dev libstartup-notification0-dev libgdk-pixbuf2.0-dev libpango1.0-dev fonts-font-awesome -y
+    sudo apt-get install i3 \
+        feh \
+        arandr \
+        blueman \
+        lxappearance \
+        compton \
+        i3blocks \
+        net-tools \
+        bison \
+        flex \
+        libxcb-ewmh2 \
+        libglib2.0-dev \
+        libxcb1-dev \
+        libxcb1 \
+        libxcb-xkb-dev \
+        libxcb-ewmh-dev \
+        libxcb-xkb-dev \
+        libxcb-xkb1 \
+        libxcb-icccm4 \
+        libxcb-icccm4-dev \
+        libxcb-cursor-dev \
+        libxcb-xinerama0-dev \
+        libxcb-randr0-dev \
+        libxkbcommon-dev \
+        libxkbcommon-x11-dev \
+        libxcb-util-dev \
+        libstartup-notification0-dev \
+        libgdk-pixbuf2.0-dev \
+        libpango1.0-dev \
+        numlockx \
+        fonts-font-awesome -y
     rm -rf rofi-1.7.5 2> /dev/null
     wget https://github.com/davatorium/rofi/releases/download/1.7.5/rofi-1.7.5.tar.gz
     tar xf rofi-1.7.5.tar.gz
