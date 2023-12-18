@@ -22,9 +22,9 @@ Run `./setup.sh` to setup various aspects of my preferred Linux environment. You
 wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run
 
 # disable nouveau drivers
-touch /usr/lib/modprobe.d/blacklist-nouveau.conf
-echo "blacklist nouveau" >> /usr/lib/modprobe.d/blacklist-nouveau.conf
-echo "options nouveau modeset=0" >> /usr/lib/modprobe.d/blacklist-nouveau.conf
+sudo touch /usr/lib/modprobe.d/blacklist-nouveau.conf
+echo 'blacklist nouveau' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.conf
+echo 'options nouveau modeset=0' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.conf
 sudo update-initramfs -u
 
 # reboot into text mode (i.e. without graphics interface)
