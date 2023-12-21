@@ -17,6 +17,7 @@ alias bashrc='vim ~/.bashrc'
 alias zshrc='vim ~/.zshrc'
 alias grep='grep --color=always'
 alias python=python3
+alias pip=pip3
 
 # set default editor
 export EDITOR=vim

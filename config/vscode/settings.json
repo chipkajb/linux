@@ -127,6 +127,7 @@
   "workbench.settings.openDefaultKeybindings": true,
   "security.workspace.trust.untrustedFiles": "open",
   "workbench.startupEditor": "none",
-  "workbench.editor.empty.hint": "hidden"
   // other stuff
+  "workbench.editor.empty.hint": "hidden",
+  "git.autofetch": true
 }
