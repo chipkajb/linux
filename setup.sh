@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # define script parameters
-ACTION_LIST=(0 1 2 3 4 5 6 7 8)
+ACTION_LIST=(0 1 2 3 4 5 6 7 8 9)
 DESC_LIST=(
     "Exit" 
     "Install zsh"
@@ -11,6 +11,7 @@ DESC_LIST=(
     "Install tmux" 
     "Install i3" 
     "Install alacritty"
+    "Misc setup"
     "Install all"
 )
 
@@ -255,6 +256,17 @@ install_alacritty() {
     printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
 }
 
+# misc setup
+misc_setup() {
+    printf "Miscellaneous setup...\n"
+    sudo apt-get update
+    sudo apt install python3-gi -y
+    rm -rf ~/.local/share/gedit 2> /dev/null
+    mkdir -p ~/.local/share/gedit/plugins
+    cd ~/.local/share/gedit/plugins && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.py && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.plugin
+    printf "${GREEN}DONE${NC} -- miscellaneous setup complete\n"
+}
+
 # main loop
 exit_condition=false
 while [ "$exit_condition" = false ]; do
@@ -306,9 +318,14 @@ while [ "$exit_condition" = false ]; do
         if [[ "$user_input" -eq 7 ]]; then
             install_alacritty
         fi
+
+        # misc setup
+        if [[ "$user_input" -eq 8 ]]; then
+            misc_setup
+        fi
        
         # install all
-        if [[ "$user_input" -eq 8 ]]; then
+        if [[ "$user_input" -eq 9 ]]; then
             install_zsh
             install_vim
             install_neovim
@@ -316,6 +333,7 @@ while [ "$exit_condition" = false ]; do
             install_tmux
             install_i3
             install_alacritty
+            misc_setup
         fi
 
     fi
