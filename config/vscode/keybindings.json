@@ -44,5 +44,10 @@
     "key": "ctrl+k",
     "command": "selectPrevSuggestion",
     "when": "editorHasCompletionItemProvider && suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-extension.vim_ctrl+i",
+    "when": "editorTextFocus && vim.active && vim.use<C-i> && !inDebugRepl"
   }
 ]
