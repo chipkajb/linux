@@ -151,7 +151,6 @@ install_vscode() {
     code --install-extension tickleforce.scrolloff
     code --install-extension vscodevim.vim
     code --install-extension Ransh.ransh
-    code --install-extension tomphilbin.gruvbox-themes
     ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
