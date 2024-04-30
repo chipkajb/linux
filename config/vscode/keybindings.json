@@ -1,11 +1,11 @@
 // Place your key bindings in this file to override the defaults
 [
   {
-    "key": "ctrl+`",
+    "key": "ctrl+shift+j",
     "command": "workbench.action.terminal.focus"
   },
   {
-    "key": "ctrl+`",
+    "key": "ctrl+shift+k",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
   },
@@ -49,5 +49,13 @@
     "key": "ctrl+i",
     "command": "-extension.vim_ctrl+i",
     "when": "editorTextFocus && vim.active && vim.use<C-i> && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+k ctrl+s",
+    "command": "workbench.action.files.saveWithoutFormatting"
+  },
+  {
+    "key": "ctrl+k s",
+    "command": "-workbench.action.files.saveWithoutFormatting"
   }
 ]
