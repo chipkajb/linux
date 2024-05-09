@@ -126,7 +126,7 @@ install_neovim() {
     rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
     ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/
     sudo apt-get install ripgrep -y
-    sudo apt-get install python3.8-venv -y
+    sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
     sudo python3 -m pip install black
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim.appimage --version | head -n 1)${NC}\n"
