@@ -129,5 +129,6 @@
   "workbench.startupEditor": "none",
   // other stuff
   "workbench.editor.empty.hint": "hidden",
-  "git.autofetch": true
+  "git.autofetch": true,
+  "explorer.confirmDragAndDrop": false
 }
