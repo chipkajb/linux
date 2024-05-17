@@ -125,6 +125,7 @@ install_neovim() {
     ln -s $PWD/config/nvim/after ~/.config/nvim
     rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
     ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/
+    ln -s ~/.config/nvim/lua/custom/init.lua ~/.config/nvim/init.lua
     sudo apt-get install ripgrep -y
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y

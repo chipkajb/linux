@@ -43,3 +43,6 @@ vim.opt.colorcolumn = "88"
 
 --- leader key
 vim.g.mapleader = " "
+
+--- relative line numbering
+vim.opt.relativenumber = true
