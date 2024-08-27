@@ -130,5 +130,6 @@
   // other stuff
   "workbench.editor.empty.hint": "hidden",
   "git.autofetch": true,
-  "explorer.confirmDragAndDrop": false
+  "explorer.confirmDragAndDrop": false,
+  "github.copilot.editor.enableAutoCompletions": true
 }
