@@ -24,6 +24,7 @@ export EDITOR=vim
 export VISUAL=vim
 
 # customize history
+export HIST_STAMPS="yyyy-mm-dd"
 export HISTTIMEFORMAT="%h %d %H:%M:%S " # show date and time in history
 export HISTSIZE=10000 # increase history size
 export HISTFILESIZE=10000

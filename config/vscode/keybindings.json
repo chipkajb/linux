@@ -57,5 +57,9 @@
   {
     "key": "ctrl+k s",
     "command": "-workbench.action.files.saveWithoutFormatting"
+  },
+  {
+    "key": "ctrl+shift+g",
+    "command": "git.stageSelectedRanges",
   }
 ]
