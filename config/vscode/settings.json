@@ -3,6 +3,7 @@
   "workbench.colorTheme": "Gruvbox Dark Hard",
   "workbench.editor.highlightModifiedTabs": true,
   "editor.rulers": [120],
+
   // formatting
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -15,8 +16,13 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
   // scrolloff
   "scrolloff.scrolloff": 8,
+
   // vim
   "vim.vimrc.enable": true,
   "vim.vimrc.path": "~/.vimrc",
@@ -108,12 +114,13 @@
       "commands": ["workbench.action.quickOpen"]
     }
   ],
+
   // git
   "git.confirmSync": false,
+
   // terminal
   "terminal.integrated.inheritEnv": false,
-  // tabnine
-  "tabnine.experimentalAutoImports": true,
+
   // helpful stuff
   "editor.quickSuggestions": {
     "other": true,
@@ -127,9 +134,9 @@
   "workbench.settings.openDefaultKeybindings": true,
   "security.workspace.trust.untrustedFiles": "open",
   "workbench.startupEditor": "none",
+
   // other stuff
   "workbench.editor.empty.hint": "hidden",
   "git.autofetch": true,
-  "explorer.confirmDragAndDrop": false,
-  "github.copilot.editor.enableAutoCompletions": true
+  "explorer.confirmDragAndDrop": false
 }

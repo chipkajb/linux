@@ -6,7 +6,7 @@ set $mod Mod1
 ######
 # a: focus parent
 # b: open bluetooth manager
-# c: open VS Code
+# c: open VS Code (or Cursor)
 # c*: reload configuration
 # d: rofi drun
 # d*: rofi run
@@ -166,6 +166,7 @@ bindsym $mod+Shift+0 move container to workspace $workspace10
 assign [class="Google-chrome"] $workspace1
 assign [class="Alacritty"] $workspace2
 assign [class="Code"] $workspace3
+assign [class="Cursor"] $workspace3
 assign [class="Slack"] $workspace4
 assign [class="Org.gnome.Nautilus"] $workspace5
 assign [class="Gedit"] $workspace6
@@ -288,7 +289,8 @@ exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled"
 
 # open applications
 bindsym $mod+g exec google-chrome
-bindsym $mod+c exec code
+# bindsym $mod+c exec code
+bindsym $mod+c exec Cursor.AppImage
 bindsym $mod+p exec pithos
 bindsym $mod+n exec nautilus
 bindsym $mod+m exec mongodb-compass

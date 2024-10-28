@@ -1,22 +1,24 @@
 // Place your key bindings in this file to override the defaults
 [
+  // Focus shortcuts
   {
     "key": "ctrl+shift+j",
-    "command": "workbench.action.terminal.focus"
+    "command": "workbench.action.terminal.focus",
+    "when": "editorTextFocus"
   },
   {
     "key": "ctrl+shift+k",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
   },
+
+  // Sidebar shortcuts
   {
     "key": "ctrl+shift+b",
     "command": "workbench.action.toggleSidebarVisibility"
   },
-  {
-    "key": "ctrl+e",
-    "command": "workbench.action.quickOpen"
-  },
+  
+  // Vim shortcuts
   {
     "key": "shift+j",
     "command": "editor.action.moveLinesDownAction",
@@ -27,39 +29,46 @@
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly && vim.active && (vim.mode == 'Visual' || vim.mode == 'VisualLine' || vim.mode == 'VisualBlock')"
   },
+  
+  // Tab navigation
   {
     "key": "ctrl+tab",
-    "command": "workbench.action.nextEditorInGroup"
+    "command": "workbench.action.nextEditorInGroup",
+    "when": "editorTextFocus"
   },
   {
     "key": "ctrl+shift+tab",
-    "command": "workbench.action.previousEditorInGroup"
+    "command": "workbench.action.previousEditorInGroup",
+    "when": "editorTextFocus"
   },
+  
+  // Git shortcuts
   {
-    "key": "ctrl+j",
-    "command": "selectNextSuggestion",
-    "when": "editorHasCompletionItemProvider && suggestWidgetVisible"
-  },
-  {
-    "key": "ctrl+k",
-    "command": "selectPrevSuggestion",
-    "when": "editorHasCompletionItemProvider && suggestWidgetVisible"
-  },
-  {
-    "key": "ctrl+i",
-    "command": "-extension.vim_ctrl+i",
-    "when": "editorTextFocus && vim.active && vim.use<C-i> && !inDebugRepl"
-  },
-  {
-    "key": "ctrl+k ctrl+s",
-    "command": "workbench.action.files.saveWithoutFormatting"
-  },
-  {
-    "key": "ctrl+k s",
-    "command": "-workbench.action.files.saveWithoutFormatting"
-  },
-  {
-    "key": "ctrl+shift+g",
+    "key": "shift+meta+s",
     "command": "git.stageSelectedRanges",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "shift+meta+r",
+    "command": "git.revertSelectedRanges",
+    "when": "editorTextFocus"
+  },
+
+  // Disable ctrl+e shortcut while in terminal
+  {
+  "key": "ctrl+e",
+  "command": "workbench.action.quickOpen",
+  "when": "editorTextFocus"
+},
+{
+  "key": "ctrl+e",
+  "command": "-workbench.action.quickOpen"
+},
+
+
+  // Save without formatting
+  {
+    "key": "ctrl+shift+s",
+    "command": "workbench.action.files.saveWithoutFormatting"
   }
 ]
