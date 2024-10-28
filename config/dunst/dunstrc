@@ -340,10 +340,9 @@
     #default_icon = /path/to/icon
 
 [shortcuts]
-    close = ctrl+space
-    close_all = ctrl+shift+space
-    # grave = tick mark
-    history = ctrl+grave
+    close = ctrl+greater
+    close_all = ctrl+shift+greater
+    history = ctrl+less
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

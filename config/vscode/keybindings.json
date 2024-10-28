@@ -17,7 +17,7 @@
     "key": "ctrl+shift+b",
     "command": "workbench.action.toggleSidebarVisibility"
   },
-  
+
   // Vim shortcuts
   {
     "key": "shift+j",
@@ -29,7 +29,7 @@
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly && vim.active && (vim.mode == 'Visual' || vim.mode == 'VisualLine' || vim.mode == 'VisualBlock')"
   },
-  
+
   // Tab navigation
   {
     "key": "ctrl+tab",
@@ -41,7 +41,7 @@
     "command": "workbench.action.previousEditorInGroup",
     "when": "editorTextFocus"
   },
-  
+
   // Git shortcuts
   {
     "key": "shift+meta+s",
@@ -56,15 +56,14 @@
 
   // Disable ctrl+e shortcut while in terminal
   {
-  "key": "ctrl+e",
-  "command": "workbench.action.quickOpen",
-  "when": "editorTextFocus"
-},
-{
-  "key": "ctrl+e",
-  "command": "-workbench.action.quickOpen"
-},
-
+    "key": "ctrl+e",
+    "command": "workbench.action.quickOpen",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "-workbench.action.quickOpen"
+  },
 
   // Save without formatting
   {
