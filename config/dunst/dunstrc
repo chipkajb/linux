@@ -340,7 +340,7 @@
     #default_icon = /path/to/icon
 
 [shortcuts]
-    close = ctrl+bracketleft
+    close = ctrl+bracketright
     close_all = ctrl+shift+bracketright
     history = ctrl+bracketleft
 
