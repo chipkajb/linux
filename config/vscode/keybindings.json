@@ -69,5 +69,17 @@
   {
     "key": "ctrl+shift+s",
     "command": "workbench.action.files.saveWithoutFormatting"
+  },
+
+  // Debug shortcuts
+  {
+    "key": "meta+d",
+    "command": "aidebug.autodebugterminal",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "alt+d",
+    "command": "-aidebug.autodebugterminal",
+    "when": "terminalFocus"
   }
 ]
