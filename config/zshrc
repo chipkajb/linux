@@ -14,6 +14,21 @@ fi
 
 # python startup
 export PYTHONSTARTUP=~/.python_startup.py
+python3() {
+    # Direct absolute path to the startup script for testing
+    startup_file="$HOME/.python_startup.py"
+
+    # Execute the startup script if it exists
+    if [ -f "$startup_file" ]; then
+        if [ $# -eq 0 ]; then
+            command python3
+        else
+            command python3 -c "exec(open('$startup_file').read()); exec(open('$1').read())" "${@:2}"
+        fi
+    else
+        echo "Startup script not found: $startup_file"
+    fi
+}
 
 # aliases
 alias home='cd ~'
