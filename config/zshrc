@@ -2,6 +2,9 @@
 ######################## CUSTOM CONFIGURATION ADDED BY JORDAN CHIPKA #######################
 ############################################################################################
 
+# make sure to put this in front of the conda init block
+# if [ -z "$VSCODE_GIT_ASKPASS_NODE" ]; then
+
 # aliases
 alias home='cd ~'
 alias root='cd /'
