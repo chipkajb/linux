@@ -2,8 +2,18 @@
 ######################## CUSTOM CONFIGURATION ADDED BY JORDAN CHIPKA #######################
 ############################################################################################
 
-# make sure to put this in front of the conda init block
-# if [ -z "$VSCODE_GIT_ASKPASS_NODE" ]; then
+# avoid unnecessary initial conda activations
+if [ -z "$VSCODE_GIT_ASKPASS_NODE" ]; then
+    conda deactivate
+fi
+if [ -z "$VSCODE_PID" ]; then
+    conda deactivate
+    conda deactivate
+    conda deactivate
+fi
+
+# python startup
+export PYTHONSTARTUP=~/.python_startup.py
 
 # aliases
 alias home='cd ~'

@@ -261,6 +261,7 @@ misc_setup() {
     printf "Miscellaneous setup...\n"
     sudo apt-get update
     sudo apt install python3-gi -y
+    ln -s $PWD/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
     cd ~/.local/share/gedit/plugins && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.py && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.plugin
