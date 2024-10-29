@@ -44,12 +44,12 @@
 
   // Git shortcuts
   {
-    "key": "shift+meta+s",
+    "key": "shift+alt+s",
     "command": "git.stageSelectedRanges",
     "when": "editorTextFocus"
   },
   {
-    "key": "shift+meta+r",
+    "key": "shift+alt+r",
     "command": "git.revertSelectedRanges",
     "when": "editorTextFocus"
   },
@@ -71,15 +71,10 @@
     "command": "workbench.action.files.saveWithoutFormatting"
   },
 
-  // Debug shortcuts
+  // Clear terminal
   {
-    "key": "meta+d",
-    "command": "aidebug.autodebugterminal",
-    "when": "terminalFocus"
-  },
-  {
-    "key": "alt+d",
-    "command": "-aidebug.autodebugterminal",
+    "key": "ctrl+l",
+    "command": "workbench.action.terminal.clear",
     "when": "terminalFocus"
   }
 ]

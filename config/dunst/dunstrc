@@ -340,9 +340,9 @@
     #default_icon = /path/to/icon
 
 [shortcuts]
-    close = ctrl+bracketright
-    close_all = ctrl+shift+bracketright
-    history = ctrl+bracketleft
+    close = mod1+r
+    close_all = mod1+space
+    history = mod1+u
 
 
 # Every section that isn't one of the above is interpreted as a rules to

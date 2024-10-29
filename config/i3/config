@@ -1,5 +1,5 @@
-# set mod key (alt)
-set $mod Mod1
+# set mod key (Super)
+set $mod Mod4
 
 ######
 # KEY
