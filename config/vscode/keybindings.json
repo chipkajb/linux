@@ -81,5 +81,17 @@
     "key": "ctrl+shift+t",
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "terminalFocus"
+  },
+
+  // Cursor
+  {
+    "key": "ctrl+i",
+    "command": "-inlineChat.start",
+    "when": "editorFocus && inlineChatHasProvider && !editorReadonly"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-composer.startComposerPrompt",
+    "when": "composerIsEnabled"
   }
 ]
