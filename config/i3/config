@@ -21,7 +21,7 @@ set $mod Mod4
 # l: focus right
 # m: open MongoDB Compass
 # n: open nautilus
-# o: <empty>
+# o: open obsidian
 # p: open pithos
 # q: <empty>
 # q*: quit window
@@ -171,6 +171,7 @@ assign [class="Cursor"] $workspace3
 assign [class="Slack"] $workspace4
 assign [class="Org.gnome.Nautilus"] $workspace5
 assign [class="Gedit"] $workspace6
+assign [class="obsidian"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
@@ -298,3 +299,4 @@ bindsym $mod+n exec nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
+bindsym $mod+o exec obsidian
