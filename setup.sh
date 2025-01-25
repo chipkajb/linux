@@ -77,11 +77,21 @@ prompt_user() {
 install_zsh() {
     printf "Installing zsh...\n"
     sudo apt-get update
-    sudo apt install zsh -y
+    sudo apt install zsh exa fzf -y
     chsh -s $(which zsh)
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-    python3 utils/append_zshrc.py
-    sudo ln -sf $PWD/scripts/* /usr/local/bin/
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-history-substring-search.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-history-substring-search
+    git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+    ln -sf $PWD/config/zshrc /home/$USER/.zshrc
+    for file in $PWD/scripts/*; do
+        if [[ $file != *.py ]]; then
+            sudo ln -sf "$file" /usr/local/bin/
+        fi
+    done
+    curl -sS https://starship.rs/install.sh | sh
+    ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 

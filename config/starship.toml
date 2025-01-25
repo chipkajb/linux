@@ -1,0 +1,35 @@
+# ~/.config/starship.toml
+
+# General Prompt Settings
+add_newline = false
+format = """
+  $directory\
+  $git_branch$git_status\
+  $character\
+"""
+
+# Character (Prompt Symbol)
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[x](bold red)"  # Red "x" for errors
+
+# Directory Module
+[directory]
+format = "[ $path ](bold fg:#ff79c6)"  # Show only the current folder
+truncate_to_repo = false  # Disable truncating to the repo root
+truncation_length = 1  # Always display only the last folder name
+
+# Git Branch
+[git_branch]
+format = " [$branch](bold fg:#8be9fd)"  # Show the branch name
+
+# Git Status
+[git_status]
+format = " ([$all_status$ahead_behind](bold fg:#8be9fd))"
+staged = "● "
+modified = "~ "
+untracked = "✚ "
+deleted = "✖ "
+conflicted = "⚔ "
+disabled = false  # Ensure the Git status module is enabled
+
