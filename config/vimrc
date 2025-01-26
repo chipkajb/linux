@@ -108,3 +108,7 @@ set updatetime=50 " shorten update time
 
 " keep cursor still
 nnoremap J  mzJ`z
+
+" make H and L go to the beginning and end of the line
+nnoremap H ^
+nnoremap L $
