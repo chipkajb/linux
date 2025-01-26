@@ -240,6 +240,11 @@ bar {
         }
 }
 
+# # polybar
+# exec_always --no-startup-id killall -q polybar
+# exec_always --no-startup-id polybar example
+# exec_always --no-startup-id polybar example > ~/.config/polybar/polybar.log 2>&1
+
 # lock screen
 bindsym $mod+Shift+x exec i3lock -i ~/Pictures/background.png -t
 
@@ -261,7 +266,9 @@ bindsym $mod+minus move workspace to output down
 # start rofi (a program launcher)
 bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config.rasi
 bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config.rasi
-exec compton
+
+# start picom (compositor)
+exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
 
 # setup-specific settings
 # ##### home #####
@@ -293,7 +300,7 @@ exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled"
 # open applications
 bindsym $mod+g exec google-chrome
 # bindsym $mod+c exec code
-bindsym $mod+c exec Cursor.AppImage
+bindsym $mod+c exec Cursor.AppImage --no-sandbox
 bindsym $mod+p exec pithos
 bindsym $mod+n exec nautilus
 bindsym $mod+m exec mongodb-compass

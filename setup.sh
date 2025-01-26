@@ -198,7 +198,6 @@ install_i3() {
         arandr \
         blueman \
         lxappearance \
-        compton \
         i3blocks \
         net-tools \
         bison \
@@ -240,6 +239,8 @@ install_i3() {
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/
     ln -sfn $PWD/config/dunst ~/.config/
+    ln -sfn $PWD/config/picom ~/.config/
+    ln -sfn $PWD/config/polybar ~/.config/
     sudo ln -sfn $PWD/config/i3/gpu_memory /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/wifi /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
