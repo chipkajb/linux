@@ -202,12 +202,25 @@ PROMPT_COMMAND='history -a'
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS
 
 # git configurations
-git config --global user.name "chipkajb"
-git config --global user.email "jbc274@cornell.edu"
-git config --global push.default simple
+if ! git config --global user.name &> /dev/null; then
+    git config --global user.name "chipkajb"
+fi
+
+if ! git config --global user.email &> /dev/null; then
+    git config --global user.email "jbc274@cornell.edu"
+fi
+
+if ! git config --global push.default &> /dev/null; then
+    git config --global push.default simple
+fi
+
 git_no_status_check () {
-    git config --add oh-my-zsh.hide-status 1
-    git config --add oh-my-zsh.hide-dirty 1
+    if ! git config --get oh-my-zsh.hide-status &> /dev/null; then
+        git config --add oh-my-zsh.hide-status 1
+    fi
+    if ! git config --get oh-my-zsh.hide-dirty &> /dev/null; then
+        git config --add oh-my-zsh.hide-dirty 1
+    fi
 }
 
 # add color to man pages
