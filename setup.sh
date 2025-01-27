@@ -202,6 +202,9 @@ install_i3() {
         net-tools \
         bison \
         flex \
+        pulseaudio \
+        pulseaudio-utils \
+        pavucontrol \
         libxcb-ewmh2 \
         libglib2.0-dev \
         libxcb1-dev \
