@@ -284,3 +284,9 @@ bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
 bindsym $mod+o exec obsidian
+
+# Hide the most recent notification using Alt+r
+bindsym Mod1+r exec --no-startup-id dunstctl close
+
+# Hide all displayed notifications using Alt+Space
+bindsym Mod1+space exec --no-startup-id dunstctl close-all
