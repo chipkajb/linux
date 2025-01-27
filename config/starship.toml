@@ -15,7 +15,7 @@ error_symbol = "[x](bold red)"  # Red "x" for errors
 
 # Directory Module
 [directory]
-format = "[ $path ](bold fg:#ff79c6)"  # Show only the current folder
+format = "[ $path ](bold fg:#b52bff)"  # Show only the current folder
 truncate_to_repo = false  # Disable truncating to the repo root
 truncation_length = 1  # Always display only the last folder name
 
