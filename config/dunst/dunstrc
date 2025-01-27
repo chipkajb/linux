@@ -24,8 +24,8 @@
     # dynamic width from 0 to 300
     # width = (0, 300)
     # constant width of 300
-    geometry = "400x100-30+20"
-    width = 300
+    geometry = "0x100-30+20"
+    width = 0
 
     # The maximum height of a single notification, excluding the frame.
     height = 100
