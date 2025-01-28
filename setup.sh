@@ -174,14 +174,7 @@ install_tmux() {
     sudo apt-get remove tmux -y
     sudo apt-get purge tmux -y
     rm -rf ~/.config/tmux 2> /dev/null
-    sudo apt-get install libevent-dev xclip ncurses-dev -y
-    wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
-    tar -xf tmux-3.3a.tar.gz
-    rm tmux-3.3a.tar.gz
-    cd tmux-3.3a && ./configure && make && sudo make install && cd ..
-    mkdir -p ~/software
-    rm -rf ~/software/tmux-3.3a 2> /dev/null
-    mv tmux-3.3a ~/software/
+    sudo apt-get install tmux libevent-dev xclip ncurses-dev -y
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     ln -s $PWD/config/tmux ~/.config/
