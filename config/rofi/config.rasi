@@ -176,7 +176,7 @@ window {
 
     anchor:         north;
     location:       center;
-    y-offset:       -9em;
+    y-offset:       -10em;
 
 
     children: [ inputbar, message, wrapper-mode-switcher, listview , pagerbox ];
