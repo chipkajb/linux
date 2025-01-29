@@ -23,8 +23,19 @@
   },
   {
     "key": "ctrl+shift+h",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "inDebugRepl"
+  },
+  {
+    "key": "ctrl+shift+h",
     "command": "-workbench.action.replaceInFiles"
   },
+  {
+    "key": "ctrl+shift+`",
+    "command": "workbench.debug.action.focusRepl",
+    "when": "editorTextFocus || terminalFocus"
+  },
+
 
   // Sidebar shortcuts
   {
