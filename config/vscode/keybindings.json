@@ -107,6 +107,16 @@
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "terminalFocus"
   },
+  {
+    "key": "ctrl+r",
+    "command": "null",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "-workbench.action.quickOpen",
+    "when": "terminalFocus"
+  },
 
   // Cursor
   {
