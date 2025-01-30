@@ -1,12 +1,27 @@
 import sys
 import os
 
-# Identify the current Python installation path
-python_lib = os.path.dirname(os.__file__)  # Gets the path to the current Python installation
-new_lib_dynload_path = os.path.join(python_lib, "lib-dynload")
+# Get environment variables set in .zshrc
+python_stdlib = os.environ.get("PYTHON_STDLIB")
+python_site_packages = os.environ.get("PYTHON_SITE_PACKAGES")
+python_lib_dynload = os.environ.get("PYTHON_LIB_DYNLOAD")
 
-# Remove all lib-dynload paths from sys.path
-sys.path = [p for p in sys.path if "lib-dynload" not in p]
+if python_stdlib and python_site_packages and python_lib_dynload:
+    # Override sys.path to remove system-level Python paths
+    sys.path = [python_stdlib, python_site_packages, python_lib_dynload]
 
-# Add the new lib-dynload path
-sys.path.append(new_lib_dynload_path)
+    # Force Python to use the correct stdlib location
+    sys.prefix = python_stdlib
+    sys.base_prefix = python_stdlib  # Ensure even virtualenvs use the right stdlib
+    sys.exec_prefix = python_stdlib  # Affects compiled C extensions
+
+    # Force Python's built-in module loader to look in the correct stdlib
+    sys.modules["os"].__file__ = os.path.join(python_stdlib, "os.py")
+    sys.modules["sys"].__file__ = os.path.join(python_stdlib, "sys.py")
+
+# # Debugging output
+# print("sys.prefix:", sys.prefix)
+# print("sys.base_prefix:", sys.base_prefix)
+# print("sys.exec_prefix:", sys.exec_prefix)
+# print("sys.path:", sys.path)
+# print("os.__file__:", sys.modules["os"].__file__)

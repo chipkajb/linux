@@ -127,7 +127,12 @@ else
     fi
 fi
 unset __conda_setup
+
+if [ -f "/home/jordan/software/anaconda3/etc/profile.d/mamba.sh" ]; then
+    . "/home/jordan/software/anaconda3/etc/profile.d/mamba.sh"
+fi
 # <<< conda initialize <<<
+conda deactivate
 
 # set paths
 export PATH=/usr/local/cuda/bin:$PATH
@@ -149,23 +154,53 @@ if [ -z "$VSCODE_PID" ]; then
     conda deactivate
 fi
 
-# python startup
+# Python startup
 export PYTHONSTARTUP=~/.python_startup.py
-python3() {
-    # Direct absolute path to the startup script for testing
-    startup_file="$HOME/.python_startup.py"
 
-    # Execute the startup script if it exists
-    if [ -f "$startup_file" ]; then
-        if [ $# -eq 0 ]; then
-            command python3
-        else
-            command python3 -c "exec(open('$startup_file').read()); exec(open('$1').read())" "${@:2}"
-        fi
+python3_func() {
+    # Temporarily disable alias to get the real python3 path
+    unalias python3 2>/dev/null
+    python_bin=$(command -v python3)  # Get the actual binary path
+
+    # Ensure we found a valid Python binary
+    if [ -z "$python_bin" ]; then
+        echo "Error: python3 not found in PATH."
+        return 1
+    fi
+
+    # Get the base Python installation path (parent of "bin/")
+    python_base_dir=$(dirname $(dirname "$python_bin"))
+
+    # Explicitly set the correct prefix to the Anaconda environment
+    export PYTHONPREFIX="$python_base_dir"
+
+    # Explicitly construct paths
+    python_stdlib="$python_base_dir/lib/python$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')"
+    python_site_packages="$python_stdlib/site-packages"
+    python_lib_dynload="$python_stdlib/lib-dynload"
+
+    # Ensure paths exist
+    if [ ! -d "$python_stdlib" ] || [ ! -d "$python_site_packages" ] || [ ! -d "$python_lib_dynload" ]; then
+        echo "Error: Computed Python paths do not exist."
+        return 1
+    fi
+
+    # Export paths for the startup script
+    export PYTHON_STDLIB="$python_stdlib"
+    export PYTHON_SITE_PACKAGES="$python_site_packages"
+    export PYTHON_LIB_DYNLOAD="$python_lib_dynload"
+
+    # Execute Python with the startup file
+    if [ $# -eq 0 ]; then
+        command "$python_bin"
     else
-        echo "Startup script not found: $startup_file"
+        command "$python_bin" -c "exec(open('$PYTHONSTARTUP').read()); exec(open('$1').read())" "${@:2}"
     fi
 }
+
+# Alias python3 to use the function
+alias python3=python3_func
+
 
 # starship
 eval "$(starship init zsh)"
