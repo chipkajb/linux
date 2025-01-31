@@ -196,6 +196,9 @@ python3_func() {
     else
         command "$python_bin" -c "exec(open('$PYTHONSTARTUP').read()); exec(open('$1').read())" "${@:2}"
     fi
+
+    # restore alias
+    alias python3=python3_func
 }
 
 # Alias python3 to use the function
