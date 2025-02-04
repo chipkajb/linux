@@ -126,9 +126,9 @@ install_neovim() {
     printf "Installing neovim...\n"
     sudo apt-get update
     sudo apt-get install -y libfuse2 python3-pip
-    wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
-    sudo mv ./nvim.appimage /usr/bin
-    sudo chmod 764 /usr/bin/nvim.appimage
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
+    sudo mv ./nvim-linux-x86_64.appimage /usr/bin
+    sudo chmod 764 /usr/bin/nvim-linux-x86_64.appimage
     rm -rf ~/.local/share/nvim/ 2> /dev/null
     rm -rf ~/.config/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
@@ -141,7 +141,7 @@ install_neovim() {
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
     sudo python3 -m pip install black
-    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim.appimage --version | head -n 1)${NC}\n"
+    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim-linux-x86_64.appimage --version | head -n 1)${NC}\n"
 }
 
 # install vs code
