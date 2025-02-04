@@ -226,7 +226,7 @@ install_i3() {
     rm -rf rofi-1.7.5.tar.gz
     cd rofi-1.7.5 && mkdir -p build && cd build && ../configure --disable-check && make && sudo make install && cd ../..
     rm -rf ~/software/rofi-1.7.5 2> /dev/null
-    mv rofi-1.7.5 ~/software/
+    mv rofi-1.7.5 ~/software/rofi-1.7.5
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
