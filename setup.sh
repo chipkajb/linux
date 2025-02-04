@@ -77,8 +77,9 @@ prompt_user() {
 install_zsh() {
     printf "Installing zsh...\n"
     sudo apt-get update
-    sudo apt install zsh exa fzf -y
+    sudo apt install zsh eza fzf -y
     chsh -s $(which zsh)
+    rm -rf ~/.oh-my-zsh 2> /dev/null
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
@@ -90,7 +91,7 @@ install_zsh() {
             sudo ln -sf "$file" /usr/local/bin/
         fi
     done
-    curl -sS https://starship.rs/install.sh | sh
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f
     ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
