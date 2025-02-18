@@ -77,8 +77,9 @@ prompt_user() {
 install_zsh() {
     printf "Installing zsh...\n"
     sudo apt-get update
-    sudo apt install zsh exa fzf -y
+    sudo apt install zsh eza fzf -y
     chsh -s $(which zsh)
+    rm -rf ~/.oh-my-zsh 2> /dev/null
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
@@ -90,7 +91,7 @@ install_zsh() {
             sudo ln -sf "$file" /usr/local/bin/
         fi
     done
-    curl -sS https://starship.rs/install.sh | sh
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f
     ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
@@ -125,9 +126,9 @@ install_neovim() {
     printf "Installing neovim...\n"
     sudo apt-get update
     sudo apt-get install -y libfuse2 python3-pip
-    wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
-    sudo mv ./nvim.appimage /usr/bin
-    sudo chmod 764 /usr/bin/nvim.appimage
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
+    sudo mv ./nvim-linux-x86_64.appimage /usr/bin
+    sudo chmod 764 /usr/bin/nvim-linux-x86_64.appimage
     rm -rf ~/.local/share/nvim/ 2> /dev/null
     rm -rf ~/.config/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
@@ -140,7 +141,7 @@ install_neovim() {
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
     sudo python3 -m pip install black
-    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim.appimage --version | head -n 1)${NC}\n"
+    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim-linux-x86_64.appimage --version | head -n 1)${NC}\n"
 }
 
 # install vs code
@@ -226,7 +227,7 @@ install_i3() {
     rm -rf rofi-1.7.5.tar.gz
     cd rofi-1.7.5 && mkdir -p build && cd build && ../configure --disable-check && make && sudo make install && cd ../..
     rm -rf ~/software/rofi-1.7.5 2> /dev/null
-    mv rofi-1.7.5 ~/software/
+    mv rofi-1.7.5 ~/software/rofi-1.7.5
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $PWD/config/i3 ~/.config/
