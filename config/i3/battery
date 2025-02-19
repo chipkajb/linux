@@ -21,12 +21,29 @@ my $status;
 my $percent;
 my $full_text;
 my $short_text;
-my $bat_number = $ENV{BLOCK_INSTANCE} || 0;
 
-# read the first line of the "acpi" command output
-open (ACPI, "acpi -b | grep 'Battery $bat_number' |") or die;
-$acpi = <ACPI>;
-close(ACPI);
+# Get the output of acpi -b and find the first battery not at 0%
+my $acpi_output = `acpi -b`;
+my @batteries = split("\n", $acpi_output);
+
+foreach my $line (@batteries) {
+    # Check for a battery with non-zero percentage
+    if ($line =~ /(Battery \d+): ([\w ]+), (\d+)%/) {
+        my ($battery, $status, $percent) = ($1, $2, $3);
+
+        # If percentage is not zero, use this one
+        if ($percent > 0) {
+            $acpi = $line;
+            last;
+        }
+    }
+}
+
+# If no non-zero battery was found, show a warning
+if (!defined $acpi) {
+    die "No battery with charge found\n";
+}
+
 
 # fail on unexpected output
 if ($acpi !~ /: (\w+), (\d+)%/) {
