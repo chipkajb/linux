@@ -277,7 +277,7 @@ set $monitor_left "DP-1-0"
 set $monitor_right "DP-1-2"
 set $monitor_top "HDMI-1-0"
 set $monitor_bottom "eDP-1"
-exec_always xrandr --output eDP-1 --primary --mode 1920x1080 --pos 2880x1440 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-1-0 --mode 2560x1440 --pos 0x0 --rotate normal --output DP-1-1 --off --output HDMI-1-0 --mode 2560x1440 --pos 2560x0 --rotate normal --output DP-1-2 --mode 2560x1440 --pos 5120x0 --rotate normal --output DP-1-3 --off
+exec always xrandr --output eDP-1 --primary --mode 1920x1080 --pos 2320x2560 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-1-0 --mode 2560x1440 --pos 0x560 --rotate normal --output DP-1-1 --off --output HDMI-1-0 --mode 2560x1440 --pos 2560x0 --rotate left --output DP-1-2 --mode 2560x1440 --pos 4000x560 --rotate normal --output DP-1-3 --off
 workspace $workspace1 output $monitor_left
 workspace $workspace2 output $monitor_bottom
 workspace $workspace3 output $monitor_top
