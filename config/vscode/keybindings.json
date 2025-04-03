@@ -24,6 +24,10 @@
     "command": "workbench.debug.action.focusRepl",
     "when": "editorTextFocus || terminalFocus"
   },
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.moveActiveEditorGroupDown"
+  },
 
   // Sidebar shortcuts
   {
