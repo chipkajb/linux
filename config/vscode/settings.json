@@ -138,8 +138,18 @@
   "security.workspace.trust.untrustedFiles": "open",
   "workbench.startupEditor": "none",
 
+  // sound
+  "accessibility.signals.terminalCommandFailed": {
+    "sound": "off",
+    "announcement": "off"
+  },
+
   // other stuff
   "workbench.editor.empty.hint": "hidden",
   "git.autofetch": true,
-  "explorer.confirmDragAndDrop": false
+  "explorer.confirmDragAndDrop": false,
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "file:/**/*.parquet": "jupyter-data-wrangler"
+  }
 }
