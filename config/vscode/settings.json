@@ -139,10 +139,7 @@
   "workbench.startupEditor": "none",
 
   // sound
-  "accessibility.signals.terminalCommandFailed": {
-    "sound": "off",
-    "announcement": "off"
-  },
+  "accessibility.signalOptions.volume": 0,
 
   // other stuff
   "workbench.editor.empty.hint": "hidden",
