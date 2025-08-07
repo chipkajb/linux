@@ -146,5 +146,9 @@
   {
     "key": "ctrl+l",
     "command": "composerMode.chat"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "composerMode.background"
   }
 ]
