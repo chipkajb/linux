@@ -54,7 +54,13 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
    f. [Obsidian](https://obsidian.md/download)
 
-   g. [Pithos](https://pithos.github.io/#install)
+   g. [Pithos](https://ubuntuhandbook.org/index.php/2024/03/pithos-pandora-radio-client-released-1-6-2/) - use Option 2
+
+   ```
+   sudo add-apt-repository ppa:ubuntuhandbook1/apps
+   sudo apt update
+   sudo apt install pithos
+   ```
 
    h. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
 
