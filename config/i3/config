@@ -136,7 +136,7 @@ set $workspace6 "6: 📋 Notes"
 set $workspace7 "7: 🎵 Music"
 set $workspace8 "8: ⚡ Terminal 2"
 set $workspace9 "9: 🔧 Code 2"
-set $workspace10 "10: ⚙️ Settings"
+set $workspace10 "10: 💾 Database"
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
