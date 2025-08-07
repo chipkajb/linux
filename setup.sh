@@ -140,7 +140,7 @@ install_neovim() {
     sudo apt-get install ripgrep -y
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
-    sudo python3 -m pip install black
+    pipx install black
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim-linux-x86_64.appimage --version | head -n 1)${NC}\n"
 }
 
@@ -154,6 +154,7 @@ install_vscode() {
     sudo apt install code -y
     code --install-extension Atishay-Jain.All-Autocomplete
     code --install-extension ms-python.black-formatter
+    code --install-extension anysphere.pyright
     code --install-extension IronGeek.vscode-env
     code --install-extension ZainChen.json
     code --install-extension esbenp.prettier-vscode
@@ -163,7 +164,15 @@ install_vscode() {
     code --install-extension tickleforce.scrolloff
     code --install-extension vscodevim.vim
     code --install-extension Ransh.ransh
+    code --install-extension jdinhlife.gruvbox
     code --install-extension charliermarsh.ruff
+    code --install-extension matangover.mypy
+    code --install-extension lucien-martijn.parquet-visualizer
+    code --install-extension ms-python.debugpy
+    code --install-extension ms-vscode-remote.remote-ssh
+    code --install-extension ms-vscode-remote.remote-ssh-edit
+    code --install-extension ms-vscode-remote.remote-explorer
+    code --install-extension tomoki1207.pdf
     ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
@@ -227,6 +236,7 @@ install_i3() {
     rm -rf rofi-1.7.5.tar.gz
     cd rofi-1.7.5 && mkdir -p build && cd build && ../configure --disable-check && make && sudo make install && cd ../..
     rm -rf ~/software/rofi-1.7.5 2> /dev/null
+    mkdir -p ~/software
     mv rofi-1.7.5 ~/software/rofi-1.7.5
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
