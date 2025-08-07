@@ -9,9 +9,9 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
    ```
    sudo apt update && sudo apt upgrade
    ```
-   
+
 2. Make `workspace` directory
-   
+
    ```
    mkdir workspace
    ```
@@ -21,43 +21,44 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
    ```
    sudo apt install git neovim libfuse2 flatpak libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0 curl pipx
    ```
-   
-5. Clone [this repo](https://github.com/chipkajb/linux) in the new `workspace` directory
-   
+
+4. Clone [this repo](https://github.com/chipkajb/linux) in the new `workspace` directory
+
    a. First, add an ssh key for the new computer in your github account
-   
+
    ```
    cd ~/.ssh && ssh-keygen
    ```
-   
+
    b. Copy the output of the `pub` file that was generated
-   
+
    c. Paste it as a new ssh key [here](https://github.com/settings/keys)
-   
+
    d. Install git and clone the repo
-   
+
    ```
    cd ~/workspace && git clone git@github.com:chipkajb/linux.git
    ```
 
-6. Apps to install
+5. Apps to install
 
    a. [Slack](https://snapcraft.io/slack)
 
    b. [Cursor](https://cursor.com/)
 
-   c. [Anaconda](https://www.anaconda.com/download/success)
-   
-   d. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
+   c. [Warp](https://app.warp.dev/get_warp?package=deb)
 
-   e. [Obsidian](https://obsidian.md/download)
+   d. [Anaconda](https://www.anaconda.com/download/success)
 
-   f. [Pithos](https://pithos.github.io/#install)
+   e. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
-   g. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
+   f. [Obsidian](https://obsidian.md/download)
 
-   h. [Zoom](https://zoom.us/download)
-   
+   g. [Pithos](https://pithos.github.io/#install)
+
+   h. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
+
+   i. [Zoom](https://zoom.us/download)
 
 ## Additional Setup
 
