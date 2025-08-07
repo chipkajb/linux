@@ -84,6 +84,8 @@ sudo update-initramfs -u
 
 # completely remove previous Nvidia driver (see NVIDIA_DRIVERS.md)
 
+# disable Secure Boot in UEFI/BIOS settings (press F2 on boot, or maybe F12)
+
 # reboot into text mode (i.e. without graphics interface)
 
 # stop display manager
@@ -97,4 +99,6 @@ sudo service gdm start
 
 # reboot
 reboot
+
+# re-enable Secure Boot in UEFI/BIOS settings (press F2 on boot, or maybe F12)
 ```
