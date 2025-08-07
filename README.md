@@ -19,7 +19,7 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 3. Install packages
 
    ```
-   sudo apt install git neovim libfuse2
+   sudo apt install git neovim libfuse2 flatpak libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0 curl pipx
    ```
    
 5. Clone [this repo](https://github.com/chipkajb/linux) in the new `workspace` directory
@@ -45,19 +45,21 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
    a. [Slack](https://snapcraft.io/slack)
 
    b. [Cursor](https://cursor.com/)
+
+   c. [Anaconda](https://www.anaconda.com/download/success)
    
-   c. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
+   d. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
-   d. [Obsidian](https://obsidian.md/download)
+   e. [Obsidian](https://obsidian.md/download)
 
-   e. [Pithos](https://pithos.github.io/#install)
+   f. [Pithos](https://pithos.github.io/#install)
 
-   f. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
+   g. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
 
-   g. [Zoom](https://zoom.us/download)
+   h. [Zoom](https://zoom.us/download)
    
 
-## Optional Setup Script
+## Additional Setup
 
 Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
 
