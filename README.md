@@ -82,6 +82,8 @@ echo 'blacklist nouveau' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.con
 echo 'options nouveau modeset=0' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.conf
 sudo update-initramfs -u
 
+# completely remove previous Nvidia driver (see NVIDIA_DRIVERS.md)
+
 # reboot into text mode (i.e. without graphics interface)
 
 # stop display manager
