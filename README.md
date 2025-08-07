@@ -74,7 +74,7 @@ Run `./setup.sh` to setup various aspects of my preferred Linux environment. You
 
 ```
 # download cuda toolkit runfile
-wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run
+wget https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda_13.0.0_580.65.06_linux.run
 
 # disable nouveau drivers
 sudo touch /usr/lib/modprobe.d/blacklist-nouveau.conf
@@ -88,7 +88,7 @@ sudo update-initramfs -u
 sudo service gdm stop
 
 # install cuda toolkit
-sudo sh cuda_11.7.1_515.65.01_linux.run
+sudo sh cuda_13.0.0_580.65.06_linux.run
 
 # start display manager
 sudo service gdm start
