@@ -141,6 +141,7 @@ install_neovim() {
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
     pipx install black
+    pipx install mypy
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim-linux-x86_64.appimage --version | head -n 1)${NC}\n"
 }
 
@@ -229,7 +230,9 @@ install_i3() {
         libgdk-pixbuf2.0-dev \
         libpango1.0-dev \
         numlockx \
+        lm-sensors \
         fonts-font-awesome -y
+    fc-cache -fv
     rm -rf rofi-1.7.5 2> /dev/null
     wget https://github.com/davatorium/rofi/releases/download/1.7.5/rofi-1.7.5.tar.gz
     tar xf rofi-1.7.5.tar.gz
