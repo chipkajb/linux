@@ -292,6 +292,9 @@ workspace $workspace10 output $monitor_right
 # enable touchpad tapping
 exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 
+# hide mouse cursor
+exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
+
 # open applications
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec Cursor.AppImage --no-sandbox
