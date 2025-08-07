@@ -282,7 +282,7 @@ install_alacritty() {
 misc_setup() {
     printf "Miscellaneous setup...\n"
     sudo apt-get update
-    sudo apt install python3-gi -y
+    sudo apt install python3-gi unclutter-xfixes flameshot simplescreenrecorder -y
     ln -s $PWD/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
