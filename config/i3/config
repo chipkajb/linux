@@ -164,18 +164,18 @@ bindsym $mod+Shift+0 move container to workspace $workspace10
 
 # make applications open in specific workspaces
 assign [class="Google-chrome"] $workspace1
-assign [class="Alacritty"] $workspace2
 assign [class="dev.warp.Warp"] $workspace2
 assign [class="Code"] $workspace3
 assign [class="Cursor"] $workspace3
 assign [class="Slack"] $workspace4
 assign [class="org.gnome.Nautilus"] $workspace5
+assign [class="Alacritty"] $workspace6
 assign [class="Gedit"] $workspace6
 assign [class="obsidian"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
-assign [class="Gnome-control-center"] $workspace10
+assign [class="MongoDB Compass"] $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
