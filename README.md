@@ -66,6 +66,8 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
    i. [Zoom](https://zoom.us/download)
 
+   j. [VLC](https://www.videolan.org/vlc/download-ubuntu.html)
+
 ## Additional Setup
 
 Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
