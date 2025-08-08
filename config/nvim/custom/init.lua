@@ -68,3 +68,6 @@ vim.cmd([[
 vim.keymap.set('n', '<leader>1', 'I# <Esc>', { desc = 'H1 header' })
 vim.keymap.set('n', '<leader>2', 'I## <Esc>', { desc = 'H2 header' })
 vim.keymap.set('n', '<leader>3', 'I### <Esc>', { desc = 'H3 header' })
+
+-- Clipboard
+vim.opt.clipboard = "unnamedplus"
