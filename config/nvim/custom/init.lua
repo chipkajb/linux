@@ -19,6 +19,9 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
+-- Disable the distracting red color column
+vim.opt.colorcolumn = ""
+
 -- Enable syntax highlighting
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
@@ -45,8 +48,21 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.conceallevel = 1  -- Partial syntax hiding
     vim.opt_local.spell = true      -- Enable spellcheck
     vim.opt_local.textwidth = 80    -- Line wrapping for prose
+    vim.opt_local.colorcolumn = ""  -- Remove distracting color column for writing
+    
+    -- Optional: Set a different background for better writing experience
+    vim.cmd([[
+      highlight Normal guibg=#1e1e1e
+      highlight ColorColumn NONE
+    ]])
   end,
 })
+
+-- Set subtle color column for non-markdown files
+vim.opt.colorcolumn = "80"
+vim.cmd([[
+  highlight ColorColumn guibg=#2d2d2d ctermbg=236
+]])
 
 -- Quick markdown commands
 vim.keymap.set('n', '<leader>1', 'I# <Esc>', { desc = 'H1 header' })
