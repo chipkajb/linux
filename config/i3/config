@@ -310,3 +310,13 @@ bindsym Mod1+r exec --no-startup-id dunstctl close
 
 # Hide all displayed notifications using Alt+Space
 bindsym Mod1+space exec --no-startup-id dunstctl close-all
+
+# force dark mode for gtk apps
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-blue-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme 'Yaru-blue-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-name 'Sans 10'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-antialiasing 'rgba'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-hinting 'medium'
+exec_always --no-startup-id gsettings set org.gnome.desktop.sound event-sounds true
+exec_always --no-startup-id ~/.config/i3/set-theme.sh

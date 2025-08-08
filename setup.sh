@@ -255,6 +255,8 @@ install_i3() {
     ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
     ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-3.0/gtkfilechooser.ini
     ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-4.0/gtkfilechooser.ini
+    ln -sfn $PWD/config/gtk/set_theme.sh ~/.config/gtk-4.0/set_theme.sh
+    chmod +x ~/.config/gtk-4.0/set_theme.sh
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/
     ln -sfn $PWD/config/dunst ~/.config/

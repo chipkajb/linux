@@ -296,6 +296,8 @@ alias vf='vim $(fzf)'
 alias df='df -h'
 alias du='du -h'
 
+# dark mode for gtk apps
+export GTK_THEME="Yaru-blue-dark:dark"
 
 # Extracts any archive(s) (if unp isn't installed)
 extract () {
