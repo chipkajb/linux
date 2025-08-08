@@ -246,7 +246,15 @@ install_i3() {
     ln -s $PWD/config/i3 ~/.config/
     ln -s $PWD/assets/background.png ~/Pictures/
     ln -sfn $PWD/assets/fonts ~/.fonts
-    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0
+    mkdir -p ~/.config/gtk-2.0
+    mkdir -p ~/.config/gtk-3.0
+    mkdir -p ~/.config/gtk-4.0
+    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-2.0/settings.ini
+    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0/settings.ini
+    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-4.0/settings.ini
+    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
+    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-3.0/gtkfilechooser.ini
+    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-4.0/gtkfilechooser.ini
     ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
     ln -sfn $PWD/config/rofi ~/.config/
     ln -sfn $PWD/config/dunst ~/.config/
