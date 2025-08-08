@@ -296,8 +296,10 @@ alias vf='vim $(fzf)'
 alias df='df -h'
 alias du='du -h'
 
-# dark mode for gtk apps
-export GTK_THEME="Yaru-blue-dark:dark"
+# Force dark theme for all GTK apps in i3
+if [[ "$XDG_CURRENT_DESKTOP" == "i3" ]] || [[ "$DESKTOP_SESSION" == "i3" ]] || [[ -z "$XDG_CURRENT_DESKTOP" ]]; then
+    export GTK_THEME=Yaru-blue-dark:dark
+fi
 
 # Extracts any archive(s) (if unp isn't installed)
 extract () {

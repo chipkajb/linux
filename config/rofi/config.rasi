@@ -7,6 +7,8 @@ configuration {
     scroll-method:			0;
     disable-history:			false;
     sidebar-mode:			false;
+    run-command: "env GTK_THEME=Yaru-blue-dark:dark {cmd}";
+    drun-command: "env GTK_THEME=Yaru-blue-dark:dark {cmd}";
 }
 
 @import "~/.config/rofi/dark_transparent_colors.rasi"

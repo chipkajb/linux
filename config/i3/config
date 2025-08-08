@@ -299,7 +299,7 @@ exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec Cursor.AppImage --no-sandbox
 bindsym $mod+p exec pithos
-bindsym $mod+n exec nautilus
+bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
@@ -320,3 +320,5 @@ exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-antia
 exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-hinting 'medium'
 exec_always --no-startup-id gsettings set org.gnome.desktop.sound event-sounds true
 exec_always --no-startup-id ~/.config/i3/set-theme.sh
+exec_always --no-startup-id "export GTK_THEME=Yaru-blue-dark:dark"
+exec_always --no-startup-id systemctl --user set-environment GTK_THEME=Yaru-blue-dark:dark
