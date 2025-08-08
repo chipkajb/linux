@@ -99,6 +99,4 @@ sudo service gdm start
 
 # reboot
 reboot
-
-# re-enable Secure Boot in UEFI/BIOS settings (press F2 on boot, or maybe F12)
 ```
