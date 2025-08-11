@@ -77,7 +77,10 @@ prompt_user() {
 install_zsh() {
     printf "Installing zsh...\n"
     sudo apt-get update
-    sudo apt install zsh eza fzf -y
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    source ~/.cargo/env
+    cargo install eza
+    sudo apt install zsh fzf -y
     chsh -s $(which zsh)
     rm -rf ~/.oh-my-zsh 2> /dev/null
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
