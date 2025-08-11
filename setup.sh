@@ -293,6 +293,7 @@ misc_setup() {
     printf "Miscellaneous setup...\n"
     sudo apt-get update
     sudo apt install python3-gi unclutter-xfixes flameshot simplescreenrecorder gnome-tweaks -y
+    sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
     ln -s $PWD/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
