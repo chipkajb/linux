@@ -136,8 +136,10 @@ conda deactivate
 
 # set paths
 export PATH=/usr/local/cuda/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/software/anaconda3/envs/mambaforge/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
@@ -208,23 +210,6 @@ alias python3=python3_func
 # starship
 eval "$(starship init zsh)"
 
-# aliases
-alias home='cd ~'
-alias root='cd /'
-alias ..='cd ..'
-alias ...='cd ..; cd ..'
-alias ....='cd ..; cd ..; cd ..'
-alias .....='cd ..; cd ..; cd ..; cd ..'
-alias o=xdg-open
-alias vim='/usr/bin/nvim-linux-x86_64.appimage'
-alias nvim='/usr/bin/nvim-linux-x86_64.appimage'
-alias vimrc='vim ~/.vimrc'
-alias bashrc='vim ~/.bashrc'
-alias zshrc='vim ~/.zshrc'
-alias grep='grep --color=always'
-alias python=python3
-alias pip=pip3
-
 # set default editor
 export EDITOR=vim
 export VISUAL=vim
@@ -270,31 +255,70 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-# search files in the current folder
-alias f="find . | grep "
+# navigation aliases
+alias home='cd ~'
+alias root='cd /'
+alias ..='cd ..'
+alias ...='cd ..; cd ..'
+alias ....='cd ..; cd ..; cd ..'
+alias .....='cd ..; cd ..; cd ..; cd ..'
 
-# helpful commands to count files, print disk space in folder, etc.
-alias countfiles="for t in files links directories; do echo \`find . -type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
-alias diskspace="du -S | sort -n -r |more"
+# file operations and viewing aliases
+alias o='xdg-open'
+alias vim='/usr/bin/nvim-linux-x86_64.appimage'
+alias nvim='/usr/bin/nvim-linux-x86_64.appimage'
+alias cat='batcat --style=header,grid'
+alias find='fd'
+alias grep='rg --color=always'
+alias f='fd . | rg'
+
+# config file editing aliases
+alias vimrc='vim ~/.vimrc'
+alias bashrc='vim ~/.bashrc'
+alias zshrc='vim ~/.zshrc'
+
+# Python aliases
+alias python='python3'
+alias pip='pip3'
+
+# directory listings aliases
+alias ls='eza'
+alias ll='eza -lh'
+alias l.='eza -a'
+alias la='eza -lha'
+alias lt='eza --tree --level=2 --git'
+
+# file search and fuzzy finding aliases
+alias ff='fzf --preview "bat --color=always {}"'
+alias vf='vim $(fzf)'
+
+# system information and monitoring aliases
+alias countfiles="for t in files links directories; do echo \`fd --type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
+alias diskspace="du -S | sort -n -r | more"
 alias folders='du -h --max-depth=1'
 alias foldersize='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
 alias tree='tree -CAhF --dirsfirst'
 alias treed='tree -CAFd'
 alias mountedinfo='df -hT'
-
-## Show hidden files ##
-alias l.='ls -d .* --color=auto'
-
-## Other aliases ##
-alias ls='eza'
-alias ll='eza -lh'
-alias l.='eza -a'
-alias la='eza -lha'
-alias ff='fzf --preview "cat {}"'
-alias vf='vim $(fzf)'
 alias df='df -h'
 alias du='du -h'
+alias top='htop'
+alias gpu='nvidia-smi'
+alias ports='lsof -i'
+alias processes='htop'
 
+# enhanced commands
+alias rsync='rsync --progress'
+alias tail='tail -f'
+
+# git shortcuts
+alias gst='git status'
+alias glog='git log --oneline --graph'
+
+# Force dark theme for all GTK apps in i3
+if [[ "$XDG_CURRENT_DESKTOP" == "i3" ]] || [[ "$DESKTOP_SESSION" == "i3" ]] || [[ -z "$XDG_CURRENT_DESKTOP" ]]; then
+    export GTK_THEME=Yaru-blue-dark:dark
+fi
 
 # Extracts any archive(s) (if unp isn't installed)
 extract () {

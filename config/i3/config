@@ -127,16 +127,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $workspace1 "1: Web   "
-set $workspace2 "2: Terminal   "
-set $workspace3 "3: Code   "
-set $workspace4 "4: Messages   "
-set $workspace5 "5: Files   "
-set $workspace6 "6: Notes   "
-set $workspace7 "7: Music   "
-set $workspace8 "8: Misc 1  "
-set $workspace9 "9: Misc 2  "
-set $workspace10 "10: Settings   "
+set $workspace1 "1: 🌍 Web"
+set $workspace2 "2: ⚫ Terminal"
+set $workspace3 "3: 💻 Code"
+set $workspace4 "4: 💬 Messages"
+set $workspace5 "5: 📁 Files"
+set $workspace6 "6: 📝 Notes"
+set $workspace7 "7: 🎵 Music"
+set $workspace8 "8: ⚡ Terminal 2"
+set $workspace9 "9: 🔧 Code 2"
+set $workspace10 "10: 💾 Database"
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -164,18 +164,18 @@ bindsym $mod+Shift+0 move container to workspace $workspace10
 
 # make applications open in specific workspaces
 assign [class="Google-chrome"] $workspace1
-assign [class="Alacritty"] $workspace2
 assign [class="dev.warp.Warp"] $workspace2
 assign [class="Code"] $workspace3
 assign [class="Cursor"] $workspace3
 assign [class="Slack"] $workspace4
 assign [class="org.gnome.Nautilus"] $workspace5
+assign [class="Alacritty"] $workspace6
 assign [class="Gedit"] $workspace6
 assign [class="obsidian"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
-assign [class="Gnome-control-center"] $workspace10
+assign [class="MongoDB Compass"] $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -273,8 +273,8 @@ bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config.rasi
 exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
 
 # office monitor setup
-set $monitor_left "DP-1-0"
-set $monitor_right "DP-1-2"
+set $monitor_left "DP-3"
+set $monitor_right "DP-2"
 set $monitor_top "HDMI-1-0"
 set $monitor_bottom "eDP-1"
 exec always xrandr --output eDP-1 --primary --mode 1920x1080 --pos 2320x2560 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-1-0 --mode 2560x1440 --pos 0x560 --rotate normal --output DP-1-1 --off --output HDMI-1-0 --mode 2560x1440 --pos 2560x0 --rotate left --output DP-1-2 --mode 2560x1440 --pos 4000x560 --rotate normal --output DP-1-3 --off
@@ -292,11 +292,14 @@ workspace $workspace10 output $monitor_right
 # enable touchpad tapping
 exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 
+# hide mouse cursor
+exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
+
 # open applications
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec Cursor.AppImage --no-sandbox
 bindsym $mod+p exec pithos
-bindsym $mod+n exec nautilus
+bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
@@ -307,3 +310,15 @@ bindsym Mod1+r exec --no-startup-id dunstctl close
 
 # Hide all displayed notifications using Alt+Space
 bindsym Mod1+space exec --no-startup-id dunstctl close-all
+
+# force dark mode for gtk apps
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-blue-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme 'Yaru-blue-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-name 'Sans 10'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-antialiasing 'rgba'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface font-hinting 'medium'
+exec_always --no-startup-id gsettings set org.gnome.desktop.sound event-sounds true
+exec_always --no-startup-id ~/.config/i3/set-theme.sh
+exec_always --no-startup-id "export GTK_THEME=Yaru-blue-dark:dark"
+exec_always --no-startup-id systemctl --user set-environment GTK_THEME=Yaru-blue-dark:dark
