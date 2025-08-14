@@ -50,6 +50,12 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
    d. [Anaconda](https://www.anaconda.com/download/success)
 
+   ```
+   # to install mamba also...
+   conda activate
+   conda install mamba -n base -c conda-forge -y
+   ```
+
    e. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
    f. [Obsidian](https://obsidian.md/download)
