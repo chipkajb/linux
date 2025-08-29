@@ -22,6 +22,7 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "python.languageServer": "Pylance",
 
   // scrolloff
   "scrolloff.scrolloff": 8,
@@ -120,6 +121,7 @@
 
   // git
   "git.confirmSync": false,
+  "git.autofetch": true,
 
   // terminal
   "terminal.integrated.inheritEnv": false,
@@ -141,12 +143,23 @@
   // sound
   "accessibility.signalOptions.volume": 0,
 
-  // other stuff
-  "workbench.editor.empty.hint": "hidden",
-  "git.autofetch": true,
-  "explorer.confirmDragAndDrop": false,
+  // file associations
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
-    "file:/**/*.parquet": "jupyter-data-wrangler"
-  }
+    "file:/**/*.parquet": "jupyter-data-wrangler",
+    "*.csv": "default"
+  },
+
+  // remote
+  "remote.SSH.remotePlatform": {
+    "Hercules": "linux"
+  },
+  "remote.autoForwardPortsSource": "hybrid",
+
+  // debug
+  "debug.focusWindowOnBreak": false,
+
+  // other stuff
+  "workbench.editor.empty.hint": "hidden",
+  "explorer.confirmDragAndDrop": false
 }
