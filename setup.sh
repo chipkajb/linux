@@ -179,6 +179,8 @@ install_vscode() {
     code --install-extension tomoki1207.pdf
     ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
+    ln -sfn $PWD/config/vscode/settings.json ~/.config/Cursor/User/
+    ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Cursor/User/
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
 }
 
