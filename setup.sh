@@ -96,6 +96,8 @@ install_zsh() {
     done
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f
     ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
