@@ -227,9 +227,10 @@ alias o='xdg-open'
 alias vim='/usr/bin/nvim-linux-x86_64.appimage'
 alias nvim='/usr/bin/nvim-linux-x86_64.appimage'
 alias cat='batcat --style=header,grid'
-alias find='fd'
+alias find='fdfind'
 alias grep='rg --color=always'
-alias f='fd . | rg'
+alias f='fdfind . | rg'
+alias fd='fdfind'
 
 # config file editing aliases
 alias vimrc='vim ~/.vimrc'
@@ -252,7 +253,7 @@ alias ff='fzf --preview "bat --color=always {}"'
 alias vf='vim $(fzf)'
 
 # system information and monitoring aliases
-alias countfiles="for t in files links directories; do echo \`fd --type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
+alias countfiles="for t in files links directories; do echo \`fdfind --type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
 alias diskspace="du -S | sort -n -r | more"
 alias folders='du -h --max-depth=1'
 alias foldersize='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
