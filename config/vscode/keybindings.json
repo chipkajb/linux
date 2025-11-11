@@ -148,10 +148,6 @@
     "command": "composerMode.chat"
   },
   {
-    "key": "ctrl+e",
-    "command": "composerMode.background"
-  },
-  {
     "key": "shift+enter",
     "command": "-python.execInREPL",
     "when": "config.python.REPL.sendToNativeREPL && editorTextFocus && !isCompositeNotebook && !jupyter.ownsSelection && !notebookEditorFocused && editorLangId == 'python'"
