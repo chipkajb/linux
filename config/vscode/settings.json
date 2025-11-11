@@ -122,6 +122,7 @@
   // git
   "git.confirmSync": false,
   "git.autofetch": true,
+  "git.mergeEditor": true,
 
   // terminal
   "terminal.integrated.inheritEnv": false,
