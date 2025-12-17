@@ -310,9 +310,6 @@ eval "$(zoxide init zsh)"
 alias cd="z"
 
 # atuin
-. "$HOME/.atuin/bin/env"
-eval "$(atuin init zsh)"
-source $HOME/.atuin/bin/env
 eval "$(atuin init zsh)"
 alias h='atuin search'           # Quick history search
 alias hs='atuin stats'           # Show command statistics
