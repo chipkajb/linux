@@ -17,12 +17,12 @@
     }
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "python.languageServer": "Pylance",
+  "python.languageServer": "None",
 
   // scrolloff
   "scrolloff.scrolloff": 8,
@@ -163,5 +163,6 @@
   // other stuff
   "workbench.editor.empty.hint": "hidden",
   "explorer.confirmDragAndDrop": false,
-  "terminal.integrated.enableMultiLinePasteWarning": "never"
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "claudeCode.preferredLocation": "panel"
 }

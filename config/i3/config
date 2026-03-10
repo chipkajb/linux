@@ -134,7 +134,7 @@ set $workspace4 "4: 💬 Messages"
 set $workspace5 "5: 📁 Files"
 set $workspace6 "6: 📝 Notes"
 set $workspace7 "7: 🎵 Music"
-set $workspace8 "8: ⚡ Terminal 2"
+set $workspace8 "8: 🤖 Claude"
 set $workspace9 "9: 🔧 Code 2"
 set $workspace10 "10: 💾 Database"
 
@@ -175,6 +175,7 @@ assign [class="obsidian"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
+assign [class="Claude"] $workspace8
 assign [class="MongoDB Compass"] $workspace10
 
 # reload the configuration file
@@ -285,7 +286,7 @@ workspace $workspace4 output $monitor_right
 workspace $workspace5 output $monitor_bottom
 workspace $workspace6 output $monitor_bottom
 workspace $workspace7 output $monitor_left
-workspace $workspace8 output $monitor_bottom
+workspace $workspace8 output $monitor_right
 workspace $workspace9 output $monitor_top
 workspace $workspace10 output $monitor_right
 
