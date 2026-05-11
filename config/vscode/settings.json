@@ -164,5 +164,6 @@
   "workbench.editor.empty.hint": "hidden",
   "explorer.confirmDragAndDrop": false,
   "terminal.integrated.enableMultiLinePasteWarning": "never",
-  "claudeCode.preferredLocation": "sidebar"
+  "claudeCode.preferredLocation": "sidebar",
+  "window.autoDetectColorScheme": false
 }
