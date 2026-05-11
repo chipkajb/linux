@@ -24,6 +24,10 @@ vim.keymap.set("v", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 --- make ctrl-c and esc the same
 vim.keymap.set("i", "<C-c>", "<Esc>")
 
+--- insert mode: delete word backward / forward (ctrl+backspace / ctrl+delete)
+vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" })
+vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" })
+
 --- ignore Q
 vim.keymap.set("n", "Q", "<nop>")
 

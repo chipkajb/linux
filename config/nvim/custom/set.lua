@@ -38,8 +38,10 @@ vim.opt.isfname:append("@-@")
 --- fast updates
 vim.opt.updatetime = 50
 
---- column width
-vim.opt.colorcolumn = "88"
+--- soft wrap only: textwidth 0 avoids inserting hard line breaks when typing (paste stays one logical line)
+--- use colorcolumn as a visual guide without forcing newlines in the buffer
+vim.opt.textwidth = 0
+vim.opt.colorcolumn = "120"
 
 --- leader key
 vim.g.mapleader = " "

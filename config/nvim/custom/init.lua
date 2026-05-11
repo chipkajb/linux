@@ -47,7 +47,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.conceallevel = 1  -- Partial syntax hiding
     vim.opt_local.spell = true      -- Enable spellcheck
-    vim.opt_local.textwidth = 80    -- Line wrapping for prose
+    vim.opt_local.textwidth = 0     -- No hard wraps; display wraps via wrap/linebreak (clean copy/paste)
     vim.opt_local.colorcolumn = ""  -- Remove distracting color column for writing
     
     -- Optional: Set a different background for better writing experience
@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Set subtle color column for non-markdown files
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "120"
 vim.cmd([[
   highlight ColorColumn guibg=#2d2d2d ctermbg=236
 ]])
