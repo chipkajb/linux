@@ -26,17 +26,25 @@ vim.opt.colorcolumn = ""
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
 
--- Default to markdown for new/unnamed buffers
-vim.api.nvim_create_autocmd({"BufNewFile", "BufEnter"}, {
+-- Default to markdown for note-taking: unnamed buffers, extensionless paths,
+-- and buffers vim would treat as plain text (so `nvim` alone gets markdown).
+local default_md = vim.api.nvim_create_augroup("CustomDefaultMarkdown", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufNewFile" }, {
+  group = default_md,
   pattern = "*",
-  callback = function()
-    local filename = vim.fn.expand('%:t')
-    local extension = vim.fn.expand('%:e')
-    
-    if (filename == '' or extension == '') and 
-       vim.bo.buftype == '' and 
-       vim.bo.filetype == '' then
-      vim.bo.filetype = 'markdown'
+  callback = function(ev)
+    local buf = ev.buf
+    if vim.bo[buf].buftype ~= "" then
+      return
+    end
+    local path = vim.api.nvim_buf_get_name(buf)
+    local ext = path ~= "" and vim.fn.fnamemodify(path, ":e") or ""
+    if path ~= "" and ext ~= "" then
+      return
+    end
+    local ft = vim.bo[buf].filetype
+    if ft == "" or ft == "text" then
+      vim.bo[buf].filetype = "markdown"
     end
   end,
 })
@@ -68,6 +76,3 @@ vim.cmd([[
 vim.keymap.set('n', '<leader>1', 'I# <Esc>', { desc = 'H1 header' })
 vim.keymap.set('n', '<leader>2', 'I## <Esc>', { desc = 'H2 header' })
 vim.keymap.set('n', '<leader>3', 'I### <Esc>', { desc = 'H3 header' })
-
--- Clipboard
-vim.opt.clipboard = "unnamedplus"

@@ -46,5 +46,15 @@ vim.opt.colorcolumn = "120"
 --- leader key
 vim.g.mapleader = " "
 
+--- yank / put use the system clipboard (+) so you can paste in other apps
+vim.opt.clipboard = "unnamedplus"
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  once = true,
+  callback = function()
+    vim.opt.clipboard = "unnamedplus"
+  end,
+})
+
 --- relative line numbering
 vim.opt.relativenumber = true
