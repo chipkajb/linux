@@ -24,3 +24,9 @@ foreground = "#ebdbb2"
 
 [selection]
 save_to_clipboard = true
+
+# ctrl+backspace: send Ctrl+W (backward-kill-word in zsh/bash)
+[[keyboard.bindings]]
+key = "Backspace"
+mods = "Control"
+chars = "\u0017"
