@@ -238,7 +238,10 @@ install_i3() {
         libpango1.0-dev \
         numlockx \
         lm-sensors \
+        brightnessctl \
         fonts-font-awesome -y
+    sudo usermod -aG video "$USER"
+    sudo ln -sf "$PWD/scripts/set_brightness" /usr/local/bin/set_brightness
     fc-cache -fv
     rm -rf rofi-1.7.5 2> /dev/null
     wget https://github.com/davatorium/rofi/releases/download/1.7.5/rofi-1.7.5.tar.gz

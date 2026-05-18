@@ -1,0 +1,11 @@
+#! /bin/bash
+
+# set internal display backlight to a comfortable startup level (25%)
+command -v brightnessctl >/dev/null 2>&1 || exit 0
+
+if brightnessctl -c backlight set 25% 2>/dev/null; then
+    exit 0
+fi
+
+# works after usermod -aG video even before re-login
+sg video -c "brightnessctl -c backlight set 25%" 2>/dev/null || true

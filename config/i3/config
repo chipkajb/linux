@@ -324,3 +324,6 @@ exec_always --no-startup-id gsettings set org.gnome.desktop.sound event-sounds t
 exec_always --no-startup-id ~/.config/i3/set-theme.sh
 exec_always --no-startup-id "export GTK_THEME=Yaru-blue-dark:dark"
 exec_always --no-startup-id systemctl --user set-environment GTK_THEME=Yaru-blue-dark:dark
+
+# set brightness
+exec_always --no-startup-id /usr/local/bin/set_brightness
