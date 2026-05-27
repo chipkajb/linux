@@ -22,6 +22,7 @@ set $mod Mod4
 # m: open MongoDB Compass
 # n: open nautilus
 # o: open obsidian
+# o*: open work apps (chrome, obsidian, claude, slack)
 # p: open pithos
 # q: <empty>
 # q*: quit window
@@ -306,6 +307,7 @@ bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
 bindsym $mod+o exec obsidian
+bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec claude-desktop; exec slack
 
 # Hide the most recent notification using Alt+r
 bindsym Mod1+r exec --no-startup-id dunstctl close
