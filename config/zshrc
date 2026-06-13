@@ -309,10 +309,15 @@ extract () {
 eval "$(zoxide init zsh)"
 alias cd="z"
 
-# atuin
-eval "$(atuin init zsh)"
-alias h='atuin search'           # Quick history search
-alias hs='atuin stats'           # Show command statistics
-alias hh='atuin history list'    # List recent history
-alias he='atuin search --exit 0' # Search history without executing
+# atuin (cross-platform history sync)
+[ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+if command -v atuin &> /dev/null; then
+    eval "$(atuin init zsh)"
+    alias h='atuin search'
+    alias hs='atuin stats'
+    alias hh='atuin history list'
+    alias he='atuin search --exit 0'
+else
+    alias h='fc -l 1 | grep'
+fi
 

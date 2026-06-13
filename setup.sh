@@ -73,6 +73,15 @@ prompt_user() {
     printf "]${NC}: "
 }
 
+# install atuin
+install_atuin() {
+    if command -v brew &> /dev/null; then
+        brew install atuin
+    else
+        curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | bash
+    fi
+}
+
 # install zsh
 install_zsh() {
     printf "Installing zsh...\n"
@@ -97,7 +106,7 @@ install_zsh() {
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f
     ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
     curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+    install_atuin
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
