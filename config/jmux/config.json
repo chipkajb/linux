@@ -1,0 +1,52 @@
+{
+  "sidebarWidth": 26,
+  "claudeCommand": "claude",
+  "cacheTimers": true,
+  "windowBranches": true,
+  "autoPinAgentPanes": true,
+  "agentPaneCommandRegex": "claude|codex",
+  "wtmIntegration": true,
+  "projectDirs": [
+    "~/workspace"
+  ],
+  "stateColors": {
+    "running": "green",
+    "waiting": "yellow",
+    "complete": "blue"
+  },
+  "pinnedSessions": [],
+  "commandCenterTabs": [
+    {
+      "id": "default",
+      "name": "Main"
+    }
+  ],
+  "diffPanel": {
+    "splitRatio": 0.4,
+    "hunkCommand": "hunk"
+  },
+  "snapshot": {
+    "enabled": true,
+    "scrollbackIntervalMs": 5000,
+    "scrollbackMaxBytes": 2097152,
+    "dir": null
+  },
+  "adapters": {
+    "codeHost": {
+      "type": "gitlab"
+    },
+    "issueTracker": {
+      "type": "linear"
+    }
+  },
+  "issueWorkflow": {
+    "teamRepoMap": {
+      "CV Applied": "~/workspace/playbook"
+    },
+    "defaultBaseBranch": "main",
+    "autoCreateWorktree": true,
+    "autoLaunchAgent": true,
+    "sessionNameTemplate": "{identifier}"
+  },
+  "panelViews": []
+}

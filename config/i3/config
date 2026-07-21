@@ -306,6 +306,7 @@ bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+t exec alacritty -e tmux new-session
+bindsym $mod+Shift+t exec alacritty --title jmux -e ~/.local/bin/jmux-launch
 bindsym $mod+o exec obsidian
 bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec claude-desktop; exec slack
 

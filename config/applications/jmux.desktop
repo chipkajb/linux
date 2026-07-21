@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=jmux
+Comment=Terminal workspace for agentic development
+Exec=alacritty --title jmux -e /home/jordan/.local/bin/jmux-launch
+Icon=jmux
+Terminal=false
+Categories=Development;
+Keywords=tmux;terminal;claude;agents;
+StartupNotify=true

@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # define script parameters
-ACTION_LIST=(0 1 2 3 4 5 6 7 8 9)
+ACTION_LIST=(0 1 2 3 4 5 6 7 8 9 10)
 DESC_LIST=(
     "Exit" 
     "Install zsh"
@@ -12,6 +12,7 @@ DESC_LIST=(
     "Install i3" 
     "Install alacritty"
     "Misc setup"
+    "Install jmux"
     "Install all"
 )
 
@@ -206,8 +207,78 @@ install_tmux() {
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     ln -s $PWD/config/tmux ~/.config/
+    ln -sfn $PWD/config/tmux/tmux.conf ~/.tmux.conf
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
+}
+
+# install jmux (tmux workspace for agentic development)
+install_jmux() {
+    printf "Installing jmux...\n"
+
+    # bun runtime
+    if ! command -v bun &> /dev/null; then
+        curl -fsSL https://bun.sh/install | bash
+        export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+        export PATH="$BUN_INSTALL/bin:$PATH"
+    fi
+
+    # tmux is required; reuse existing install if present
+    if ! command -v tmux &> /dev/null; then
+        install_tmux
+    else
+        # ensure ~/.tmux.conf exists so jmux picks up plugins / prefix / binds
+        ln -sfn $PWD/config/tmux/tmux.conf ~/.tmux.conf
+        mkdir -p ~/.config
+        ln -sfn $PWD/config/tmux ~/.config/tmux
+        if [ ! -d ~/.tmux/plugins/tpm ]; then
+            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        fi
+    fi
+
+    # jmux + recommended companions (worktrees + diff panel)
+    bun install -g @jx0/jmux @jx0/wtm
+    # hunk powers Ctrl-<prefix> g Diff tab (package provides `hunk` binary)
+    if command -v npm &> /dev/null; then
+        npm install -g hunkdiff
+    else
+        bun install -g hunkdiff
+    fi
+
+    # application config
+    mkdir -p ~/.config/jmux
+    ln -sfn $PWD/config/jmux/config.json ~/.config/jmux/config.json
+
+    # launcher for rofi / i3 (full PATH for bun-installed jmux)
+    chmod +x $PWD/scripts/jmux-launch
+    mkdir -p ~/.local/bin ~/.local/share/applications
+    ln -sfn $PWD/scripts/jmux-launch ~/.local/bin/jmux-launch
+    ln -sfn $PWD/config/applications/jmux.desktop ~/.local/share/applications/jmux.desktop
+    # app icon (hicolor theme → rofi/desktop pick up Icon=jmux)
+    for size_dir in "$PWD"/assets/icons/hicolor/*/apps; do
+        size=$(basename "$(dirname "$size_dir")")
+        mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
+        ln -sfn "$size_dir/jmux.png" "$HOME/.local/share/icons/hicolor/$size/apps/jmux.png"
+    done
+    if command -v gtk-update-icon-cache &> /dev/null; then
+        gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2> /dev/null || true
+    fi
+    if command -v update-desktop-database &> /dev/null; then
+        update-desktop-database ~/.local/share/applications 2> /dev/null || true
+    fi
+
+    # claude code attention hooks (orange ! in sidebar)
+    if command -v jmux &> /dev/null; then
+        jmux --install-agent-hooks || true
+    else
+        "$HOME/.bun/bin/jmux" --install-agent-hooks || true
+    fi
+
+    printf "${GREEN}DONE${NC} -- jmux installed to ${YELLOW}$(command -v jmux || echo "$HOME/.bun/bin/jmux")${NC}\n"
+    printf "  Launch from rofi (Mod+d) as ${YELLOW}jmux${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
+    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (jmux docs say Ctrl-a — same chords, different prefix)\n"
+    printf "  Set ${YELLOW}LINEAR_API_KEY${NC} in ~/.zshrc for Linear issue tracking (GITLAB_TOKEN already used)\n"
+    printf "  Optional: ${YELLOW}wtm init <git-url>${NC} per repo for worktree-native agent sessions\n"
 }
 
 # install i3
@@ -376,9 +447,14 @@ while [ "$exit_condition" = false ]; do
         if [[ "$user_input" -eq 8 ]]; then
             misc_setup
         fi
+
+        # install jmux
+        if [[ "$user_input" -eq 9 ]]; then
+            install_jmux
+        fi
        
         # install all
-        if [[ "$user_input" -eq 9 ]]; then
+        if [[ "$user_input" -eq 10 ]]; then
             install_zsh
             install_vim
             install_neovim
@@ -387,6 +463,7 @@ while [ "$exit_condition" = false ]; do
             install_i3
             install_alacritty
             misc_setup
+            install_jmux
         fi
 
     fi
