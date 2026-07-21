@@ -29,7 +29,8 @@ Related files:
 | Key | Action |
 |-----|--------|
 | Click toolbar tab | Switch window |
-| `Ctrl-Space c` | New window |
+| `Ctrl-Space t` | New window (tab) |
+| `Ctrl-Space c` | Copy mode |
 | `Ctrl-Left/Right` | Prev / next window |
 | `Ctrl-Shift-Left/Right` | Reorder windows |
 | `Alt-H` / `Alt-L` | Prev / next window *(custom)* |
@@ -82,7 +83,7 @@ Related files:
 | `Ctrl-Space i` | Settings |
 | `Ctrl-Space k` | Clear pane + scrollback |
 | `Ctrl-Space y` | Copy pane to clipboard |
-| `Ctrl-Space [` | Copy mode *(custom)* |
+| `Ctrl-Space [` | Copy mode alias (also Command Center prev-tab when CC is open) |
 
 ## Palette favorites (`Ctrl-Space p`)
 
