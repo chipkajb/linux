@@ -141,85 +141,178 @@ if "invalidate():" not in text:
 else:
     print(f"already patched invalidate() in {renderer}")
 
+# Narrow-window overlays: don't drop toolbar/palette/diff when sidebar is hidden
+if "NO_SIDEBAR_COMPOSITE_PATCH" not in text:
+    old = (
+        "): CellGrid {\n"
+        "  if (!sidebar) return main;\n"
+        "\n"
+        "  const mainCols = toolbar ? toolbar.mainCols : main.cols;\n"
+        "  let contentCols: number;\n"
+        "  if (diffPanel) {\n"
+        "    if (diffPanel.mode === \"split\") {\n"
+        "      contentCols = mainCols + 1 + diffPanel.grid.cols; // main + divider + diff\n"
+        "    } else {\n"
+        "      contentCols = diffPanel.grid.cols; // full: diff replaces main\n"
+        "    }\n"
+        "  } else {\n"
+        "    contentCols = mainCols;\n"
+        "  }\n"
+        "  const totalCols = sidebar.cols + 1 + contentCols;\n"
+        "  const toolbarRows = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n"
+        "  const totalRows = main.rows + toolbarRows;\n"
+        "  const grid = createGrid(totalCols, totalRows);\n"
+        "\n"
+        "  for (let y = 0; y < totalRows; y++) {\n"
+        "    // Copy sidebar cells\n"
+        "    for (let x = 0; x < sidebar.cols && x < sidebar.cells[y]?.length; x++) {\n"
+        "      grid.cells[y][x] = { ...sidebar.cells[y][x] };\n"
+        "    }\n"
+        "    // Border column\n"
+        "    const borderCol = sidebar.cols;\n"
+        "    grid.cells[y][borderCol] = {\n"
+        "      ...DEFAULT_CELL,\n"
+        "      char: BORDER_CHAR,\n"
+        "      fg: 8,\n"
+        "      fgMode: ColorMode.Palette,\n"
+        "    };\n"
+        "\n"
+        "    if (toolbar && y < toolbarRows) {\n"
+    )
+    new = (
+        "): CellGrid {\n"
+        "  // NO_SIDEBAR_COMPOSITE_PATCH: upstream returned `main` whenever sidebar was\n"
+        "  // null (window < 80 cols), which also dropped toolbar / command palette /\n"
+        "  // diff panel. Keep the fast-path only when there is truly nothing to layer.\n"
+        "  if (!sidebar && !toolbar && !modalOverlay && !diffPanel) return main;\n"
+        "\n"
+        "  const mainCols = toolbar ? toolbar.mainCols : main.cols;\n"
+        "  let contentCols: number;\n"
+        "  if (diffPanel) {\n"
+        "    if (diffPanel.mode === \"split\") {\n"
+        "      contentCols = mainCols + 1 + diffPanel.grid.cols; // main + divider + diff\n"
+        "    } else {\n"
+        "      contentCols = diffPanel.grid.cols; // full: diff replaces main\n"
+        "    }\n"
+        "  } else {\n"
+        "    contentCols = mainCols;\n"
+        "  }\n"
+        "  const sidebarCols = sidebar?.cols ?? 0;\n"
+        "  // contentOrigin: first column of main/toolbar area. Without a sidebar there\n"
+        "  // is no border column; borderCol is kept as contentOrigin-1 so existing\n"
+        "  // `borderCol + 1 + …` math still resolves to contentOrigin.\n"
+        "  const contentOrigin = sidebar ? sidebarCols + 1 : 0;\n"
+        "  const totalCols = contentOrigin + contentCols;\n"
+        "  const toolbarRows = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n"
+        "  const totalRows = main.rows + toolbarRows;\n"
+        "  const grid = createGrid(totalCols, totalRows);\n"
+        "\n"
+        "  for (let y = 0; y < totalRows; y++) {\n"
+        "    if (sidebar) {\n"
+        "      for (let x = 0; x < sidebarCols && x < sidebar.cells[y]?.length; x++) {\n"
+        "        grid.cells[y][x] = { ...sidebar.cells[y][x] };\n"
+        "      }\n"
+        "      grid.cells[y][sidebarCols] = {\n"
+        "        ...DEFAULT_CELL,\n"
+        "        char: BORDER_CHAR,\n"
+        "        fg: 8,\n"
+        "        fgMode: ColorMode.Palette,\n"
+        "      };\n"
+        "    }\n"
+        "    const borderCol = contentOrigin - 1;\n"
+        "\n"
+        "    if (toolbar && y < toolbarRows) {\n"
+    )
+    if old not in text:
+        sys.exit(f"renderer.ts: compositeGrids header not found in {renderer}")
+    text = text.replace(old, new, 1)
+    text = text.replace(
+        "    const sidebarOffset = sidebar.cols + 1;\n",
+        "    const sidebarOffset = contentOrigin;\n",
+        1,
+    )
+    text = text.replace(
+        "    const mainStart = sidebar.cols + 1;\n",
+        "    const mainStart = contentOrigin;\n",
+        1,
+    )
+    print(f"patched no-sidebar composite in {renderer}")
+else:
+    print(f"already patched no-sidebar composite in {renderer}")
+
 # Dynamic toolbar cursor offset (upstream still hardcodes 1).
-# Must be (sidebar && toolbar) — compositeGrids drops the toolbar when sidebar is null.
-if "SIDEBAR_TOOLBAR_PATCH" not in text:
-    for old_offset, label in (
-        (
-            "    const cursorRowOffset = toolbar ? 1 : 0;\n",
-            "upstream",
-        ),
-        (
-            "    const cursorRowOffset = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n",
-            "partial",
-        ),
-    ):
-        if old_offset in text:
+if "toolbar.toolbarRows ?? 1" not in text.split("position cursor")[-1][:500]:
+    old = (
+        "    // Reset attributes, position cursor\n"
+        "    const cursorRowOffset = toolbar ? 1 : 0;\n"
+        '    buf.push("\\x1b[0m");\n'
+        "    if (modalCursor != null) {\n"
+        "      // Modal cursor is in absolute grid coordinates\n"
+        '      buf.push(`\\x1b[${modalCursor.row + 1};${modalCursor.col + 1}H`);\n'
+        '      buf.push("\\x1b[?25h");\n'
+        "    } else if (diffPanel?.focused) {\n"
+        '      buf.push("\\x1b[?25l"); // hide cursor when diff panel focused\n'
+        "    } else {\n"
+        "      buf.push(\n"
+        "        `\\x1b[${cursor.y + cursorRowOffset + 1};${cursor.x + cursorOffset + 1}H`,\n"
+        "      );\n"
+        '      buf.push("\\x1b[?25h");\n'
+        "    }"
+    )
+    new = (
+        "    // Reset attributes, position cursor\n"
+        "    // CURSOR_RESIZE_SYNC_PATCH: match composite toolbarRows; clamp to term size.\n"
+        "    // NO_SIDEBAR_COMPOSITE_PATCH: toolbar is composited even when sidebar is hidden.\n"
+        "    const cursorRowOffset = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n"
+        "    const termRows = process.stdout.rows || 24;\n"
+        "    const termCols = process.stdout.columns || 80;\n"
+        '    buf.push("\\x1b[0m");\n'
+        "    if (modalCursor != null) {\n"
+        "      // Modal cursor is in absolute grid coordinates\n"
+        "      const mr = Math.max(0, Math.min(modalCursor.row, termRows - 1));\n"
+        "      const mc = Math.max(0, Math.min(modalCursor.col, termCols - 1));\n"
+        '      buf.push(`\\x1b[${mr + 1};${mc + 1}H`);\n'
+        '      buf.push("\\x1b[?25h");\n'
+        "    } else if (diffPanel?.focused) {\n"
+        '      buf.push("\\x1b[?25l"); // hide cursor when diff panel focused\n'
+        "    } else {\n"
+        "      const cy = Math.max(0, Math.min(cursor.y + cursorRowOffset, termRows - 1));\n"
+        "      const cx = Math.max(0, Math.min(cursor.x + cursorOffset, termCols - 1));\n"
+        "      buf.push(\n"
+        "        `\\x1b[${cy + 1};${cx + 1}H`,\n"
+        "      );\n"
+        '      buf.push("\\x1b[?25h");\n'
+        "    }"
+    )
+    if old not in text:
+        # migrate older (sidebar && toolbar) variant
+        old2 = "    const cursorRowOffset = (sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0;\n"
+        if old2 in text:
             text = text.replace(
-                old_offset,
-                "    // CURSOR_RESIZE_SYNC_PATCH + SIDEBAR_TOOLBAR_PATCH: offset only when\n"
-                "    // toolbar was actually composited (compositeGrids skips it without sidebar).\n"
-                "    const cursorRowOffset = (sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0;\n",
+                old2,
+                "    // NO_SIDEBAR_COMPOSITE_PATCH: toolbar is composited even when sidebar is hidden.\n"
+                "    const cursorRowOffset = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n",
                 1,
             )
-            print(f"patched cursor offset ({label}) in {renderer}")
-            break
-    else:
-        if "(sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0" in text:
-            print(f"already patched cursor offset in {renderer}")
+            print(f"migrated cursor offset in {renderer}")
         else:
-            sys.exit(f"renderer.ts: cursorRowOffset pattern not found in {renderer}")
-
-    # Upgrade a bare cursorRowOffset patch into the clamped modal/cursor block if needed
-    if "const cy = Math.max(0, Math.min(cursor.y + cursorRowOffset, termRows - 1))" not in text:
-        old = (
-            "    // Reset attributes, position cursor\n"
-            "    // CURSOR_RESIZE_SYNC_PATCH + SIDEBAR_TOOLBAR_PATCH: offset only when\n"
-            "    // toolbar was actually composited (compositeGrids skips it without sidebar).\n"
-            "    const cursorRowOffset = (sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0;\n"
-            '    buf.push("\\x1b[0m");\n'
-            "    if (modalCursor != null) {\n"
-            "      // Modal cursor is in absolute grid coordinates\n"
-            '      buf.push(`\\x1b[${modalCursor.row + 1};${modalCursor.col + 1}H`);\n'
-            '      buf.push("\\x1b[?25h");\n'
-            "    } else if (diffPanel?.focused) {\n"
-            '      buf.push("\\x1b[?25l"); // hide cursor when diff panel focused\n'
-            "    } else {\n"
-            "      buf.push(\n"
-            "        `\\x1b[${cursor.y + cursorRowOffset + 1};${cursor.x + cursorOffset + 1}H`,\n"
-            "      );\n"
-            '      buf.push("\\x1b[?25h");\n'
-            "    }"
-        )
-        new = (
-            "    // Reset attributes, position cursor\n"
-            "    // CURSOR_RESIZE_SYNC_PATCH + SIDEBAR_TOOLBAR_PATCH: offset only when\n"
-            "    // toolbar was actually composited (compositeGrids skips it without sidebar).\n"
-            "    const cursorRowOffset = (sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0;\n"
-            "    const termRows = process.stdout.rows || 24;\n"
-            "    const termCols = process.stdout.columns || 80;\n"
-            '    buf.push("\\x1b[0m");\n'
-            "    if (modalCursor != null) {\n"
-            "      // Modal cursor is in absolute grid coordinates\n"
-            "      const mr = Math.max(0, Math.min(modalCursor.row, termRows - 1));\n"
-            "      const mc = Math.max(0, Math.min(modalCursor.col, termCols - 1));\n"
-            '      buf.push(`\\x1b[${mr + 1};${mc + 1}H`);\n'
-            '      buf.push("\\x1b[?25h");\n'
-            "    } else if (diffPanel?.focused) {\n"
-            '      buf.push("\\x1b[?25l"); // hide cursor when diff panel focused\n'
-            "    } else {\n"
-            "      const cy = Math.max(0, Math.min(cursor.y + cursorRowOffset, termRows - 1));\n"
-            "      const cx = Math.max(0, Math.min(cursor.x + cursorOffset, termCols - 1));\n"
-            "      buf.push(\n"
-            "        `\\x1b[${cy + 1};${cx + 1}H`,\n"
-            "      );\n"
-            '      buf.push("\\x1b[?25h");\n'
-            "    }"
-        )
-        if old in text:
-            text = text.replace(old, new, 1)
+            sys.exit(f"renderer.ts: cursor block not found in {renderer}")
+    else:
+        text = text.replace(old, new, 1)
+        print(f"patched cursor offset in {renderer}")
 else:
-    print(f"already patched cursor offset in {renderer}")
+    # ensure we don't keep the obsolete (sidebar && toolbar) offset
+    old2 = "    const cursorRowOffset = (sidebar && toolbar) ? (toolbar.toolbarRows ?? 1) : 0;\n"
+    if old2 in text:
+        text = text.replace(
+            old2,
+            "    // NO_SIDEBAR_COMPOSITE_PATCH: toolbar is composited even when sidebar is hidden.\n"
+            "    const cursorRowOffset = toolbar ? (toolbar.toolbarRows ?? 1) : 0;\n",
+            1,
+        )
+        print(f"migrated cursor offset in {renderer}")
+    else:
+        print(f"already patched cursor offset in {renderer}")
 
 # Autowrap scroll fix
 if "AUTOWRAP_SCROLL_PATCH" not in text:

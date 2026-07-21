@@ -143,6 +143,6 @@ jmux ctl pane send-keys --target %12 "continue" --enter
 ## Notes
 
 - `windowBranches` is off in `config.json` — avoids a jmux cursor off-by-one when the toolbar is 2 rows tall.
-- `scripts/patch-jmux.sh` fixes cursor drift: toolbar offset, resize resync, autowrap-during-paint,
-  and not offsetting the cursor when the sidebar is hidden (window width under 80 cols).
+- `scripts/patch-jmux.sh` fixes cursor drift and keeps palette / diff panel working when the
+  window is under 80 cols (sidebar hidden). Re-run after `bun update -g @jx0/jmux`.
 - After upgrading jmux, relaunch via `jmux-launch` (or run `scripts/patch-jmux.sh`) so local fixes stay applied.
