@@ -2,7 +2,7 @@
   "sidebarWidth": 26,
   "claudeCommand": "claude",
   "cacheTimers": true,
-  "windowBranches": true,
+  "windowBranches": false,
   "autoPinAgentPanes": true,
   "agentPaneCommandRegex": "claude|codex",
   "wtmIntegration": true,
