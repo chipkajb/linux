@@ -1,4 +1,10 @@
 {
+  "snapshot": {
+    "enabled": true,
+    "scrollbackIntervalMs": 5000,
+    "scrollbackMaxBytes": 2097152,
+    "dir": null
+  },
   "sidebarWidth": 26,
   "claudeCommand": "claude",
   "cacheTimers": true,
@@ -24,12 +30,6 @@
   "diffPanel": {
     "splitRatio": 0.4,
     "hunkCommand": "hunk"
-  },
-  "snapshot": {
-    "enabled": true,
-    "scrollbackIntervalMs": 5000,
-    "scrollbackMaxBytes": 2097152,
-    "dir": null
   },
   "adapters": {
     "codeHost": {
