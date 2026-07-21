@@ -11,4 +11,10 @@ if ! command -v jmux >/dev/null 2>&1; then
     exit 1
 fi
 
+# keep local jmux fixes applied after upgrades (best-effort)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -x "$SCRIPT_DIR/patch-jmux.sh" ]; then
+    "$SCRIPT_DIR/patch-jmux.sh" >/dev/null 2>&1 || true
+fi
+
 exec jmux "$@"

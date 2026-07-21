@@ -245,6 +245,10 @@ install_jmux() {
         bun install -g hunkdiff
     fi
 
+    # local jmux fixes: Ctrl-Space prefix + cursor sync on resize
+    chmod +x $PWD/scripts/patch-jmux.sh $PWD/scripts/patch-jmux-prefix.sh
+    "$PWD/scripts/patch-jmux.sh"
+
     # application config
     mkdir -p ~/.config/jmux
     ln -sfn $PWD/config/jmux/config.json ~/.config/jmux/config.json
@@ -276,7 +280,8 @@ install_jmux() {
 
     printf "${GREEN}DONE${NC} -- jmux installed to ${YELLOW}$(command -v jmux || echo "$HOME/.bun/bin/jmux")${NC}\n"
     printf "  Launch from rofi (Mod+d) as ${YELLOW}jmux${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
-    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (jmux docs say Ctrl-a — same chords, different prefix)\n"
+    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (jmux package patched via scripts/patch-jmux.sh)\n"
+    printf "  Re-run that patch after ${YELLOW}bun update -g @jx0/jmux${NC}\n"
     printf "  Set ${YELLOW}LINEAR_API_KEY${NC} in ~/.zshrc for Linear issue tracking (GITLAB_TOKEN already used)\n"
     printf "  Optional: ${YELLOW}wtm init <git-url>${NC} per repo for worktree-native agent sessions\n"
 }
