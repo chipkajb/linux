@@ -321,11 +321,9 @@ else
     alias h='fc -l 1 | grep'
 fi
 
-# jmux
-[ -s "/home/jordan/.bun/_bun" ] && source "/home/jordan/.bun/_bun"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# herdr
+alias hr='herdr'
+alias herdr-stop='herdr server stop'
+alias herdr-reload='herdr server reload-config'
 export PATH="$HOME/.local/bin:$PATH"
-alias jmux-hooks='jmux --install-agent-hooks'
-alias jm='jmux'
 

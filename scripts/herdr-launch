@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# launch herdr (for rofi / .desktop / i3)
+
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if ! command -v herdr >/dev/null 2>&1; then
+    printf 'herdr not found. Install with: curl -fsSL https://herdr.dev/install.sh | sh\n' >&2
+    exit 1
+fi
+
+exec herdr "$@"

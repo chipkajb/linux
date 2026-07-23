@@ -12,7 +12,7 @@ DESC_LIST=(
     "Install i3" 
     "Install alacritty"
     "Misc setup"
-    "Install jmux"
+    "Install adlc"
     "Install all"
 )
 
@@ -212,57 +212,43 @@ install_tmux() {
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
 }
 
-# install jmux (tmux workspace for agentic development)
-install_jmux() {
-    printf "Installing jmux...\n"
+# install adlc tooling: herdr + caveman + superpowers
+install_adlc() {
+    printf "Installing adlc (herdr + caveman + superpowers)...\n"
 
-    # bun runtime
-    if ! command -v bun &> /dev/null; then
-        curl -fsSL https://bun.sh/install | bash
-        export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
-        export PATH="$BUN_INSTALL/bin:$PATH"
-    fi
+    export PATH="$HOME/.local/bin:$PATH"
 
-    # tmux is required; reuse existing install if present
-    if ! command -v tmux &> /dev/null; then
-        install_tmux
+    # clipboard helper used by pane-copy binding
+    sudo apt-get update
+    sudo apt-get install -y xclip
+
+    # herdr binary
+    if ! command -v herdr &> /dev/null; then
+        curl -fsSL https://herdr.dev/install.sh | sh
     else
-        # ensure ~/.tmux.conf exists so jmux picks up plugins / prefix / binds
-        ln -sfn $PWD/config/tmux/tmux.conf ~/.tmux.conf
-        mkdir -p ~/.config
-        ln -sfn $PWD/config/tmux ~/.config/tmux
-        if [ ! -d ~/.tmux/plugins/tpm ]; then
-            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-        fi
+        printf "  herdr already installed: ${YELLOW}$(herdr --version 2>/dev/null || echo present)${NC}\n"
     fi
-
-    # jmux + recommended companions (worktrees + diff panel)
-    bun install -g @jx0/jmux @jx0/wtm
-    # hunk powers Ctrl-<prefix> g Diff tab (package provides `hunk` binary)
-    if command -v npm &> /dev/null; then
-        npm install -g hunkdiff
-    else
-        bun install -g hunkdiff
-    fi
-
-    # local jmux fixes: Ctrl-Space prefix + cursor sync on resize
-    chmod +x $PWD/scripts/patch-jmux.sh $PWD/scripts/patch-jmux-prefix.sh
-    "$PWD/scripts/patch-jmux.sh"
+    export PATH="$HOME/.local/bin:$PATH"
 
     # application config
-    mkdir -p ~/.config/jmux
-    ln -sfn $PWD/config/jmux/config.json ~/.config/jmux/config.json
+    mkdir -p ~/.config/herdr
+    ln -sfn "$PWD/config/herdr/config.toml" ~/.config/herdr/config.toml
+    if command -v herdr &> /dev/null; then
+        herdr config check || true
+    fi
 
-    # launcher for rofi / i3 (full PATH for bun-installed jmux)
-    chmod +x $PWD/scripts/jmux-launch
+    # launcher for rofi / i3
+    chmod +x "$PWD/scripts/herdr-launch"
     mkdir -p ~/.local/bin ~/.local/share/applications
-    ln -sfn $PWD/scripts/jmux-launch ~/.local/bin/jmux-launch
-    ln -sfn $PWD/config/applications/jmux.desktop ~/.local/share/applications/jmux.desktop
-    # app icon (hicolor theme → rofi/desktop pick up Icon=jmux)
+    ln -sfn "$PWD/scripts/herdr-launch" ~/.local/bin/herdr-launch
+    ln -sfn "$PWD/config/applications/herdr.desktop" ~/.local/share/applications/herdr.desktop
+    # app icon (hicolor theme → rofi/desktop pick up Icon=herdr)
     for size_dir in "$PWD"/assets/icons/hicolor/*/apps; do
-        size=$(basename "$(dirname "$size_dir")")
-        mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
-        ln -sfn "$size_dir/jmux.png" "$HOME/.local/share/icons/hicolor/$size/apps/jmux.png"
+        if [ -f "$size_dir/herdr.png" ]; then
+            size=$(basename "$(dirname "$size_dir")")
+            mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
+            ln -sfn "$size_dir/herdr.png" "$HOME/.local/share/icons/hicolor/$size/apps/herdr.png"
+        fi
     done
     if command -v gtk-update-icon-cache &> /dev/null; then
         gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2> /dev/null || true
@@ -271,19 +257,32 @@ install_jmux() {
         update-desktop-database ~/.local/share/applications 2> /dev/null || true
     fi
 
-    # claude code attention hooks (orange ! in sidebar)
-    if command -v jmux &> /dev/null; then
-        jmux --install-agent-hooks || true
+    # caveman — terse agent replies (auto-detects installed agents)
+    printf "  Installing caveman...\n"
+    curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash || true
+
+    # superpowers — agentic skills methodology (Claude Code + Cursor when available)
+    printf "  Installing superpowers...\n"
+    if command -v claude &> /dev/null; then
+        claude plugin marketplace add obra/superpowers-marketplace 2>/dev/null || true
+        claude plugin install superpowers@claude-plugins-official -s user 2>/dev/null \
+            || claude plugin install superpowers@superpowers-marketplace -s user 2>/dev/null \
+            || true
     else
-        "$HOME/.bun/bin/jmux" --install-agent-hooks || true
+        printf "  ${YELLOW}claude${NC} not on PATH — skip Claude Code superpowers install\n"
+    fi
+    if command -v npx &> /dev/null; then
+        # cursor skill install (idempotent; safe to re-run)
+        npx --yes skills add JuliusBrussee/caveman -a cursor 2>/dev/null || true
     fi
 
-    printf "${GREEN}DONE${NC} -- jmux installed to ${YELLOW}$(command -v jmux || echo "$HOME/.bun/bin/jmux")${NC}\n"
-    printf "  Launch from rofi (Mod+d) as ${YELLOW}jmux${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
-    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (jmux package patched via scripts/patch-jmux.sh)\n"
-    printf "  Re-run that patch after ${YELLOW}bun update -g @jx0/jmux${NC}\n"
-    printf "  Set ${YELLOW}LINEAR_API_KEY${NC} in ~/.zshrc for Linear issue tracking (GITLAB_TOKEN already used)\n"
-    printf "  Optional: ${YELLOW}wtm init <git-url>${NC} per repo for worktree-native agent sessions\n"
+    printf "${GREEN}DONE${NC} -- adlc tooling installed\n"
+    printf "  herdr: ${YELLOW}$(command -v herdr || echo "$HOME/.local/bin/herdr")${NC}\n"
+    printf "  Launch from rofi (Mod+d) as ${YELLOW}herdr${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
+    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (see config/herdr/CHEATSHEET.md)\n"
+    printf "  caveman: type ${YELLOW}/caveman${NC} in a session (or say \"talk like caveman\")\n"
+    printf "  superpowers: restart Claude Code / Cursor after install\n"
+    printf "  Update herdr with ${YELLOW}herdr update${NC}\n"
 }
 
 # install i3
@@ -453,9 +452,9 @@ while [ "$exit_condition" = false ]; do
             misc_setup
         fi
 
-        # install jmux
+        # install adlc (herdr + caveman + superpowers)
         if [[ "$user_input" -eq 9 ]]; then
-            install_jmux
+            install_adlc
         fi
        
         # install all
@@ -468,7 +467,7 @@ while [ "$exit_condition" = false ]; do
             install_i3
             install_alacritty
             misc_setup
-            install_jmux
+            install_adlc
         fi
 
     fi

@@ -1,0 +1,134 @@
+# herdr keybindings — optimized for learnability
+# docs: https://herdr.dev/docs/configuration/
+# cheatsheet: config/herdr/CHEATSHEET.md
+#
+# Mental model:
+#   1) Tmux habits: Ctrl-Space, c/[ copy, t new tab, p/n tabs, l clear,
+#      y yank, |/-/v/; splits, ctrl+hjkl panes, z zoom, x close, q detach
+#   2) s = space: s new space, S rename space; t/T tab; P rename pane
+#   3) Lowercase = everyday; Shift = rename, larger scope, or rarer sibling
+#   4) Close ladder: x pane → X tab → d workspace
+#   5) Prefix + arrows: left/right = tabs, up/down = workspaces
+#   6) Numbers: 1..9 tabs, Shift-1..9 workspaces, Alt-1..9 agents
+#   7) Shift-Enter = scratch terminal (like i3 "new terminal")
+#   8) Shift-r = reload config (r = resize; Shift-r = reload)
+
+onboarding = false
+
+[theme]
+name = "catppuccin"
+
+[terminal]
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+space"
+
+# session / ui
+help = "prefix+?"
+settings = "prefix+i"
+detach = "prefix+q"
+reload_config = "prefix+shift+r"
+toggle_sidebar = "prefix+b"
+goto = "prefix+g"
+workspace_picker = "prefix+w"
+
+# workspaces / spaces (s = space)
+new_workspace = "prefix+s"
+rename_workspace = "prefix+shift+s"
+close_workspace = "prefix+d"
+new_worktree = "prefix+f"
+open_worktree = "prefix+shift+f"
+remove_worktree = "prefix+shift+d"
+previous_workspace = ["prefix+up", "ctrl+shift+up"]
+next_workspace = ["prefix+down", "ctrl+shift+down"]
+switch_workspace = "prefix+shift+1..9"
+
+# agents
+previous_agent = "prefix+,"
+next_agent = "prefix+."
+focus_agent = "prefix+alt+1..9"
+
+# tabs (tmux-ish)
+new_tab = "prefix+t"
+rename_tab = "prefix+shift+t"
+previous_tab = ["prefix+p", "prefix+left", "ctrl+left"]
+next_tab = ["prefix+n", "prefix+right", "ctrl+right"]
+switch_tab = "prefix+1..9"
+close_tab = "prefix+shift+x"
+
+# panes
+copy_mode = ["prefix+c", "prefix+["]
+edit_scrollback = "prefix+e"
+rename_pane = "prefix+shift+p"
+focus_pane_left = ["prefix+h", "ctrl+h", "shift+left"]
+focus_pane_down = ["prefix+j", "ctrl+j", "shift+down"]
+focus_pane_up = ["prefix+k", "ctrl+k", "shift+up"]
+# prefix+l is clear (tmux); right uses ctrl+l / shift-right
+focus_pane_right = ["ctrl+l", "shift+right"]
+swap_pane_left = "prefix+shift+h"
+swap_pane_down = "prefix+shift+j"
+swap_pane_up = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+last_pane = "prefix+o"
+split_vertical = ["prefix+|", "prefix+;"]
+split_horizontal = ["prefix+minus", "prefix+v"]
+close_pane = "prefix+x"
+zoom = "prefix+z"
+resize_mode = "prefix+r"
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+
+# --- custom commands -------------------------------------------------------
+
+# tmux: prefix+l clear
+[[keys.command]]
+key = "prefix+l"
+type = "shell"
+command = 'herdr pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
+description = "clear pane"
+
+# prefix+y yank pane
+[[keys.command]]
+key = "prefix+y"
+type = "shell"
+command = 'herdr pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null | xclip -selection clipboard'
+description = "copy pane to clipboard"
+
+# a = agent
+[[keys.command]]
+key = "prefix+a"
+type = "pane"
+command = "claude"
+description = "open claude"
+
+# G = git
+[[keys.command]]
+key = "prefix+shift+g"
+type = "popup"
+command = "lazygit"
+description = "lazygit"
+width = "90%"
+height = "90%"
+
+# Shift-Enter = scratch terminal (i3 "new terminal" muscle memory)
+[[keys.command]]
+key = "prefix+shift+enter"
+type = "popup"
+command = 'exec "${SHELL:-zsh}"'
+description = "scratch terminal"
+width = "80%"
+height = "80%"
+
+[ui]
+sidebar_width = 26
+prompt_new_tab_name = false
+
+[ui.toast]
+delivery = "herdr"
+
+[worktrees]
+directory = "~/.herdr/worktrees"
+
+[session]
+resume_agents_on_restore = true

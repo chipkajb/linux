@@ -1,11 +1,11 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=jmux
+Name=Herdr
 Comment=Terminal workspace for agentic development
-Exec=alacritty --title jmux -e /home/jordan/.local/bin/jmux-launch
-Icon=jmux
+Exec=alacritty --title Herdr -e /home/jordan/.local/bin/herdr-launch
+Icon=herdr
 Terminal=false
 Categories=Development;
-Keywords=tmux;terminal;claude;agents;
+Keywords=tmux;terminal;claude;agents;herdr;
 StartupNotify=true
