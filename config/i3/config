@@ -300,7 +300,7 @@ exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 
 # open applications
 bindsym $mod+g exec google-chrome
-bindsym $mod+c exec cursor
+bindsym $mod+c exec /usr/share/cursor/cursor
 bindsym $mod+p exec pithos
 bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
