@@ -165,5 +165,6 @@
   "explorer.confirmDragAndDrop": false,
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "claudeCode.preferredLocation": "sidebar",
-  "window.autoDetectColorScheme": false
+  "window.autoDetectColorScheme": false,
+  "python.defaultInterpreterPath": "/bin/python3"
 }
