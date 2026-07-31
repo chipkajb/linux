@@ -106,12 +106,19 @@ type = "shell"
 command = 'herdr pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null | xclip -selection clipboard'
 description = "copy pane to clipboard"
 
-# a = agent
+# a = Cursor agent
 [[keys.command]]
 key = "prefix+a"
 type = "pane"
+command = "/home/jordan/.local/bin/agent"
+description = "cursor agent"
+
+# A = Claude Code
+[[keys.command]]
+key = "prefix+shift+a"
+type = "pane"
 command = "claude"
-description = "open claude"
+description = "claude code"
 
 # G = git
 [[keys.command]]
