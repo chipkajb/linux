@@ -296,6 +296,9 @@ workspace $workspace10 output $monitor_right
 # enable touchpad tapping
 exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled" 1
 
+# start notification daemon
+exec --no-startup-id dunst
+
 # hide mouse cursor
 exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 
