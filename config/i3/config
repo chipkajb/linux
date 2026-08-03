@@ -72,7 +72,8 @@ floating_modifier $mod
 
 # start a terminal
 # bindsym $mod+Return exec warp-terminal
-bindsym $mod+Return exec alacritty
+# bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec alacritty --title Herdr -e ~/.local/bin/herdr-launch
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -300,13 +301,11 @@ exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 
 # open applications
 bindsym $mod+g exec google-chrome
-bindsym $mod+c exec /usr/share/cursor/cursor
+bindsym $mod+c exec /usr/share/cursor/cursor --classic
 bindsym $mod+p exec pithos
 bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
-bindsym $mod+t exec alacritty -e tmux new-session
-bindsym $mod+Shift+t exec alacritty --title Herdr -e ~/.local/bin/herdr-launch
 bindsym $mod+o exec obsidian
 bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec claude-desktop; exec slack
 
