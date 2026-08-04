@@ -15,9 +15,21 @@ body="${DUNST_BODY:-}"
 urgency="${DUNST_URGENCY:-NORMAL}"
 icon_path="${DUNST_ICON_PATH:-}"
 
-limit_lines() {
+# approximate chars per wrapped line at width=360 with icon + padding
+FOLD_WIDTH=50
+
+normalize_text() {
+    local text="$1"
+    text="${text//$'\r\n'/$'\n'}"
+    text="${text//$'\r'/$'\n'}"
+    printf '%b' "$text"
+}
+
+# strip blank lines, fold overlong lines, then cap line count
+limit_content() {
     local max_lines="$1"
-    awk -v max="$max_lines" '
+    local fold_width="${2:-$FOLD_WIDTH}"
+    fold -s -w "$fold_width" | awk -v max="$max_lines" '
         NF {
             print
             count++
@@ -28,8 +40,8 @@ limit_lines() {
     '
 }
 
-summary="$(printf '%s\n' "$summary" | limit_lines 2)"
-body="$(printf '%s\n' "$body" | limit_lines 3)"
+summary="$(normalize_text "$summary" | limit_content 2)"
+body="$(normalize_text "$body" | limit_content 3)"
 
 args=(
     -a "$appname"

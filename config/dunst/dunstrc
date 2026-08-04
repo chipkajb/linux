@@ -189,7 +189,12 @@
 [sanitize-all]
     summary = *
     category = !x-sanitized
-    format =
+    format = ""
     script = ~/.config/dunst/sanitize-notification.sh
+
+# preserve line breaks from sanitize-notification.sh (global ignore_newline=yes collapses them)
+[sanitize-display]
+    category = "x-sanitized"
+    ignore_newline = no
 
 # vim: ft=cfg
