@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# rofi ssh modi: list ~/.ssh/config hosts and open a terminal ssh session
+
+set -euo pipefail
+
+ssh_config="${HOME}/.ssh/config"
+
+list_hosts() {
+    if [[ ! -f "$ssh_config" ]]; then
+        return 0
+    fi
+
+    awk '
+        /^[Hh]ost[ \t]+/ {
+            for (i = 2; i <= NF; i++) {
+                if ($i !~ /[*?]/) {
+                    print $i
+                }
+            }
+        }
+    ' "$ssh_config" | sort -u
+}
+
+if [[ -z "${1:-}" ]]; then
+    list_hosts
+    exit 0
+fi
+
+host="$1"
+exec alacritty --title "ssh ${host}" -e ssh "$host"

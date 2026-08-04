@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# open vim in the Obsidian vault on the Notes workspace (toggle focus)
+
+set -euo pipefail
+
+vault="${HOME}/Documents/Obsidian Vault"
+window_title="Obsidian Notes"
+window_class="obsidian-notes-scratch"
+notes_workspace="6: 📝 Notes"
+script_dir="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+
+notes_window_exists() {
+    command -v jq >/dev/null 2>&1 || return 1
+    i3-msg -t get_tree 2>/dev/null | jq -e --arg title "$window_title" '
+        .. | objects | select(.type? == "con" and .name? == $title)
+    ' >/dev/null
+}
+
+launch_notes() {
+    mkdir -p "$vault" "$HOME/.local/bin"
+    ln -sfn "$script_dir/herdr-notify-send" "$HOME/.local/bin/notify-send"
+    chmod +x "$script_dir/herdr-notify-send"
+
+    i3-msg -q "workspace ${notes_workspace}"
+
+    alacritty \
+        --title "$window_title" \
+        --class "$window_class" \
+        -e bash -lc "export PATH=\"${HOME}/.local/bin:\$PATH\"; cd \"${vault}\"; exec vim" &
+}
+
+if notes_window_exists; then
+    i3-msg -q "workspace ${notes_workspace}; [title=\"${window_title}\"] focus"
+    exit 0
+fi
+
+launch_notes

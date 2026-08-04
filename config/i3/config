@@ -1,12 +1,13 @@
 # set mod key (Super)
 set $mod Mod4
+set $scripts_dir ~/workspace/linux/scripts
 
 ######
 # KEY
 ######
-# a: focus parent
+# a: open Claude
 # b: open bluetooth manager
-# c: open VS Code (or Cursor)
+# c: open Cursor
 # c*: reload configuration
 # d: rofi drun
 # d*: rofi run
@@ -15,32 +16,34 @@ set $mod Mod4
 # f: full screen toggle
 # g: open google-chrome
 # h: focus left
-# i: <empty>
+# i: show hotkey help
 # j: focus down
 # k: focus up
 # l: focus right
 # m: open MongoDB Compass
-# n: open nautilus
-# o: open obsidian
-# o*: open work apps (chrome, obsidian, claude, slack)
-# p: open pithos
-# q: <empty>
+# n: open Nautilus
+# o: open Obsidian
+# o*: open work apps (Google Chrome, Obsidian, Claude, Slack)
+# p: open Pithos
+# q: toggle notification quiet mode
 # q*: quit window
 # r: resize window
 # r*: restart i3
-# s: layout stacking
-# t: open tmux session
-# u: <empty>
+# s: open Slack
+# s*: rofi ssh switcher
+# t: obsidian notes scratch (vim in vault)
+# u: next workspace
 # v: split vertically
-# w: layout tabbed
-# x: <empty>
+# w: rofi window switcher
+# x: pop last dismissed notification
 # x*: lock screen
-# y: <empty>
-# z: <empty>
+# y: move window to overflow workspace and go there
+# z: goto latest dunst notification workspace
+# tab: workspace back and forth
 # semicolon: split horizontally
 # enter: open terminal
-# space: focus mode_toggle
-# space*: toggle floating/tiling
+# space: toggle floating/tiling
+# space*: focus mode_toggle
 # less: move workspace left
 # greater: move workspace right
 # plus: move workspace up
@@ -111,22 +114,20 @@ bindsym $mod+v split v
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+# change container layout (toggle split)
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+Shift+space focus mode_toggle
 
-# focus the parent container
-bindsym $mod+a focus parent
+# toggle between current and previous workspace
+bindsym $mod+Tab workspace back_and_forth
 
-# focus the child container
-#bindsym $mod+d focus child
+# jump to workspace for dunst's most recent notification
+bindsym $mod+z exec --no-startup-id $scripts_dir/i3-goto-notification-workspace
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -175,6 +176,7 @@ assign [class="slack"] $workspace4
 assign [class="org.gnome.Nautilus"] $workspace5
 assign [class="Gedit"] $workspace6
 assign [class="obsidian"] $workspace6
+assign [class="obsidian-notes-scratch"] $workspace6
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
@@ -272,6 +274,8 @@ bindsym $mod+minus move workspace to output down
 # start rofi (a program launcher)
 bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config.rasi
 bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config.rasi
+bindsym $mod+w exec rofi -show window -config ~/.config/rofi/config.rasi
+bindsym $mod+Shift+s exec --no-startup-id $scripts_dir/i3-rofi-ssh
 
 # start picom (compositor)
 exec --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
@@ -303,14 +307,24 @@ exec --no-startup-id dunst
 exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 
 # open applications
+bindsym $mod+a exec claude-desktop
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec /usr/share/cursor/cursor --classic
+bindsym $mod+s exec slack
 bindsym $mod+p exec pithos
 bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+o exec obsidian
 bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec claude-desktop; exec slack
+
+# notification and navigation shortcuts
+bindsym $mod+q exec --no-startup-id $scripts_dir/i3-dunst-quiet-toggle
+bindsym $mod+i exec --no-startup-id $scripts_dir/i3-hotkeys-help
+bindsym $mod+x exec --no-startup-id dunstctl history-pop
+bindsym $mod+y move container to workspace $workspace9; workspace $workspace9
+bindsym $mod+u workspace next
+bindsym $mod+t exec --no-startup-id $scripts_dir/i3-obsidian-notes
 
 # Hide the most recent notification using Alt+r
 bindsym Mod1+r exec --no-startup-id dunstctl close

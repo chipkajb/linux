@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# show i3 hotkey reference in a terminal (vim keys; Esc or q to close)
+
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+repo_hotkeys="$script_dir/../config/i3/i3-hotkeys.txt"
+repo_viewer_vimrc="$script_dir/../config/i3/i3-hotkeys-viewer.vim"
+config_hotkeys="${HOME}/.config/i3/i3-hotkeys.txt"
+config_viewer_vimrc="${HOME}/.config/i3/i3-hotkeys-viewer.vim"
+
+resolve_hotkeys_file() {
+    if [[ -f "$config_hotkeys" ]]; then
+        printf '%s\n' "$config_hotkeys"
+    elif [[ -f "$repo_hotkeys" ]]; then
+        printf '%s\n' "$repo_hotkeys"
+    else
+        return 1
+    fi
+}
+
+resolve_viewer_vimrc() {
+    if [[ -f "$config_viewer_vimrc" ]]; then
+        printf '%s\n' "$config_viewer_vimrc"
+    elif [[ -f "$repo_viewer_vimrc" ]]; then
+        printf '%s\n' "$repo_viewer_vimrc"
+    else
+        return 1
+    fi
+}
+
+pick_pager() {
+    if command -v nvim >/dev/null 2>&1; then
+        printf '%s\n' nvim
+    elif command -v vim >/dev/null 2>&1; then
+        printf '%s\n' vim
+    else
+        return 1
+    fi
+}
+
+view_hotkeys() {
+    local hotkeys_file viewer_vimrc pager
+    hotkeys_file="$(resolve_hotkeys_file)" || {
+        printf 'hotkeys file not found\n' >&2
+        exit 1
+    }
+
+    export TERM="${TERM:-xterm-256color}"
+
+    if pager="$(pick_pager)" && viewer_vimrc="$(resolve_viewer_vimrc)"; then
+        exec "$pager" -R -u "$viewer_vimrc" "$hotkeys_file"
+    fi
+
+    exec less '+1' -R "$hotkeys_file"
+}
+
+launch_hotkeys() {
+    exec alacritty \
+        --title "i3 Hotkeys" \
+        --class i3-hotkeys-help \
+        -e "$script_path" --view
+}
+
+case "${1:-}" in
+    --view)
+        view_hotkeys
+        ;;
+    *)
+        launch_hotkeys
+        ;;
+esac

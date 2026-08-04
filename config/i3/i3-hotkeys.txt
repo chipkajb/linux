@@ -1,0 +1,123 @@
+╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                                 i3 HOTKEY REFERENCE                                  ║
+║                         Super = Mod4    ·    * = Super+Shift                         ║
+╚══════════════════════════════════════════════════════════════════════════════════════╝
+
+
+APPLICATIONS
+──────────────────────────────────────────────────────────────────────────────────────
+  a         open Claude
+  b         open Bluetooth Manager
+  c         open Cursor
+  g         open Google Chrome
+  m         open MongoDB Compass
+  n         open Nautilus
+  o         open Obsidian
+  p         open Pithos
+  s         open Slack
+
+  o*        open work apps (Chrome, Obsidian, Claude, Slack)
+
+
+NOTIFICATIONS & QUICK NAV
+──────────────────────────────────────────────────────────────────────────────────────
+  q         toggle notification quiet mode (3s toast, then pause dunst)
+  x         pop last dismissed notification (dunst history)
+  z         goto latest dunst notification workspace
+  y         move window to overflow (9) and go there
+
+  Tab       workspace back and forth
+  u         next workspace
+
+  i         show this hotkey help
+
+
+WORKSPACES
+──────────────────────────────────────────────────────────────────────────────────────
+  1 – 9, 0      switch to workspace 1 – 10
+  1* – 9*, 0*   move focused window to workspace 1 – 10
+
+  1   🌍 Web
+  2   ⚫ Terminal
+  3   💻 Code
+  4   💬 Messages
+  5   📁 Files
+  6   📝 Notes
+  7   🎵 Music
+  8   🤖 Claude
+  9   🔀 Overflow
+  10  💾 Database
+
+
+WINDOW FOCUS & MOVE
+──────────────────────────────────────────────────────────────────────────────────────
+  h j k l           focus left / down / up / right
+  arrow keys        focus left / down / up / right
+
+  h* j* k* l*       move window left / down / up / right
+  arrow*            move window left / down / up / right
+
+
+LAYOUT & RESIZE
+──────────────────────────────────────────────────────────────────────────────────────
+  e           layout toggle split
+  f           fullscreen toggle
+  v           split vertically
+  ;           split horizontally
+  space       toggle floating / tiling
+  space*      focus tiling / floating windows
+  r           resize mode (Esc, Enter, or r to exit)
+
+
+LAUNCHERS (ROFI)
+──────────────────────────────────────────────────────────────────────────────────────
+  d           application launcher (drun)
+  d*          run command
+  w           window switcher
+  s*          ssh host switcher (~/.ssh/config)
+
+
+SCRATCH & TERMINAL
+──────────────────────────────────────────────────────────────────────────────────────
+  t           obsidian notes scratch (vim in vault, workspace 6)
+  Enter       open terminal (Herdr)
+
+
+MONITORS
+──────────────────────────────────────────────────────────────────────────────────────
+  <           move workspace to output left
+  >           move workspace to output right
+  +           move workspace to output up
+  -           move workspace to output down
+
+
+SYSTEM
+──────────────────────────────────────────────────────────────────────────────────────
+  c*          reload i3 configuration
+  r*          restart i3
+  e*          logout (with confirmation)
+  q*          quit focused window
+  x*          lock screen
+
+
+NOTIFICATIONS (ALT)
+──────────────────────────────────────────────────────────────────────────────────────
+  Alt+r         close most recent notification
+  Alt+Space     close all notifications
+
+
+MEDIA KEYS
+──────────────────────────────────────────────────────────────────────────────────────
+  Volume Up / Down     raise / lower volume
+  Volume Mute          toggle mute
+  Mic Mute             toggle microphone mute
+
+
+─────────────────────────────── HELP WINDOW (Super+i) ────────────────────────────────
+  j / k          line down / up
+  Ctrl+d / u     half-page down / up
+  h / l          scroll left / right
+  PgUp / PgDn    page up / down
+  H / L          jump to top / bottom
+  Esc / q        close
+──────────────────────────────────────────────────────────────────────────────────────

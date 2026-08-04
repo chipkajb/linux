@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# show scratchpad terminal, creating it first if needed
+
+set -euo pipefail
+
+scratchpad_class="scratchpad-terminal"
+
+scratchpad_exists() {
+    command -v jq >/dev/null 2>&1 || return 1
+    i3-msg -t get_tree 2>/dev/null | jq -e --arg class "$scratchpad_class" '
+        .. | objects | select(.type? == "con" and .window_properties?.class? == $class)
+    ' >/dev/null
+}
+
+launch_scratchpad() {
+    alacritty --class "$scratchpad_class" --title Scratchpad -e zsh &
+    for _ in $(seq 1 20); do
+        if scratchpad_exists; then
+            return 0
+        fi
+        sleep 0.1
+    done
+    return 1
+}
+
+if ! scratchpad_exists; then
+    launch_scratchpad || exit 1
+fi
+
+i3-msg -q scratchpad show

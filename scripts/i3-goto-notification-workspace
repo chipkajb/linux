@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+# jump to the i3 workspace for dunst's most recent notification (any urgency)
+
+set -euo pipefail
+
+command -v dunstctl >/dev/null 2>&1 || exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+command -v i3-msg >/dev/null 2>&1 || exit 0
+
+readonly WS_WEB='1: 🌍 Web'
+readonly WS_TERMINAL='2: ⚫ Terminal'
+readonly WS_CODE='3: 💻 Code'
+readonly WS_MESSAGES='4: 💬 Messages'
+readonly WS_FILES='5: 📁 Files'
+readonly WS_NOTES='6: 📝 Notes'
+readonly WS_MUSIC='7: 🎵 Music'
+readonly WS_CLAUDE='8: 🤖 Claude'
+readonly WS_DATABASE='10: 💾 Database'
+
+notify() {
+    if [[ -x /usr/bin/notify-send ]]; then
+        /usr/bin/notify-send -a i3 "$@"
+    elif command -v notify-send >/dev/null 2>&1; then
+        notify-send -a i3 "$@"
+    fi
+}
+
+history="$(dunstctl history 2>/dev/null)" || {
+    notify "Notifications" "Dunst is not running" -i dialog-warning -t 3000
+    exit 0
+}
+
+read -r appname summary body < <(
+    printf '%s' "$history" | jq -r '
+        (.data[0] // [])
+        | map(select(
+            ((.appname.data // "") | ascii_downcase) as $app |
+            $app != "i3" and $app != "notify-send" and $app != "dunst"
+          ))
+        | if length == 0 then empty else
+            max_by(.timestamp.data) |
+            [
+                (.appname.data // ""),
+                (.summary.data // ""),
+                (.body.data // "")
+            ] | @tsv
+          end
+    '
+) || true
+
+if [[ -z "${appname:-}${summary:-}${body:-}" ]]; then
+    notify "Notifications" "No app notifications in dunst history" -i dialog-information -t 3000
+    exit 0
+fi
+
+resolve_workspace() {
+    local app="${1,,}"
+    local sum="$2"
+    local text="${2} ${3}"
+
+    # slack snap often sends empty appname with bracketed summaries
+    if [[ -z "$app" && "$sum" =~ ^\[.+\]\ (from|in)\  ]]; then
+        printf '%s\n' "$WS_MESSAGES"
+        return 0
+    fi
+
+    case "$app" in
+        grid-*|*grid*|*teamworks*|*slack*|*discord*|*telegram*|*signal*|*teams*|*mattermost*|*element*|*franz*|*rambox*)
+            printf '%s\n' "$WS_MESSAGES"
+            ;;
+        *google*chrome*|google-chrome|*chromium*|*firefox*|*brave*|*vivaldi*|*opera*|*microsoft-edge*|*edge*)
+            printf '%s\n' "$WS_WEB"
+            ;;
+        cursor|*cursor*|code|*vscode*|*vscodium*|*sublime*|*intellij*|*pycharm*|*webstorm*)
+            printf '%s\n' "$WS_CODE"
+            ;;
+        herdr)
+            if [[ "${text,,}" == *cursor* ]]; then
+                printf '%s\n' "$WS_CODE"
+            else
+                printf '%s\n' "$WS_TERMINAL"
+            fi
+            ;;
+        alacritty|*alacritty*|kitty|*kitty*|warp|*warp*|*terminator*|*xterm*|*foot*|*wezterm*)
+            printf '%s\n' "$WS_TERMINAL"
+            ;;
+        claude|claude-desktop|*claude*|*anthropic*)
+            printf '%s\n' "$WS_CLAUDE"
+            ;;
+        obsidian|*obsidian*|gedit|*notion*|*logseq*)
+            printf '%s\n' "$WS_NOTES"
+            ;;
+        *nautilus*|org.gnome.nautilus|*thunar*|*dolphin*|files)
+            printf '%s\n' "$WS_FILES"
+            ;;
+        pithos|*pithos*|pavucontrol|*pavucontrol*|*blueman*|*spotify*|*rhythmbox*|*clementine*)
+            printf '%s\n' "$WS_MUSIC"
+            ;;
+        *mongodb*compass*|*mongodb*|mongodb-compass)
+            printf '%s\n' "$WS_DATABASE"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+workspace="$(resolve_workspace "$appname" "$summary" "$body" || true)"
+if [[ -z "${workspace:-}" ]]; then
+    label="${appname:-unknown app}"
+    notify "Notifications" "No workspace mapped for ${label}" -i dialog-warning -t 4000
+    exit 0
+fi
+
+i3-msg "workspace $workspace" >/dev/null
+notify "Notifications" "Switched to ${workspace} (${appname})" -i dialog-information -t 2500

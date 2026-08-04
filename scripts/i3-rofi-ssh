@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# pick an ssh host from ~/.ssh/config and open a terminal session
+
+set -euo pipefail
+
+rofi_config="${HOME}/.config/rofi/config.rasi"
+ssh_config="${HOME}/.ssh/config"
+
+list_hosts() {
+    if [[ ! -f "$ssh_config" ]]; then
+        return 0
+    fi
+
+    awk '
+        /^[Hh]ost[ \t]+/ {
+            for (i = 2; i <= NF; i++) {
+                if ($i !~ /[*?]/) {
+                    print $i
+                }
+            }
+        }
+    ' "$ssh_config" | sort -u
+}
+
+notify() {
+    if [[ -x /usr/bin/notify-send ]]; then
+        /usr/bin/notify-send -a i3 "$@"
+    fi
+}
+
+hosts="$(list_hosts)"
+if [[ -z "$hosts" ]]; then
+    notify "SSH" "No hosts found in ~/.ssh/config"
+    exit 0
+fi
+
+host="$(printf '%s\n' "$hosts" | rofi -dmenu -i -p "ssh" -config "$rofi_config" -lines 12)"
+[[ -n "${host:-}" ]] || exit 0
+
+exec alacritty --title "ssh ${host}" -e ssh "$host"
