@@ -85,6 +85,45 @@
     "when": "editorTextFocus"
   },
 
+  // Git diff navigation — open inline peek at next/previous hunk (replaces clicking gutter)
+  {
+    "key": "shift+alt+]",
+    "command": "editor.action.dirtydiff.next",
+    "when": "editorTextFocus && !isInDiffEditor"
+  },
+  {
+    "key": "shift+alt+[",
+    "command": "editor.action.dirtydiff.previous",
+    "when": "editorTextFocus && !isInDiffEditor"
+  },
+  // Jump to next gutter change without opening the peek (blue=modified, green=added, red=deleted)
+  {
+    "key": "shift+alt+.",
+    "command": "workbench.action.editor.nextChange",
+    "when": "editorTextFocus && !isInDiffEditor"
+  },
+  // Same hunk navigation in the side-by-side diff editor
+  {
+    "key": "shift+alt+]",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "isInDiffEditor"
+  },
+  {
+    "key": "shift+alt+[",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "isInDiffEditor"
+  },
+  {
+    "key": "shift+alt+.",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "isInDiffEditor"
+  },
+  {
+    "key": "escape",
+    "command": "closeQuickDiff",
+    "when": "dirtyDiffVisible"
+  },
+
   // Disable ctrl+e shortcut while in terminal
   {
     "key": "ctrl+e",
