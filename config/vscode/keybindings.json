@@ -63,16 +63,49 @@
     "when": "editorTextFocus"
   },
 
-  // Git shortcuts
+  // Git shortcuts — stage/revert selected ranges (editor focused, peek closed)
   {
     "key": "shift+alt+s",
     "command": "git.stageSelectedRanges",
-    "when": "editorTextFocus"
+    "when": "editorTextFocus && !dirtyDiffVisible && !isInDiffEditor"
   },
   {
     "key": "shift+alt+r",
     "command": "git.revertSelectedRanges",
-    "when": "editorTextFocus"
+    "when": "editorTextFocus && !dirtyDiffVisible && !isInDiffEditor"
+  },
+  // Same keys in side-by-side diff editor (highlighted ranges)
+  {
+    "key": "shift+alt+s",
+    "command": "git.stageSelectedRanges",
+    "when": "isInDiffEditor && isInDiffRightEditor && editorTextFocus"
+  },
+  {
+    "key": "shift+alt+r",
+    "command": "git.revertSelectedRanges",
+    "when": "isInDiffEditor && isInDiffRightEditor && editorTextFocus"
+  },
+  // Inline git diff peek — hunk at cursor (peek may hold focus, not the editor)
+  {
+    "key": "shift+alt+s",
+    "command": "git.diff.stageHunk",
+    "when": "dirtyDiffVisible"
+  },
+  {
+    "key": "shift+alt+r",
+    "command": "git.revertSelectedRanges",
+    "when": "dirtyDiffVisible"
+  },
+  // Peek open but editor still has a selection — prefer selected ranges over cursor hunk
+  {
+    "key": "shift+alt+s",
+    "command": "git.stageSelectedRanges",
+    "when": "dirtyDiffVisible && editorTextFocus && editorHasSelection"
+  },
+  {
+    "key": "shift+alt+r",
+    "command": "git.revertSelectedRanges",
+    "when": "dirtyDiffVisible && editorTextFocus && editorHasSelection"
   },
   {
     "key": "shift+alt+d",
@@ -85,7 +118,7 @@
     "when": "editorTextFocus"
   },
 
-  // Git diff navigation — open inline peek at next/previous hunk (replaces clicking gutter)
+  // Git diff navigation — inline peek at next/previous unstaged hunk (requires Index diffs hidden; see settings.json git comment)
   {
     "key": "shift+alt+]",
     "command": "editor.action.dirtydiff.next",

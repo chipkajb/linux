@@ -193,6 +193,7 @@ install_vscode() {
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
     ln -sfn $PWD/config/vscode/settings.json ~/.config/Cursor/User/
     ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Cursor/User/
+    python3 "$PWD/config/vscode/hide-staged-gutter-diffs.py" || true
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
 }
 

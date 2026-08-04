@@ -120,6 +120,11 @@
   ],
 
   // git
+  // Gutter navigation (shift+alt+[ / ]) uses editor.action.dirtydiff.*, which visits every
+  // visible quick-diff provider. Since VS Code 1.100 that includes staged hunks (Index) as
+  // well as unstaged (Working Tree). Hide staged decorations so [] only cycles unstaged changes:
+  //   right-click line numbers → Diff Decorations → uncheck "Git Local Changes (Index)"
+  // Or: python3 config/vscode/hide-staged-gutter-diffs.py  (close the editor first)
   "git.confirmSync": false,
   "git.autofetch": true,
   "git.mergeEditor": true,
