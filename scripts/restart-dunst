@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# reload dunst config (restart is required; dunst 1.9.x has no reload command)
+
+set -euo pipefail
+
+killall dunst 2>/dev/null || true
+sleep 0.2
+dunst &

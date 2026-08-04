@@ -10,7 +10,8 @@
     ### Geometry ###
 
     width = 360
-    height = (0, 120)
+    # dunst 1.9.x only supports a single height value (not (min, max))
+    height = 120
     origin = top-right
     offset = 20x20
     scale = 0
@@ -47,7 +48,7 @@
     ### Text ###
 
     font = pango:System San Francisco Display 12
-    line_height = 4
+    line_height = 0
     markup = full
     format = "<b><span color='#fabd2f'>%s</span></b>\n<span color='#d5c4a1'>%b</span>"
     alignment = left
@@ -185,16 +186,17 @@
     set_stack_tag = "volume"
     timeout = 3
 
-# strip empty lines and cap summary/body length before display
+# hide original (empty format), re-display sanitized copy via script
 [sanitize-all]
     summary = *
-    category = !x-sanitized
     format = ""
     script = ~/.config/dunst/sanitize-notification.sh
 
-# preserve line breaks from sanitize-notification.sh (global ignore_newline=yes collapses them)
-[sanitize-display]
+# restore display settings for the sanitized re-display
+[x-sanitized-display]
     category = "x-sanitized"
-    ignore_newline = no
+    word_wrap = no
+    ellipsize = end
+    format = "<b><span color='#fabd2f'>%s</span></b>\n<span color='#d5c4a1'>%b</span>"
 
 # vim: ft=cfg

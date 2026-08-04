@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# sanitize notification text and re-display (avoids empty lines + long bodies)
+# sanitize notification text and re-display (strip blank lines, truncate long bodies)
 
 set -euo pipefail
 
@@ -9,14 +9,13 @@ fi
 
 command -v dunstify >/dev/null 2>&1 || exit 0
 
-appname="${DUNST_APPNAME:-${DUNST_APP_NAME:-notification}}"
-summary="${DUNST_SUMMARY:-}"
-body="${DUNST_BODY:-}"
-urgency="${DUNST_URGENCY:-NORMAL}"
-icon_path="${DUNST_ICON_PATH:-}"
+appname="${DUNST_APPNAME:-${DUNST_APP_NAME:-${1:-notification}}}"
+summary="${DUNST_SUMMARY:-${2:-}}"
+body="${DUNST_BODY:-${3:-}}"
+urgency="${DUNST_URGENCY:-${5:-NORMAL}}"
+icon_path="${DUNST_ICON_PATH:-${4:-}}"
 
-# approximate chars per wrapped line at width=360 with icon + padding
-FOLD_WIDTH=50
+BODY_MAX_CHARS=100
 
 normalize_text() {
     local text="$1"
@@ -25,23 +24,57 @@ normalize_text() {
     printf '%b' "$text"
 }
 
-# strip blank lines, fold overlong lines, then cap line count
-limit_content() {
-    local max_lines="$1"
-    local fold_width="${2:-$FOLD_WIDTH}"
-    fold -s -w "$fold_width" | awk -v max="$max_lines" '
+strip_markup() {
+    sed -e 's/<br[[:space:]]*\/?>/ /gi' -e 's/<[^>]*>//g'
+}
+
+strip_empty_lines() {
+    awk '
         NF {
-            print
-            count++
-        }
-        count >= max {
-            exit
+            if (n++) {
+                printf " "
+            }
+            printf "%s", $0
         }
     '
 }
 
-summary="$(normalize_text "$summary" | limit_content 2)"
-body="$(normalize_text "$body" | limit_content 3)"
+collapse_whitespace() {
+    tr '\n\r\t' '   ' | awk '{$1=$1; print}'
+}
+
+trim_whitespace() {
+    local text="$1"
+    text="${text#"${text%%[![:space:]]*}"}"
+    text="${text%"${text##*[![:space:]]}"}"
+    printf '%s' "$text"
+}
+
+truncate_chars() {
+    local max="$1"
+    local text="$2"
+    if ((${#text} > max)); then
+        text="${text:0:max}"
+    fi
+    printf '%s' "$text"
+}
+
+sanitize_field() {
+    local max_chars="$1"
+    local text="$2"
+    text="$(normalize_text "$text")"
+    text="$(printf '%s' "$text" | strip_markup)"
+    text="$(printf '%s\n' "$text" | strip_empty_lines)"
+    text="$(printf '%s' "$text" | collapse_whitespace)"
+    text="$(trim_whitespace "$text")"
+    if ((max_chars > 0)); then
+        text="$(truncate_chars "$max_chars" "$text")"
+    fi
+    trim_whitespace "$text"
+}
+
+summary="$(sanitize_field 0 "$summary")"
+body="$(sanitize_field "$BODY_MAX_CHARS" "$body")"
 
 args=(
     -a "$appname"
