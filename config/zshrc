@@ -248,8 +248,10 @@ alias l.='eza -a'
 alias la='eza -lha'
 alias lt='eza --tree --level=2 --git'
 
-# file search and fuzzy finding aliases
-alias ff='fzf --preview "bat --color=always {}"'
+# file search aliases
+# agents (claude/cursor) + nvim use fff (resident index); shell one-shot still uses fd/rg.
+# fzf kept only for interactive terminal pickers outside nvim.
+alias ff='fzf --preview "batcat --color=always {}"'
 alias vf='vim $(fzf)'
 
 # system information and monitoring aliases

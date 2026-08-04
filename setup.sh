@@ -393,12 +393,24 @@ install_alacritty() {
     printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
 }
 
+# install fff-mcp (agent file search; used by claude/cursor instead of rg/fzf)
+install_fff_mcp() {
+    printf "Installing fff-mcp...\n"
+    curl -fsSL https://raw.githubusercontent.com/dmtrKovalenko/fff/main/install-mcp.sh | bash
+    if command -v claude &>/dev/null; then
+        claude mcp add -s user fff -- "$HOME/.local/bin/fff-mcp" 2>/dev/null || true
+    fi
+    printf "${GREEN}DONE${NC} -- fff-mcp at ${YELLOW}$HOME/.local/bin/fff-mcp${NC}\n"
+}
+
 # misc setup
 misc_setup() {
     printf "Miscellaneous setup...\n"
     sudo apt-get update
     sudo apt install python3-gi unclutter-xfixes flameshot simplescreenrecorder gnome-tweaks -y
+    # fd/rg/fzf remain for one-shot shell use; agents + nvim use fff
     sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
+    install_fff_mcp
     ln -s $PWD/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins

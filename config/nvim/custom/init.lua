@@ -9,6 +9,10 @@ vim.defer_fn(function()
     dofile(path1)
     local path2 = vim.fn.stdpath('config') .. '/after/remap.lua'
     dofile(path2)
+    local path3 = vim.fn.stdpath('config') .. '/after/plugin/fff.lua'
+    if vim.fn.filereadable(path3) == 1 then
+        dofile(path3)
+    end
 end, 0)
 
 -- Basic vim settings
