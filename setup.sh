@@ -242,14 +242,25 @@ install_adlc() {
     mkdir -p ~/.local/bin ~/.local/share/applications
     ln -sfn "$PWD/scripts/herdr-launch" ~/.local/bin/herdr-launch
     ln -sfn "$PWD/config/applications/herdr.desktop" ~/.local/share/applications/herdr.desktop
-    # app icon (hicolor theme → rofi/desktop pick up Icon=herdr)
+    # app icons (hicolor → rofi/desktop/dunst pick up Icon=herdr, slack, …)
     for size_dir in "$PWD"/assets/icons/hicolor/*/apps; do
-        if [ -f "$size_dir/herdr.png" ]; then
-            size=$(basename "$(dirname "$size_dir")")
-            mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
-            ln -sfn "$size_dir/herdr.png" "$HOME/.local/share/icons/hicolor/$size/apps/herdr.png"
-        fi
+        size=$(basename "$(dirname "$size_dir")")
+        mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
+        for icon in "$size_dir"/*.png; do
+            [ -f "$icon" ] || continue
+            ln -sfn "$icon" "$HOME/.local/share/icons/hicolor/$size/apps/$(basename "$icon")"
+        done
     done
+    # Cursor ships only in pixmaps; alias into hicolor for dunst theme lookup
+    if [ -f /usr/share/pixmaps/co.anysphere.cursor.png ]; then
+        for size in 48x48 128x128 256x256; do
+            mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
+            ln -sfn /usr/share/pixmaps/co.anysphere.cursor.png \
+                "$HOME/.local/share/icons/hicolor/$size/apps/co.anysphere.cursor.png"
+            ln -sfn /usr/share/pixmaps/co.anysphere.cursor.png \
+                "$HOME/.local/share/icons/hicolor/$size/apps/cursor.png"
+        done
+    fi
     if command -v gtk-update-icon-cache &> /dev/null; then
         gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2> /dev/null || true
     fi

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Wrap notify-send so Herdr client system toasts use the Herdr logo.
+# herdr-launch puts this on PATH as `notify-send` ahead of /usr/bin.
+# Only brands calls whose parent process is the herdr binary itself, so
+# pane shells and other tools keep normal notify-send behavior.
+
+set -euo pipefail
+
+REAL_NOTIFY_SEND=/usr/bin/notify-send
+if [[ ! -x "$REAL_NOTIFY_SEND" ]]; then
+  printf 'herdr-notify-send: /usr/bin/notify-send not found\n' >&2
+  exit 127
+fi
+
+ICON="${HERDR_NOTIFY_ICON:-$HOME/.local/share/icons/hicolor/48x48/apps/herdr.png}"
+parent_comm=""
+if [[ -r "/proc/${PPID}/comm" ]]; then
+  parent_comm="$(tr -d '[:space:]' <"/proc/${PPID}/comm" || true)"
+fi
+
+if [[ "$parent_comm" == "herdr" && -f "$ICON" ]]; then
+  exec "$REAL_NOTIFY_SEND" --app-name=Herdr --icon="$ICON" "$@"
+fi
+
+exec "$REAL_NOTIFY_SEND" "$@"

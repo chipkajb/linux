@@ -63,12 +63,13 @@
     ### Icons ###
 
     enable_recursive_icon_lookup = true
-    icon_theme = Yaru-blue-dark
+    # Yaru-blue-dark inherits Yaru/Humanity; hicolor holds local app icons (slack, herdr, …)
+    icon_theme = Yaru-blue-dark,Yaru,hicolor
     icon_position = left
     min_icon_size = 32
     max_icon_size = 48
-
-    icon_path = /usr/share/icons/Yaru-blue-dark/16x16/status/:/usr/share/icons/Yaru-blue-dark/16x16/devices/
+    # legacy path search (used when recursive lookup misses a name)
+    icon_path = /usr/share/icons/Yaru/48x48/status/:/usr/share/icons/Yaru/48x48/apps/:/usr/share/pixmaps/
 
     ### History ###
 
@@ -99,23 +100,78 @@
     foreground = "#a89984"
     frame_color = "#504945"
     timeout = 6
+    # blue "i" — used only when the app sends no icon
+    default_icon = /usr/share/icons/Yaru/48x48/status/dialog-information.png
 
 [urgency_normal]
     background = "#282828"
     foreground = "#ebdbb2"
     frame_color = "#458588"
     timeout = 8
+    default_icon = /usr/share/icons/Yaru/48x48/status/dialog-information.png
 
 [urgency_critical]
     background = "#3c2020"
     foreground = "#fbf1c7"
     frame_color = "#fb4934"
     timeout = 0
+    # red / warning mark for critical
+    default_icon = /usr/share/icons/Yaru/48x48/status/dialog-error.png
 
 [shortcuts]
     close = mod1+r
     close_all = mod1+space
     history = mod1+u
+
+# --- App icons (default_icon keeps any icon the app already sent, e.g. avatars) ---
+
+[slack]
+    appname = Slack
+    new_icon = ~/.local/share/icons/hicolor/48x48/apps/slack.png
+
+[cursor]
+    appname = Cursor
+    default_icon = /usr/share/pixmaps/co.anysphere.cursor.png
+
+[claude]
+    appname = Claude
+    default_icon = /usr/share/icons/hicolor/48x48/apps/claude-desktop.png
+
+[claude-desktop]
+    appname = claude-desktop
+    default_icon = /usr/share/icons/hicolor/48x48/apps/claude-desktop.png
+
+[herdr]
+    appname = Herdr
+    new_icon = ~/.local/share/icons/hicolor/48x48/apps/herdr.png
+
+[google-chrome]
+    appname = "Google Chrome"
+    default_icon = google-chrome
+
+# Upgrade libnotify's tiny Humanity fallbacks to crisp 48px Yaru icons
+[fallback-information]
+    icon = "*dialog-information*"
+    new_icon = /usr/share/icons/Yaru/48x48/status/dialog-information.png
+
+[fallback-warning]
+    icon = "*dialog-warning*"
+    new_icon = /usr/share/icons/Yaru/48x48/status/dialog-warning.png
+
+[fallback-error]
+    icon = "*dialog-error*"
+    new_icon = /usr/share/icons/Yaru/48x48/status/dialog-error.png
+
+# Slack snap sends empty appname + generic info icon. Summaries look like:
+#   [workspace] from Name
+#   [workspace] in channel-or-#channel
+[slack-from]
+    summary = "[[]*] from *"
+    new_icon = ~/.local/share/icons/hicolor/48x48/apps/slack.png
+
+[slack-in]
+    summary = "[[]*] in *"
+    new_icon = ~/.local/share/icons/hicolor/48x48/apps/slack.png
 
 # stack volume changes
 [stack-volume]
