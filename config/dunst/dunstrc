@@ -11,7 +11,7 @@
 
     width = 360
     # dunst 1.9.x only supports a single height value (not (min, max))
-    height = 120
+    height = 180
     origin = top-right
     offset = 20x20
     scale = 0
@@ -89,7 +89,7 @@
     force_xwayland = false
     force_xinerama = false
 
-    mouse_left_click = do_action
+    mouse_left_click = do_action, close_current
     mouse_middle_click = close_current
     mouse_right_click = close_all
 
@@ -194,9 +194,10 @@
 
 # restore display settings for the sanitized re-display
 [x-sanitized-display]
-    category = "x-sanitized"
-    word_wrap = no
+    category = "x-sanitized*"
+    word_wrap = yes
     ellipsize = end
+    ignore_newline = no
     format = "<b><span color='#fabd2f'>%s</span></b>\n<span color='#d5c4a1'>%b</span>"
 
 # vim: ft=cfg
