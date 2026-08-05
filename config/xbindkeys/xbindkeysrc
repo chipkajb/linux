@@ -1,0 +1,6 @@
+# scroll wheel tilt left/right -> browser back/forward (buttons 6 and 7)
+"/usr/bin/xdotool key --clearmodifiers alt+Left"
+  b:6
+
+"/usr/bin/xdotool key --clearmodifiers alt+Right"
+  b:7

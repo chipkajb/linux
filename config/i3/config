@@ -310,6 +310,9 @@ exec --no-startup-id dunst
 # hide mouse cursor
 exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 
+# scroll wheel tilt left/right -> back/forward in browsers
+exec --no-startup-id xbindkeys
+
 # open applications
 bindsym $mod+a exec claude-desktop
 bindsym $mod+g exec google-chrome

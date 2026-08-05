@@ -334,6 +334,7 @@ install_i3() {
         libpango1.0-dev \
         numlockx \
         xdotool \
+        xbindkeys \
         lm-sensors \
         brightnessctl \
         fonts-font-awesome -y
@@ -369,6 +370,7 @@ install_i3() {
     ln -sfn $PWD/config/dunst ~/.config/
     ln -sfn $PWD/config/picom ~/.config/
     ln -sfn $PWD/config/polybar ~/.config/
+    ln -sfn $PWD/config/xbindkeys/xbindkeysrc ~/.xbindkeysrc
     sudo ln -sfn $PWD/config/i3/gpu_memory /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/wifi /usr/share/i3blocks
     sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
