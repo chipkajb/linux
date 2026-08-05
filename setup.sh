@@ -333,6 +333,7 @@ install_i3() {
         libgdk-pixbuf2.0-dev \
         libpango1.0-dev \
         numlockx \
+        xdotool \
         lm-sensors \
         brightnessctl \
         fonts-font-awesome -y

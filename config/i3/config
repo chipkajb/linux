@@ -39,6 +39,7 @@ set $scripts_dir ~/workspace/linux/scripts
 # x*: lock screen
 # y: move window to overflow workspace and go there
 # z: goto latest dunst notification workspace
+# period: focus window content (emulates mouse click in center of window)
 # tab: workspace back and forth
 # semicolon: split horizontally
 # enter: open terminal
@@ -125,6 +126,9 @@ bindsym $mod+Shift+space focus mode_toggle
 
 # toggle between current and previous workspace
 bindsym $mod+Tab workspace back_and_forth
+
+# click focused window so Electron/web apps accept keyboard input after i3 focus
+bindsym $mod+period exec --no-startup-id $scripts_dir/i3-focus-window-content
 
 # jump to workspace for dunst's most recent notification
 bindsym $mod+z exec --no-startup-id $scripts_dir/i3-goto-notification-workspace

@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# click a low-risk spot in the focused window so Electron/web apps accept keyboard
+# input. i3 gives WM focus on switch, but Chrome/Slack need a content-area click
+# before page up/down, esc, arrows, etc. reach the webview.
+
+set -euo pipefail
+
+skip_classes=(
+    Alacritty
+    i3-hotkeys-help
+    obsidian-notes-scratch
+    herdr
+    code
+    Code
+    Cursor
+    cursor
+)
+
+require_xdotool() {
+    if ! command -v xdotool >/dev/null 2>&1; then
+        printf 'i3-focus-window-content: install xdotool (sudo apt install xdotool)\n' >&2
+        exit 1
+    fi
+}
+
+wm_classes() {
+    local wid="$1"
+    if ! command -v xprop >/dev/null 2>&1; then
+        xdotool getwindowclassname "$wid" 2>/dev/null || true
+        return
+    fi
+
+    xprop -id "$wid" WM_CLASS 2>/dev/null \
+        | sed -E 's/^WM_CLASS\(STRING\) = "//; s/"$//; s/", "/\n/g' \
+        | tr -d '"' || true
+}
+
+class_matches() {
+    local needle="$1"
+    shift
+    local class
+    for class in "$@"; do
+        [[ "$class" == "$needle" ]] && return 0
+    done
+    return 1
+}
+
+should_skip() {
+    local wid="$1"
+    local class
+    while IFS= read -r class; do
+        [[ -z "$class" ]] && continue
+        if class_matches "$class" "${skip_classes[@]}"; then
+            return 0
+        fi
+    done < <(wm_classes "$wid")
+    return 1
+}
+
+click_window_safe_spot() {
+    local wid="$1"
+    # shellcheck disable=SC2034
+    eval "$(xdotool getwindowgeometry --shell "$wid")"
+    # left margin, vertical center — usually padding, not a button
+    local x=$((WIDTH / 20))
+    local y=$((HEIGHT / 2))
+    xdotool mousemove --window "$wid" --sync "$x" "$y"
+    xdotool click 1
+}
+
+main() {
+    require_xdotool
+
+    local wid
+    wid="$(xdotool getwindowfocus)"
+    if [[ -z "$wid" || "$wid" == "0" ]]; then
+        exit 0
+    fi
+
+    if should_skip "$wid"; then
+        exit 0
+    fi
+
+    click_window_safe_spot "$wid"
+}
+
+main "$@"

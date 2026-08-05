@@ -28,6 +28,7 @@ NOTIFICATIONS & QUICK NAV
 
   Tab       workspace back and forth
   u         next workspace
+  .         focus window content (emulates mouse click)
 
   i         show this hotkey help
 
