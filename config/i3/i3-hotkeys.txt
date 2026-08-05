@@ -28,7 +28,7 @@ NOTIFICATIONS & QUICK NAV
 
   Tab       workspace back and forth
   u         next workspace
-  .         focus window content (emulates mouse click)
+  .*          focus window content (emulates mouse click)
 
   i         show this hotkey help
 
@@ -86,9 +86,9 @@ SCRATCH & TERMINAL
 
 MONITORS
 ──────────────────────────────────────────────────────────────────────────────────────
-  <           move workspace to output left
-  >           move workspace to output right
-  +           move workspace to output up
+  ,           move workspace to output left
+  .           move workspace to output right
+  =           move workspace to output up
   -           move workspace to output down
 
 
