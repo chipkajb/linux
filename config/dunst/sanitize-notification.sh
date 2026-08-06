@@ -16,12 +16,25 @@ readonly BODY_MAX_LINES=3
 readonly BODY_MAX_CHARS=100
 readonly WS_SCRIPT="${HOME}/workspace/linux/scripts/i3-notification-workspace.sh"
 
-appname="${DUNST_APPNAME:-${DUNST_APP_NAME:-}}"
+appname="${DUNST_APPNAME:-${DUNST_APP_NAME:-${1:-}}}"
 summary="${DUNST_SUMMARY:-${2:-}}"
 body="${DUNST_BODY:-${3:-}}"
 urgency="${DUNST_URGENCY:-${5:-NORMAL}}"
 icon_path="${DUNST_ICON_PATH:-${4:-}}"
 desktop_entry="${DUNST_DESKTOP_ENTRY:-}"
+
+looks_like_slack_summary() {
+    [[ "$1" =~ ^\[[^]]+\][[:space:]]+(from|in)[[:space:]] ]]
+}
+
+# Slack snap sends an empty appname; dunstify rejects `-a ""`.
+if [[ -z "$appname" ]]; then
+    if looks_like_slack_summary "$summary"; then
+        appname="Slack"
+    elif [[ "$desktop_entry" == *slack* ]]; then
+        appname="Slack"
+    fi
+fi
 
 normalize_text() {
     local text="$1"
@@ -150,10 +163,10 @@ if [[ -x "$WS_SCRIPT" ]]; then
     fi
 fi
 
-args=(
-    -a "$appname"
-    -h "string:category:${category}"
-)
+args=(-h "string:category:${category}")
+if [[ -n "$appname" ]]; then
+    args+=(-a "$appname")
+fi
 
 if [[ -n "$desktop_entry" ]]; then
     args+=(-h "string:x-canonical-desktop:${desktop_entry}")
