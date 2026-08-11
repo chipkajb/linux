@@ -6,32 +6,34 @@
 
 APPLICATIONS
 ──────────────────────────────────────────────────────────────────────────────────────
-  a         open Claude
-  b         open Bluetooth Manager
-  c         open Cursor
-  g         open Google Chrome
-  m         open MongoDB Compass
-  n         open Nautilus
-  o         open Obsidian
-  p         open Pithos
-  s         open Slack
+  a         rofi drun — *A*pps
+  a*        rofi run
+  b         Bluetooth Manager — *B*luetooth
+  c         Cursor — *C*ursor
+  d         Claude — clau*D*e
+  g         Google Chrome — *G*oogle Chrome
+  m         MongoDB Compass — *M*ongoDB Compass
+  n         Nautilus — *N*autilus
+  o         Obsidian — *O*bsidian
+  p         Pithos — *P*ithos
+  s         Slack — *S*lack
 
-  p*        screenshot monitor under mouse (Flameshot)
-  o*        open work apps (Chrome, Obsidian, Claude, Slack)
+  o*        open work apps (Chrome, Obsidian, Claude, Slack) — *O*pen work apps
+  p*        screenshot monitor under mouse (Flameshot) — *P*rintscreen
 
 
 NOTIFICATIONS & QUICK NAV
 ──────────────────────────────────────────────────────────────────────────────────────
-  q         toggle notification quiet mode (3s toast, then pause dunst)
+  q         toggle notification quiet mode — *Q*uiet
   x         pop last dismissed notification (dunst history)
   z         goto latest dunst notification workspace
   y         move window to overflow (9) and go there
 
   Tab       workspace back and forth
   u         next workspace
-  .*          focus window content (emulates mouse click)
+  .*        focus window content (emulates mouse click)
 
-  i         show this hotkey help
+  i         show this hotkey help — *I*nformation
 
 
 WORKSPACES
@@ -63,25 +65,25 @@ WINDOW FOCUS & MOVE
 LAYOUT & RESIZE
 ──────────────────────────────────────────────────────────────────────────────────────
   e           layout toggle split
-  f           fullscreen toggle
+  e*          logout — *E*xit
+  f           fullscreen toggle — *F*ull screen
   v           split vertically
   ;           split horizontally
   space       toggle floating / tiling
   space*      focus tiling / floating windows
-  r           resize mode (Esc, Enter, or r to exit)
+  r           resize mode — *R*esize (Esc, Enter, or r to exit)
+  r*          restart i3 — *R*estart
 
 
 LAUNCHERS (ROFI)
 ──────────────────────────────────────────────────────────────────────────────────────
-  d           application launcher (drun)
-  d*          run command
   w           window switcher
-  s*          ssh host switcher (~/.ssh/config)
+  s*          ssh host switcher — *S*SH (~/.ssh/config)
 
 
 SCRATCH & TERMINAL
 ──────────────────────────────────────────────────────────────────────────────────────
-  t           obsidian notes scratch (vim in vault, workspace 6)
+  t           obsidian notes scratch (vim in vault) — *T*ext editor
   Enter       open terminal (Herdr)
 
 
@@ -95,10 +97,8 @@ MONITORS
 
 SYSTEM
 ──────────────────────────────────────────────────────────────────────────────────────
-  c*          reload i3 configuration
-  r*          restart i3
-  e*          logout (with confirmation)
-  q*          quit focused window
+  c*          reload i3 configuration — *C*onfiguration
+  q*          quit focused window — *Q*uit
   x*          lock screen
 
 

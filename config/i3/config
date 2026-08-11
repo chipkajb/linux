@@ -5,41 +5,34 @@ set $scripts_dir ~/workspace/linux/scripts
 ######
 # KEY
 ######
-# a: open Claude
-# b: open bluetooth manager
-# c: open Cursor
-# c*: reload configuration
-# d: rofi drun
-# d*: rofi run
+# a: rofi drun (*A*pps)
+# a*: rofi run
+# b: open bluetooth manager (*B*luetooth)
+# c: open cursor (*C*ursor)
+# c*: reload configuration (*C*onfiguration)
+# d: open claude (clau*D*e)
 # e: layout toggle split
-# e*: logout
-# f: full screen toggle
-# g: open google-chrome
+# e*: logout (*E*xit)
+# f: full screen toggle (*F*ull screen)
+# g: open google chrome (*G*oogle chrome)
 # h: focus left
-# i: show hotkey help
+# i: show hotkey help (*I*nformation)
 # j: focus down
 # k: focus up
 # l: focus right
-# m: open MongoDB Compass
-# n: open Nautilus
-# o: open Obsidian
-# o*: open work apps (Google Chrome, Obsidian, Claude, Slack)
-# p: open Pithos
-# p*: printscreen
-# q: toggle notification quiet mode
-# q*: quit window
-# r: resize window
-# r*: restart i3
-# s: open Slack
-# s*: rofi ssh switcher
-# t: obsidian notes scratch (vim in vault)
-# u: next workspace
-# v: split vertically
-# w: rofi window switcher
-# x: pop last dismissed notification
-# x*: lock screen
-# y: move window to overflow workspace and go there
-# z: goto latest dunst notification workspace
+# m: open mongodb compass (*M*ongoDB Compass)
+# n: open nautilus (*N*autilus)
+# o: open obsidian (*O*bsidian)
+# o*: open work apps (Google Chrome, Obsidian, Claude, Slack) (*O*pen work apps)
+# p: open pithos (*P*ithos)
+# p*: printscreen (*P*rintscreen)
+# q: toggle notification quiet mode (*Q*uiet)
+# q*: quit window (*Q*uit)
+# r: resize window (*R*esize)
+# r*: restart i3 (*R*estart)
+# s: open slack (*S*lack)
+# s*: rofi ssh switcher (*S*SH)
+# t: obsidian notes scratch (vim in vault) (*T*ext editor)
 # comma: move workspace left
 # period: move workspace right
 # equal: move workspace up
@@ -277,8 +270,8 @@ bindsym $mod+equal move workspace to output up
 bindsym $mod+minus move workspace to output down
 
 # start rofi (a program launcher)
-bindsym $mod+d exec rofi -show drun -config ~/.config/rofi/config.rasi
-bindsym $mod+Shift+d exec rofi -show run -config ~/.config/rofi/config.rasi
+bindsym $mod+a exec rofi -show drun -config ~/.config/rofi/config.rasi
+bindsym $mod+Shift+a exec rofi -show run -config ~/.config/rofi/config.rasi
 bindsym $mod+w exec rofi -show window -config ~/.config/rofi/config.rasi
 bindsym $mod+Shift+s exec --no-startup-id $scripts_dir/i3-rofi-ssh
 
@@ -315,7 +308,7 @@ exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 exec --no-startup-id xbindkeys
 
 # open applications
-bindsym $mod+a exec claude-desktop
+bindsym $mod+d exec claude-desktop
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec /usr/share/cursor/cursor --classic
 bindsym $mod+s exec slack
