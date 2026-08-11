@@ -16,6 +16,7 @@ APPLICATIONS
   p         open Pithos
   s         open Slack
 
+  p*        screenshot monitor under mouse (Flameshot)
   o*        open work apps (Chrome, Obsidian, Claude, Slack)
 
 

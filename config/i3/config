@@ -25,6 +25,7 @@ set $scripts_dir ~/workspace/linux/scripts
 # o: open Obsidian
 # o*: open work apps (Google Chrome, Obsidian, Claude, Slack)
 # p: open Pithos
+# p*: printscreen
 # q: toggle notification quiet mode
 # q*: quit window
 # r: resize window
@@ -319,6 +320,7 @@ bindsym $mod+g exec google-chrome
 bindsym $mod+c exec /usr/share/cursor/cursor --classic
 bindsym $mod+s exec slack
 bindsym $mod+p exec pithos
+bindsym $mod+Shift+p exec --no-startup-id $scripts_dir/i3-flameshot-screen
 bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
