@@ -26,7 +26,7 @@ launch_notes() {
     alacritty \
         --title "$window_title" \
         --class "$window_class" \
-        -e bash -lc "export PATH=\"${HOME}/.local/bin:\$PATH\"; cd \"${vault}\"; exec vim" &
+        -e bash -lc "export PATH=\"${HOME}/.local/bin:\$PATH\"; cd \"${vault}\"; exec nvim" &
 }
 
 if notes_window_exists; then

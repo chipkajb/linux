@@ -170,8 +170,16 @@ fi
 eval "$(starship init zsh)"
 
 # set default editor
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=nvim
+export VISUAL=nvim
+
+# always use neovim (snap on Ubuntu 24.04; never symlink vim -> /snap/bin/nvim)
+if [ -x /snap/bin/nvim ]; then
+    alias nvim='/snap/bin/nvim'
+    alias vim='/snap/bin/nvim'
+elif command -v nvim &>/dev/null; then
+    alias vim='nvim'
+fi
 
 # customize history
 export HISTTIMEFORMAT="%h %d %H:%M:%S " # show date and time in history
@@ -224,8 +232,6 @@ alias .....='cd ..; cd ..; cd ..; cd ..'
 
 # file operations and viewing aliases
 alias o='xdg-open'
-alias vim='/usr/bin/nvim-linux-x86_64.appimage'
-alias nvim='/usr/bin/nvim-linux-x86_64.appimage'
 alias cat='batcat --style=header,grid'
 alias find='fdfind'
 alias grep='rg --color=always'

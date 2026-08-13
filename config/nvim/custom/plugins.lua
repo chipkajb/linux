@@ -1,6 +1,6 @@
 local plugins = {
     {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         ft = {"python"},
         opts = function()
             return require "custom.configs.null-ls"
@@ -76,7 +76,44 @@ local plugins = {
     {'mbbill/undotree', lazy = false},
     {'tpope/vim-fugitive', lazy = false},
     {'gennaro-tedesco/nvim-jqx', lazy = true, ft={"json"}},
-    { "preservim/vim-markdown", ft = { "markdown" } },
+    { "preservim/vim-markdown", ft = { "markdown" }, init = function()
+        vim.g.vim_markdown_folding_disabled = 1
+    end },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        override = true,
+        branch = "main",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            local ts = require("custom.configs.treesitter")
+            ts.setup()
+            ts.install_parsers()
+        end,
+    },
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        lazy = false,
+        opts = {
+            enabled = true,
+            -- no nerd-font icons; keeps rendering readable in the default terminal font
+            code = { sign = false, width = "block", right_pad = 1 },
+            heading = { sign = false, icons = {} },
+            checkbox = { enabled = false },
+        },
+        keys = {
+            {
+                "<leader>md",
+                function()
+                    vim.cmd("RenderMarkdown toggle")
+                    local on = require("render-markdown").get()
+                    vim.notify(on and "Markdown rendering: ON" or "Markdown rendering: OFF", vim.log.levels.INFO)
+                end,
+                desc = "Toggle rendered markdown",
+            },
+        },
+    },
 }
 
 return plugins

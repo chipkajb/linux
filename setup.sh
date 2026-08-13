@@ -136,28 +136,71 @@ install_vim() {
     printf "${GREEN}DONE${NC} -- vim installed, vimrc file located at ${YELLOW}$(ls ~/.vimrc)${NC}\n"
 }
 
-# install neovim
+# install tree-sitter-cli 0.26+ (required by nvim-treesitter main on Neovim 0.12)
+install_tree_sitter_cli() {
+    if command -v tree-sitter &> /dev/null; then
+        local ver
+        ver=$(tree-sitter --version 2>/dev/null | awk '{print $1}')
+        case "$ver" in
+            v0.26*|0.26*) return ;;
+        esac
+    fi
+    printf "Installing tree-sitter-cli v0.26.11...\n"
+    sudo apt-get install -y unzip
+    local tmpdir version="v0.26.11"
+    tmpdir=$(mktemp -d)
+    wget -q "https://github.com/tree-sitter/tree-sitter/releases/download/${version}/tree-sitter-cli-linux-x64.zip" \
+        -O "$tmpdir/tree-sitter.zip"
+    unzip -qo "$tmpdir/tree-sitter.zip" -d "$tmpdir"
+    mkdir -p "$HOME/.local/bin"
+    install -m 755 "$tmpdir/tree-sitter" "$HOME/.local/bin/tree-sitter"
+    rm -rf "$tmpdir"
+}
+
+# sync lazy.nvim plugins and install treesitter parsers for markdown rendering
+install_neovim_treesitter_parsers() {
+    if ! command -v nvim &> /dev/null; then
+        printf "${YELLOW}WARN${NC} -- nvim not on PATH, skipping treesitter parser install\n"
+        return
+    fi
+    printf "Installing Neovim plugins and markdown treesitter parsers...\n"
+    nvim --headless "+Lazy sync" +qa
+    nvim --headless "+lua require('custom.configs.treesitter').install_parsers()" +qa
+}
+
+# install neovim (snap: current stable on Ubuntu 24.04; apt/PPA stay on 0.9.5)
 install_neovim() {
     printf "Installing neovim...\n"
     sudo apt-get update
-    sudo apt-get install -y libfuse2 python3-pip
-    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage
-    sudo mv ./nvim-linux-x86_64.appimage /usr/bin
-    sudo chmod 764 /usr/bin/nvim-linux-x86_64.appimage
+    sudo apt-get install -y snapd python3-pip gcc g++ make git unzip
+    if ! snap list nvim &> /dev/null; then
+        sudo snap install nvim --classic
+    else
+        sudo snap refresh nvim
+    fi
+    sudo mkdir -p /usr/local/bin
+    sudo ln -sf /snap/bin/nvim /usr/local/bin/nvim
+    sudo rm -f /usr/local/bin/vim
+    sudo snap alias nvim.nvim vim
+    sudo rm -f /usr/bin/nvim-linux-x86_64.appimage 2> /dev/null
     rm -rf ~/.local/share/nvim/ 2> /dev/null
     rm -rf ~/.config/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
     rm -rf ~/.config/nvim/after 2> /dev/null
     ln -s $PWD/config/nvim/after ~/.config/nvim
     rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
-    ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/
-    ln -s ~/.config/nvim/lua/custom/init.lua ~/.config/nvim/init.lua
+    ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/custom
+    ln -sf $PWD/config/nvim/init.lua ~/.config/nvim/init.lua
+    ln -sf $PWD/config/nvim/lua/configs ~/.config/nvim/lua/configs
+    ln -sf $PWD/config/nvim/lua/chadrc.lua ~/.config/nvim/lua/chadrc.lua
     sudo apt-get install ripgrep -y
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
     pipx install black
     pipx install mypy
-    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(/usr/bin/nvim-linux-x86_64.appimage --version | head -n 1)${NC}\n"
+    install_tree_sitter_cli
+    install_neovim_treesitter_parsers
+    printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(nvim --version | head -n 1)${NC}\n"
 }
 
 # install vs code
