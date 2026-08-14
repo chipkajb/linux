@@ -92,6 +92,18 @@ local plugins = {
         end,
     },
     {
+        "lewis6991/gitsigns.nvim",
+        opts = {
+            signs = {
+                add = { text = "+" },
+                change = { text = "~" },
+                delete = { text = "_" },
+                topdelete = { text = "_" },
+                changedelete = { text = "~" },
+            },
+        },
+    },
+    {
         "MeanderingProgrammer/render-markdown.nvim",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
         lazy = false,
