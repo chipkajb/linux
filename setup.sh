@@ -89,7 +89,7 @@ install_zsh() {
     sudo apt-get update
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     source ~/.cargo/env
-    cargo install eza
+    cargo install eza --locked
     sudo apt install zsh fzf -y
     chsh -s $(which zsh)
     rm -rf ~/.oh-my-zsh 2> /dev/null
