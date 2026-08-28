@@ -11,6 +11,7 @@ vim.defer_fn(function()
   if vim.fn.filereadable(path3) == 1 then
     dofile(path3)
   end
+  pcall(require, "custom.configs.whichkey")
 end, 0)
 
 -- Basic vim settings
@@ -85,7 +86,7 @@ vim.cmd([[
   highlight ColorColumn guibg=#2d2d2d ctermbg=236
 ]])
 
--- Quick markdown commands
-vim.keymap.set("n", "<leader>1", "I# <Esc>", { desc = "H1 header" })
-vim.keymap.set("n", "<leader>2", "I## <Esc>", { desc = "H2 header" })
-vim.keymap.set("n", "<leader>3", "I### <Esc>", { desc = "H3 header" })
+-- Quick markdown commands (<leader>1-4 = harpoon)
+vim.keymap.set("n", "<leader>m1", "I# <Esc>", { desc = "H1 header" })
+vim.keymap.set("n", "<leader>m2", "I## <Esc>", { desc = "H2 header" })
+vim.keymap.set("n", "<leader>m3", "I### <Esc>", { desc = "H3 header" })

@@ -34,8 +34,8 @@ vim.keymap.set("n", "Q", "<nop>")
 --- change all instances of a word in a file
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {desc="Change all instances of word in file"})
 
---- run "chmod +x <file>" from inside file
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true }, {desc="chmod +x"})
+--- run "chmod +x <file>" from inside file (<leader>x reserved for trouble)
+vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "chmod +x" })
 
 --- close buffer
 vim.keymap.set("n", "<C-w>", function() require("nvchad_ui.tabufline").close_buffer() end, {desc="Close buffer"})

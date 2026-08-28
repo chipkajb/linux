@@ -11,21 +11,127 @@ local plugins = {
         lazy = false,
     },
     {
-        'williamboman/mason.nvim',
+        "williamboman/mason.nvim",
         opts = {
             ensure_installed = {
                 "black",
                 "pyright",
                 "ruff",
-                "mypy",
-            }
-        }
+                "lua-language-server",
+                "bash-language-server",
+                "json-lsp",
+                "yaml-language-server",
+                "marksman",
+                "typescript-language-server",
+                "rust-analyzer",
+                "gopls",
+            },
+        },
     },
     {
         "neovim/nvim-lspconfig",
         config = function()
-            require "plugins.configs.lspconfig"
+            require("nvchad.configs.lspconfig").defaults()
             require "custom.configs.lspconfig"
+        end,
+    },
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        lazy = false,
+        config = function()
+            require "custom.configs.harpoon"
+        end,
+    },
+    {
+        "stevearc/oil.nvim",
+        lazy = false,
+        opts = {
+            view_options = { show_hidden = true },
+            keymaps = {
+                ["<C-h>"] = false,
+                ["<C-l>"] = false,
+            },
+        },
+        keys = {
+            {
+                "-",
+                function()
+                    require("oil").open()
+                end,
+                desc = "Oil open parent",
+            },
+        },
+    },
+    {
+        "folke/trouble.nvim",
+        cmd = "Trouble",
+        opts = {},
+        keys = {
+            {
+                "<leader>xx",
+                "<cmd>Trouble diagnostics toggle<cr>",
+                desc = "Trouble diagnostics",
+            },
+            {
+                "<leader>xr",
+                "<cmd>Trouble lsp_references toggle<cr>",
+                desc = "Trouble references",
+            },
+        },
+    },
+    {
+        "kylechui/nvim-surround",
+        version = "*",
+        event = "VeryLazy",
+        opts = {},
+    },
+    -- no nerd-font glyphs (rects / mojibake in default terminal fonts)
+    {
+        "folke/which-key.nvim",
+        opts = function()
+            dofile(vim.g.base46_cache .. "whichkey")
+            return {
+                icons = {
+                    mappings = false,
+                    rules = false,
+                    breadcrumb = ">",
+                    separator = "-",
+                    group = "+",
+                    ellipsis = "...",
+                    keys = {
+                        Up = "Up",
+                        Down = "Down",
+                        Left = "Left",
+                        Right = "Right",
+                        C = "C-",
+                        M = "M-",
+                        D = "D-",
+                        S = "S-",
+                        CR = "CR",
+                        Esc = "Esc",
+                        ScrollWheelDown = "SwD",
+                        ScrollWheelUp = "SwU",
+                        NL = "NL",
+                        BS = "BS",
+                        Space = "SPC",
+                        Tab = "TAB",
+                        F1 = "F1",
+                        F2 = "F2",
+                        F3 = "F3",
+                        F4 = "F4",
+                        F5 = "F5",
+                        F6 = "F6",
+                        F7 = "F7",
+                        F8 = "F8",
+                        F9 = "F9",
+                        F10 = "F10",
+                        F11 = "F11",
+                        F12 = "F12",
+                    },
+                },
+            }
         end,
     },
     {
@@ -73,9 +179,9 @@ local plugins = {
             },
         },
     },
-    {'mbbill/undotree', lazy = false},
-    {'tpope/vim-fugitive', lazy = false},
-    {'gennaro-tedesco/nvim-jqx', lazy = true, ft={"json"}},
+    {"mbbill/undotree", lazy = false},
+    {"tpope/vim-fugitive", lazy = false},
+    {"gennaro-tedesco/nvim-jqx", lazy = true, ft={"json"}},
     { "preservim/vim-markdown", ft = { "markdown" }, init = function()
         vim.g.vim_markdown_folding_disabled = 1
     end },
@@ -129,4 +235,3 @@ local plugins = {
 }
 
 return plugins
-
