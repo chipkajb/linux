@@ -8,6 +8,7 @@ wk.add({
   { "<leader>m", group = "markdown" },
   { "<leader>c", group = "chad / code" },
   { "<leader>p", group = "python / paste" },
+  { "<leader>d", group = "debug / delete" },
   {
     "<leader>?",
     function()

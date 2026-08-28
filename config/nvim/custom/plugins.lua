@@ -17,6 +17,7 @@ local plugins = {
                 "black",
                 "pyright",
                 "ruff",
+                "debugpy",
                 "lua-language-server",
                 "bash-language-server",
                 "json-lsp",
@@ -51,6 +52,26 @@ local plugins = {
         lazy = false,
         config = function()
             require "custom.configs.harpoon"
+        end,
+    },
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "mfussenegger/nvim-dap-python",
+            {
+                "rcarriga/nvim-dap-ui",
+                dependencies = { "nvim-neotest/nvim-nio" },
+            },
+        },
+        keys = {
+            { "<F5>", desc = "DAP continue" },
+            { "<F9>", desc = "DAP toggle breakpoint" },
+            { "<leader>db", desc = "DAP toggle breakpoint" },
+            { "<leader>dc", desc = "DAP continue" },
+            { "<leader>du", desc = "DAP UI toggle" },
+        },
+        config = function()
+            require "custom.configs.dap"
         end,
     },
     {

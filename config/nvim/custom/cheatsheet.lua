@@ -11,6 +11,7 @@ local SECTIONS = {
   { id = "harpoon", title = "Harpoon" },
   { id = "files", title = "Files & buffers" },
   { id = "lsp", title = "LSP" },
+  { id = "debug", title = "Debug" },
   { id = "git", title = "Git" },
   { id = "edit", title = "Edit" },
   { id = "markdown", title = "Markdown" },
@@ -114,6 +115,24 @@ local function section_for(item)
   end
   if desc:find("git") or desc:find("fugitive") or desc:find("gitsigns") or lhs:find("<leader>g", 1, true) then
     return "git"
+  end
+  if
+    desc:find("dap")
+    or desc:find("debug")
+    or desc:find("breakpoint")
+    or lhs:match("^<f5>$")
+    or lhs:match("^<f9>$")
+    or lhs:match("^<f1[012]>$")
+    or lhs:find("<leader>d", 1, true) and (
+      desc:find("dap")
+      or desc:find("debug")
+      or desc:find("breakpoint")
+      or desc:find("step")
+      or desc:find("repl")
+      or desc:find("terminate")
+    )
+  then
+    return "debug"
   end
   if
     desc:find("markdown")
