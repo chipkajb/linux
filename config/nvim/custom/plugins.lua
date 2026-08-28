@@ -74,6 +74,23 @@ local plugins = {
             require "custom.configs.dap"
         end,
     },
+    -- VS Code-style: highlight other instances of word under cursor
+    {
+        "RRethy/vim-illuminate",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("illuminate").configure({
+                delay = 150,
+                under_cursor = true,
+                large_file_cutoff = 3000,
+                min_count_to_highlight = 2,
+            })
+            local hl = { underline = true }
+            vim.api.nvim_set_hl(0, "IlluminatedWordText", hl)
+            vim.api.nvim_set_hl(0, "IlluminatedWordRead", hl)
+            vim.api.nvim_set_hl(0, "IlluminatedWordWrite", hl)
+        end,
+    },
     {
         "stevearc/oil.nvim",
         lazy = false,
