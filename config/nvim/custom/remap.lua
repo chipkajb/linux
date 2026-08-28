@@ -38,7 +38,17 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "chmod +x" })
 
 --- close buffer
-vim.keymap.set("n", "<C-w>", function() require("nvchad_ui.tabufline").close_buffer() end, {desc="Close buffer"})
+vim.keymap.set("n", "<leader>bx", function()
+  require("nvchad.tabufline").close_buffer()
+end, { desc = "Close buffer" })
+
+--- tabufline: next / prev buffer
+vim.keymap.set("n", "<Tab>", function()
+  require("nvchad.tabufline").next()
+end, { desc = "Next buffer" })
+vim.keymap.set("n", "<S-Tab>", function()
+  require("nvchad.tabufline").prev()
+end, { desc = "Prev buffer" })
 
 --- source file
 vim.keymap.set("n", "<leader><leader>", function()

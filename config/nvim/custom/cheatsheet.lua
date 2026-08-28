@@ -34,7 +34,8 @@ M.sections = {
       { "<C-n>", "nvim-tree toggle" },
       { "<leader>e", "nvim-tree focus" },
       { "<leader>v / h", "vsplit / split" },
-      { "<C-w>", "close buffer" },
+      { "<Tab> / <S-Tab>", "next / prev buffer tab" },
+      { "<leader>bx", "close buffer tab" },
     },
   },
   {
@@ -48,6 +49,8 @@ M.sections = {
       { "<leader>ca", "code action" },
       { "[d / ]d", "prev / next diagnostic" },
       { "<leader>xx", "trouble diagnostics" },
+      { "<leader>pv", "pick python env (or :PythonEnv)" },
+      { ":TSStart", "force treesitter highlight" },
     },
   },
   {

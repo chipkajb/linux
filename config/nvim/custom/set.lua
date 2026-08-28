@@ -2,6 +2,13 @@
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
+--- mason LSP binaries (NvChad options.lua not loaded by this bootstrap)
+do
+  local sep = package.config:sub(1, 1)
+  local delim = vim.fn.has("win32") == 1 and ";" or ":"
+  vim.env.PATH = table.concat({ vim.fn.stdpath("data"), "mason", "bin" }, sep) .. delim .. vim.env.PATH
+end
+
 --- mouse use
 vim.opt.mouse = 'a'
 
@@ -29,6 +36,9 @@ vim.opt.smartcase = true
 
 --- colors
 vim.opt.termguicolors = true
+vim.cmd("filetype on")
+vim.cmd("filetype plugin on")
+vim.cmd("filetype indent on")
 
 --- scrolling
 vim.opt.scrolloff = 8

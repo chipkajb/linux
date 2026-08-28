@@ -24,12 +24,22 @@ vim.list_extend(plugins, require("custom.plugins"))
 
 require("lazy").setup(plugins, require("configs.lazy"))
 
+-- NvChad FilePost + friends (gitsigns / lsp lazy events); set ui_entered if UI already up
+pcall(function()
+  require "nvchad.autocmds"
+  if vim.v.vim_did_enter == 1 then
+    vim.g.ui_entered = true
+  end
+end)
+
 -- NvChad theme (base46 cache written during lazy setup)
 vim.schedule(function()
-  local defaults = vim.g.base46_cache .. "defaults"
-  if vim.fn.filereadable(defaults) == 1 then
-    dofile(defaults)
-    dofile(vim.g.base46_cache .. "statusline")
+  local cache = vim.g.base46_cache
+  for _, name in ipairs({ "defaults", "statusline", "syntax", "treesitter", "lsp" }) do
+    local path = cache .. name
+    if vim.fn.filereadable(path) == 1 then
+      dofile(path)
+    end
   end
 end)
 

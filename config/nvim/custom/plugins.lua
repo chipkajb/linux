@@ -26,10 +26,19 @@ local plugins = {
                 "rust-analyzer",
                 "gopls",
             },
+            ui = {
+                icons = {
+                    package_pending = "P",
+                    package_installed = "*",
+                    package_uninstalled = "o",
+                },
+            },
         },
     },
     {
         "neovim/nvim-lspconfig",
+        -- don't wait for NvChad User FilePost (autocmds often never fire in this bootstrap)
+        event = { "BufReadPost", "BufNewFile" },
         config = function()
             require("nvchad.configs.lspconfig").defaults()
             require "custom.configs.lspconfig"
@@ -49,6 +58,7 @@ local plugins = {
         lazy = false,
         opts = {
             view_options = { show_hidden = true },
+            columns = { "permissions", "size", "mtime" }, -- no icon column
             keymaps = {
                 ["<C-h>"] = false,
                 ["<C-l>"] = false,
@@ -67,7 +77,9 @@ local plugins = {
     {
         "folke/trouble.nvim",
         cmd = "Trouble",
-        opts = {},
+        opts = function()
+            return { icons = require("custom.configs.noicons").trouble_icons() }
+        end,
         keys = {
             {
                 "<leader>xx",
@@ -80,6 +92,26 @@ local plugins = {
                 desc = "Trouble references",
             },
         },
+    },
+    {
+        "nvim-tree/nvim-tree.lua",
+        opts = function()
+            local opts = require "nvchad.configs.nvimtree"
+            opts.renderer = opts.renderer or {}
+            opts.renderer.icons = require("custom.configs.noicons").nvim_tree_icons()
+            return opts
+        end,
+    },
+    {
+        "nvim-tree/nvim-web-devicons",
+        opts = function()
+            require("custom.configs.noicons").neuter_devicons()
+            return { color_icons = false, default = true }
+        end,
+        config = function(_, opts)
+            require("custom.configs.noicons").neuter_devicons()
+            pcall(require("nvim-web-devicons").setup, opts)
+        end,
     },
     {
         "kylechui/nvim-surround",

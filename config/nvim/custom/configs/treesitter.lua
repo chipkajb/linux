@@ -8,12 +8,30 @@ M.parsers = {
   "vimdoc",
   "markdown",
   "markdown_inline",
+  "python",
+  "bash",
+  "json",
+  "yaml",
+  "toml",
+  "html",
+  "css",
+  "javascript",
+  "typescript",
+  "tsx",
+  "rust",
+  "go",
+  "dockerfile",
+  "regex",
 }
 
 function M.setup()
   require("nvim-treesitter").setup({
     install_dir = vim.fn.stdpath("data") .. "/site",
   })
+  -- register parsers so vim.treesitter.start finds them
+  for _, lang in ipairs(M.parsers) do
+    pcall(vim.treesitter.language.add, lang)
+  end
 end
 
 function M.install_parsers()
