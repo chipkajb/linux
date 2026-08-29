@@ -251,6 +251,41 @@ local plugins = {
     },
     {"mbbill/undotree", lazy = false},
     {"tpope/vim-fugitive", lazy = false},
+    {
+        "sindrets/diffview.nvim",
+        cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+        opts = {
+            enhanced_diff_hl = true,
+            use_icons = false, -- no nerd-font glyphs, matches rest of config
+            view = {
+                merge_tool = { layout = "diff3_horizontal" },
+            },
+        },
+        keys = {
+            {
+                "<leader>gd",
+                function()
+                    -- toggle: close if a diffview is open, else open (merge-conflict view when mid-merge)
+                    if next(require("diffview.lib").views) == nil then
+                        vim.cmd("DiffviewOpen")
+                    else
+                        vim.cmd("DiffviewClose")
+                    end
+                end,
+                desc = "Git: toggle diffview / conflict resolution",
+            },
+            {
+                "<leader>gh",
+                "<cmd>DiffviewFileHistory %<CR>",
+                desc = "Git: file history (current file)",
+            },
+            {
+                "<leader>gH",
+                "<cmd>DiffviewFileHistory<CR>",
+                desc = "Git: file history (repo)",
+            },
+        },
+    },
     {"gennaro-tedesco/nvim-jqx", lazy = true, ft={"json"}},
     { "preservim/vim-markdown", ft = { "markdown" }, init = function()
         vim.g.vim_markdown_folding_disabled = 1
