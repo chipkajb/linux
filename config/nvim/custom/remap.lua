@@ -38,7 +38,7 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "chmod +x" })
 
 --- close buffer
-vim.keymap.set("n", "<leader>bx", function()
+vim.keymap.set("n", "<leader>bd", function()
   require("nvchad.tabufline").close_buffer()
 end, { desc = "Close buffer" })
 

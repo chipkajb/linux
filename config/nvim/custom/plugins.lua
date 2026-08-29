@@ -226,21 +226,21 @@ local plugins = {
                 desc = "FFF find files",
             },
             {
-                "<leader>fw",
+                "<leader>fg",
                 function()
                     require("fff").live_grep()
                 end,
                 desc = "FFF live grep",
             },
             {
-                "<leader>fz",
+                "<leader>fG",
                 function()
                     require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
                 end,
                 desc = "FFF fuzzy live grep",
             },
             {
-                "<leader>fW",
+                "<leader>fw",
                 function()
                     require("fff").live_grep_under_cursor()
                 end,
