@@ -223,29 +223,29 @@ local plugins = {
                 function()
                     require("fff").find_files()
                 end,
-                desc = "FFF find files",
+                desc = "Find: files",
             },
             {
-                "<leader>fw",
+                "<leader>fg",
                 function()
                     require("fff").live_grep()
                 end,
-                desc = "FFF live grep",
+                desc = "Find: grep (live, project-wide)",
             },
             {
                 "<leader>fz",
                 function()
                     require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
                 end,
-                desc = "FFF fuzzy live grep",
+                desc = "Find: grep, fuzzy",
             },
             {
-                "<leader>fW",
+                "<leader>fw",
                 function()
                     require("fff").live_grep_under_cursor()
                 end,
                 mode = { "n", "x" },
-                desc = "FFF grep word/selection",
+                desc = "Find: word/selection under cursor",
             },
         },
     },
