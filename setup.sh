@@ -200,6 +200,16 @@ install_neovim() {
     pipx install mypy
     install_tree_sitter_cli
     install_neovim_treesitter_parsers
+
+    # git merge conflicts: `git mergetool` opens a 4-pane nvim diff (LOCAL/BASE/REMOTE/MERGED).
+    # Prefer `nvim` + `:DiffviewOpen` (bound to <leader>gd) for resolving conflicts across a
+    # whole merge at once -- this is just a fallback for tools/scripts that call `git mergetool`.
+    git config --global merge.tool nvimdiff
+    git config --global mergetool.nvimdiff.cmd 'nvim -d $LOCAL $BASE $REMOTE $MERGED -c "wincmd J"'
+    git config --global mergetool.nvimdiff.trustExitCode true
+    git config --global mergetool.keepBackup false
+    git config --global merge.conflictstyle diff3
+
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(nvim --version | head -n 1)${NC}\n"
 }
 
