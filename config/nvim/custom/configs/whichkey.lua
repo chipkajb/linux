@@ -7,6 +7,7 @@ wk.add({
   { "<leader>w", group = "workspace" },
   { "<leader>m", group = "markdown" },
   { "<leader>c", group = "chad / code" },
+  { "<leader>cs", desc = "Toggle Supermaven suggestions" },
   { "<leader>p", group = "python / paste" },
   { "<leader>d", group = "debug / delete" },
   {
