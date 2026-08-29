@@ -13,6 +13,11 @@ require("supermaven-nvim").setup({
   disable_keymaps = false,
 })
 
+-- free tier by default (skips pro activation popup)
+vim.defer_fn(function()
+  require("supermaven-nvim.api").use_free_version()
+end, 500)
+
 vim.keymap.set("n", "<leader>cs", function()
   require("supermaven-nvim.api").toggle()
 end, { desc = "Toggle Supermaven suggestions" })
