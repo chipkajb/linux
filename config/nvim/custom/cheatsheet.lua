@@ -21,13 +21,90 @@ local SECTIONS = {
   { id = "undoc", title = "Undocumented" },
 }
 
+-- fill desc for plugin / which-key maps that ship without one
+local DESC_FALLBACK = {
+  ['"'] = "which-key: register prefix",
+  ["'"] = "which-key: mark jump prefix",
+  ["`"] = "which-key: mark jump (exact) prefix",
+  ["c"] = "which-key: change prefix",
+  ["g"] = "which-key: goto prefix",
+  ["v"] = "which-key: visual prefix",
+  ["<C-W>"] = "which-key: window prefix",
+  ["<leader>"] = "which-key: leader menu",
+  ["[["] = "Markdown: previous header",
+  ["]]"] = "Markdown: next header",
+  ["[]"] = "Markdown: previous sibling header",
+  ["]["] = "Markdown: next sibling header",
+  ["]h"] = "Markdown: current header",
+  ["]u"] = "Markdown: parent header",
+  ["ge"] = "Markdown: edit URL under cursor",
+  ["gx"] = "Markdown: open URL under cursor",
+  ["y<C-G>"] = "Fugitive: yank repo-relative path",
+  ["<C-R><C-G>"] = "Fugitive: insert repo-relative path",
+}
+
+-- replace cryptic stock descs (help tags, one-word labels) with readable ones
+local DESC_CLARIFY = {
+  ["#"] = "Search selection backward",
+  ["*"] = "Search selection forward",
+  ["&"] = "Repeat last :substitute",
+  ["@"] = "Repeat macro on visual selection",
+  ["Q"] = "Replay last recorded macro",
+  ["Y"] = "Yank to end of line",
+  ["<C-U>"] = "Delete to start of line",
+  ["<C-W>"] = "Delete word backward",
+  ["[a"] = "Previous argument",
+  ["]a"] = "Next argument",
+  ["[A"] = "First argument",
+  ["]A"] = "Last argument",
+  ["[b"] = "Previous buffer",
+  ["]b"] = "Next buffer",
+  ["[B"] = "First buffer",
+  ["]B"] = "Last buffer",
+  ["[l"] = "Previous location-list item",
+  ["]l"] = "Next location-list item",
+  ["[L"] = "First location-list item",
+  ["]L"] = "Last location-list item",
+  ["[q"] = "Previous quickfix item",
+  ["]q"] = "Next quickfix item",
+  ["[Q"] = "First quickfix item",
+  ["]Q"] = "Last quickfix item",
+  ["[t"] = "Previous tag",
+  ["]t"] = "Next tag",
+  ["[T"] = "First tag",
+  ["]T"] = "Last tag",
+  ["[<C-L>"] = "Previous file with matches (loclist)",
+  ["]<C-L>"] = "Next file with matches (loclist)",
+  ["[<C-Q>"] = "Previous file with matches (quickfix)",
+  ["]<C-Q>"] = "Next file with matches (quickfix)",
+  ["[<C-T>"] = "Previous tag match",
+  ["]<C-T>"] = "Next tag match",
+}
+
+local function is_cryptic_desc(desc)
+  if not desc or desc == "" or desc == "<lua>" or desc == "(no rhs)" then
+    return true
+  end
+  if desc:match("^help ") then
+    return true
+  end
+  -- one-word stock labels: previous, bnext, lpfile, ptprevious, …
+  if desc:match("^[%w%-]+$") and #desc <= 12 then
+    return true
+  end
+  return false
+end
+
 local function pretty_lhs(lhs)
   if not lhs then
     return ""
   end
   local leader = vim.g.mapleader or "\\"
   if leader == " " then
-    lhs = lhs:gsub("^ ", "<leader>")
+    -- every leading space is a leader press (<leader><leader> …)
+    lhs = lhs:gsub("^ +", function(s)
+      return string.rep("<leader>", #s)
+    end)
     lhs = lhs:gsub("<Space>", "<leader>")
   elseif leader ~= "" then
     lhs = lhs:gsub("^" .. vim.pesc(leader), "<leader>")
@@ -57,7 +134,7 @@ local function section_for(item)
   local lhs, desc, mode = item.lhs:lower(), item.desc:lower(), item.mode
 
   -- which-key internal triggers → other (not Help)
-  if desc:find("which%-key%-trigger") then
+  if desc:find("which%-key") then
     return "other"
   end
 
@@ -76,14 +153,20 @@ local function section_for(item)
     return "harpoon"
   end
   if
-    lhs == "-"
+    (lhs == "-" and mode == "n")
     or desc:find("oil")
     or desc:find("nvimtree")
     or desc:find("nvim%-tree")
     or lhs == "<c-n>"
     or lhs == "<leader>e"
     or lhs:find("<leader>b", 1, true)
-    or desc:find("buffer")
+    or desc:find("close buffer")
+    or desc:find("next buffer")
+    or desc:find("prev buffer")
+    or desc:find("previous buffer")
+    or desc:find("first buffer")
+    or desc:find("last buffer")
+    or desc:find("buffer:")
     or lhs == "<tab>"
     or lhs == "<s-tab>"
     or desc:find("tabufline")
@@ -102,12 +185,15 @@ local function section_for(item)
     or desc:find("implementation")
     or desc:find("pyright")
     or desc:find("python env")
+    or desc:find("outline of the current buffer")
+    or desc:find("document_symbol")
     or lhs:match("^g[dDrRiI]$")
-    or (lhs == "K" or lhs == "k") and desc:find("hover")
+    or lhs == "go"
+    or ((lhs == "K" or lhs == "k") and desc:find("hover"))
     or lhs:find("<leader>ca", 1, true)
     or lhs:find("<leader>ra", 1, true)
     or lhs:find("<leader>pv", 1, true)
-    or lhs:find("<leader>x", 1, true)
+    or (lhs:match("^<leader>x") and not desc:find("chmod"))
     or lhs == "[d"
     or lhs == "]d"
   then
@@ -123,13 +209,16 @@ local function section_for(item)
     or lhs:match("^<f5>$")
     or lhs:match("^<f9>$")
     or lhs:match("^<f1[012]>$")
-    or lhs:find("<leader>d", 1, true) and (
-      desc:find("dap")
-      or desc:find("debug")
-      or desc:find("breakpoint")
-      or desc:find("step")
-      or desc:find("repl")
-      or desc:find("terminate")
+    or (
+      lhs:find("<leader>d", 1, true)
+      and (
+        desc:find("dap")
+        or desc:find("debug")
+        or desc:find("breakpoint")
+        or desc:find("step")
+        or desc:find("repl")
+        or desc:find("terminate")
+      )
     )
   then
     return "debug"
@@ -139,6 +228,14 @@ local function section_for(item)
     or desc:find("render%-markdown")
     or lhs:match("^<leader>m%d")
     or lhs == "<leader>md"
+    or lhs == "[["
+    or lhs == "]]"
+    or lhs == "[]"
+    or lhs == "]["
+    or lhs == "]h"
+    or lhs == "]u"
+    or (lhs == "ge" and desc:find("url"))
+    or (lhs == "gx" and desc:find("markdown"))
   then
     return "markdown"
   end
@@ -153,6 +250,7 @@ local function section_for(item)
     or lhs == "<leader>v"
     or lhs == "<leader>h"
     or lhs:match("^<c%-[hjkl]>$")
+    or lhs == "<c-bslash>"
   then
     return "window"
   end
@@ -166,6 +264,11 @@ local function section_for(item)
     or desc:find("undo")
     or desc:find("replace")
     or desc:find("move text")
+    or desc:find("join lines")
+    or desc:find("search match")
+    or desc:find("half%-page")
+    or desc:find("ex mode")
+    or desc:find("chmod")
     or lhs:find("<leader>y", 1, true)
     or lhs:find("<leader>d", 1, true)
     or lhs == "<leader>s"
@@ -190,10 +293,17 @@ local function collect()
     if lhs:find("<Plug>", 1, true) or lhs:find("<SNR>", 1, true) then
       return
     end
+    local pretty = pretty_lhs(lhs)
     local undocumented = not (map.desc and map.desc ~= "")
     local desc
     if not undocumented then
       desc = map.desc
+    elseif DESC_FALLBACK[pretty] then
+      desc = DESC_FALLBACK[pretty]
+      undocumented = false
+    elseif DESC_FALLBACK[lhs] then
+      desc = DESC_FALLBACK[lhs]
+      undocumented = false
     elseif map.rhs and map.rhs ~= "" then
       desc = map.rhs
     elseif map.callback then
@@ -201,9 +311,15 @@ local function collect()
     else
       desc = "(no rhs)"
     end
+    -- readable overrides only when current desc is cryptic (don't clobber good descs)
     desc = clean_desc(desc)
-    local pretty = pretty_lhs(lhs)
-    local key = mode .. "\0" .. pretty:lower() .. "\0" .. desc:lower()
+    local clarify = DESC_CLARIFY[pretty] or DESC_CLARIFY[lhs]
+    if clarify and is_cryptic_desc(desc) then
+      desc = clarify
+      undocumented = false
+    end
+    -- keep lhs case in key so n/N both show (lowercasing collapsed them)
+    local key = mode .. "\0" .. pretty .. "\0" .. desc:lower()
     if seen[key] then
       return
     end
@@ -235,7 +351,7 @@ local function collect()
   local merged = {}
   local index = {}
   for _, item in ipairs(items) do
-    local k = item.section .. "\0" .. item.lhs:lower() .. "\0" .. item.desc:lower()
+    local k = item.section .. "\0" .. item.lhs .. "\0" .. item.desc:lower()
     local existing = index[k]
     if existing then
       if not existing.modes[item.mode] then

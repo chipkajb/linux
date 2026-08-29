@@ -23,6 +23,38 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
+# Ubuntu 22.04 (jammy, glibc 2.35) and 24.04 (noble, glibc 2.39) are supported.
+UBUNTU_VERSION=""
+UBUNTU_CODENAME=""
+
+detect_ubuntu() {
+    if [ ! -r /etc/os-release ]; then
+        printf "${RED}ERROR${NC}: /etc/os-release not found; this script targets Ubuntu 22.04 or 24.04\n"
+        exit 1
+    fi
+    # shellcheck source=/dev/null
+    . /etc/os-release
+    if [ "${ID:-}" != "ubuntu" ]; then
+        printf "${RED}ERROR${NC}: detected ID=%s, expected ubuntu (22.04 or 24.04)\n" "${ID:-unknown}"
+        exit 1
+    fi
+    UBUNTU_VERSION="${VERSION_ID:-}"
+    UBUNTU_CODENAME="${VERSION_CODENAME:-}"
+    case "$UBUNTU_VERSION" in
+        22.04|24.04)
+            printf "Detected Ubuntu ${CYAN}%s${NC} (%s)\n" "$UBUNTU_VERSION" "$UBUNTU_CODENAME"
+            ;;
+        *)
+            printf "${YELLOW}WARN${NC}: Ubuntu %s is untested; 22.04 and 24.04 are supported\n" "$UBUNTU_VERSION"
+            ;;
+    esac
+}
+
+# true if $UBUNTU_VERSION >= $1 (e.g. ubuntu_at_least 24.04)
+ubuntu_at_least() {
+    [ "$(printf '%s\n%s\n' "$1" "$UBUNTU_VERSION" | sort -V | head -n 1)" = "$1" ]
+}
+
 # check that both lists have the same size
 if [ "${#ACTION_LIST[@]}" -ne "${#DESC_LIST[@]}" ];
 then
@@ -137,24 +169,45 @@ install_vim() {
 }
 
 # install tree-sitter-cli 0.26+ (required by nvim-treesitter main on Neovim 0.12)
-install_tree_sitter_cli() {
-    if command -v tree-sitter &> /dev/null; then
-        local ver
-        ver=$(tree-sitter --version 2>/dev/null | awk '{print $1}')
-        case "$ver" in
-            v0.26*|0.26*) return ;;
-        esac
+# 24.04+ (glibc 2.39): upstream linux-x64 zip works
+# 22.04  (glibc 2.35): prebuilt needs GLIBC_2.39, so build from source with cargo
+install_tree_sitter_from_source() {
+    local version=$1
+    [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+    if ! command -v cargo &> /dev/null; then
+        printf "${RED}FAIL${NC} -- cargo not found, cannot build tree-sitter-cli; run Install zsh first\n"
+        return 1
     fi
-    printf "Installing tree-sitter-cli v0.26.11...\n"
-    sudo apt-get install -y unzip
-    local tmpdir version="v0.26.11"
-    tmpdir=$(mktemp -d)
-    wget -q "https://github.com/tree-sitter/tree-sitter/releases/download/${version}/tree-sitter-cli-linux-x64.zip" \
-        -O "$tmpdir/tree-sitter.zip"
-    unzip -qo "$tmpdir/tree-sitter.zip" -d "$tmpdir"
+    cargo install tree-sitter-cli --version "$version" --root "$HOME/.local" --locked --force
+}
+
+install_tree_sitter_cli() {
+    local version="0.26.11"
+    if tree-sitter --version 2>/dev/null | grep -q "$version"; then
+        printf "tree-sitter-cli v%s already installed\n" "$version"
+        return
+    fi
+    printf "Installing tree-sitter-cli v%s for Ubuntu %s...\n" "$version" "$UBUNTU_VERSION"
     mkdir -p "$HOME/.local/bin"
-    install -m 755 "$tmpdir/tree-sitter" "$HOME/.local/bin/tree-sitter"
-    rm -rf "$tmpdir"
+
+    if ubuntu_at_least 24.04; then
+        sudo apt-get install -y unzip
+        local tmpdir
+        tmpdir=$(mktemp -d)
+        if wget -q "https://github.com/tree-sitter/tree-sitter/releases/download/v${version}/tree-sitter-cli-linux-x64.zip" \
+                -O "$tmpdir/tree-sitter.zip" \
+            && unzip -qo "$tmpdir/tree-sitter.zip" -d "$tmpdir" \
+            && "$tmpdir/tree-sitter" --version &> /dev/null; then
+            install -m 755 "$tmpdir/tree-sitter" "$HOME/.local/bin/tree-sitter"
+            rm -rf "$tmpdir"
+            return
+        fi
+        rm -rf "$tmpdir"
+        printf "${YELLOW}WARN${NC} -- prebuilt tree-sitter failed on Ubuntu %s, building from source\n" "$UBUNTU_VERSION"
+    else
+        printf "Ubuntu %s: building tree-sitter-cli from source (release binary needs glibc 2.39)\n" "$UBUNTU_VERSION"
+    fi
+    install_tree_sitter_from_source "$version"
 }
 
 # sync lazy.nvim plugins and install treesitter parsers for markdown rendering
@@ -168,11 +221,12 @@ install_neovim_treesitter_parsers() {
     nvim --headless "+lua require('custom.configs.treesitter').install_parsers()" +qa
 }
 
-# install neovim (snap: current stable on Ubuntu 24.04; apt/PPA stay on 0.9.5)
+# install neovim (snap: current nvim on both 22.04 and 24.04; apt/PPA stay on 0.9.x)
 install_neovim() {
     printf "Installing neovim...\n"
     sudo apt-get update
-    sudo apt-get install -y snapd python3-pip gcc g++ make git unzip
+    sudo apt-get install -y snapd python3-pip pipx gcc g++ make git unzip
+    pipx ensurepath || true
     if ! snap list nvim &> /dev/null; then
         sudo snap install nvim --classic
     else
@@ -213,14 +267,18 @@ install_neovim() {
     printf "${GREEN}DONE${NC} -- neovim installed, ${YELLOW}$(nvim --version | head -n 1)${NC}\n"
 }
 
-# install vs code
+# install vs code (signed-by keyring works on 22.04 and 24.04; apt-key is gone on 24.04)
 install_vscode() {
     printf "Installing VS Code...\n"
-    sudo apt update
-    sudo apt install software-properties-common apt-transport-https wget
-    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-    sudo apt install code -y
+    sudo apt-get update
+    sudo apt-get install -y wget gpg apt-transport-https
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/packages.microsoft.gpg
+    sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
+    rm -f /tmp/packages.microsoft.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
+        | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install -y code
     code --install-extension Atishay-Jain.All-Autocomplete
     code --install-extension ms-python.black-formatter
     code --install-extension anysphere.pyright
@@ -344,7 +402,7 @@ install_adlc() {
     printf "${GREEN}DONE${NC} -- adlc tooling installed\n"
     printf "  herdr: ${YELLOW}$(command -v herdr || echo "$HOME/.local/bin/herdr")${NC}\n"
     printf "  Launch from rofi (Mod+d) as ${YELLOW}herdr${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
-    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (see config/herdr/CHEATSHEET.md)\n"
+    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (see config/herdr/config.toml)\n"
     printf "  caveman: type ${YELLOW}/caveman${NC} in a session (or say \"talk like caveman\")\n"
     printf "  superpowers: restart Claude Code / Cursor after install\n"
     printf "  Update herdr with ${YELLOW}herdr update${NC}\n"
@@ -354,6 +412,11 @@ install_adlc() {
 install_i3() {
     printf "Installing i3...\n"
     sudo apt-get update
+    # package renamed in 24.04 (22.04 still uses libgdk-pixbuf2.0-dev)
+    local pixbuf_dev="libgdk-pixbuf2.0-dev"
+    if ubuntu_at_least 24.04; then
+        pixbuf_dev="libgdk-pixbuf-2.0-dev"
+    fi
     sudo apt-get install i3 \
         feh \
         arandr \
@@ -383,7 +446,7 @@ install_i3() {
         libxkbcommon-x11-dev \
         libxcb-util-dev \
         libstartup-notification0-dev \
-        libgdk-pixbuf2.0-dev \
+        $pixbuf_dev \
         libpango1.0-dev \
         numlockx \
         xdotool \
@@ -476,6 +539,7 @@ misc_setup() {
 }
 
 # main loop
+detect_ubuntu
 exit_condition=false
 while [ "$exit_condition" = false ]; do
     # execute prompt

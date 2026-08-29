@@ -1,6 +1,5 @@
 # herdr keybindings — optimized for learnability
 # docs: https://herdr.dev/docs/configuration/
-# cheatsheet: config/herdr/CHEATSHEET.md
 #
 # Mental model (hjkl-first; arrows trimmed from help):
 #   1) Tmux habits: Ctrl-Space, c/[ copy, t new tab, p/n tabs, l clear,
@@ -92,25 +91,25 @@ navigate_pane_right = "l"
 
 # --- custom commands -------------------------------------------------------
 
-# tmux: prefix+l clear
+# tmux: prefix+l clear (HERDR_BIN_PATH — shell cmds use /bin/sh -lc, not zsh PATH)
 [[keys.command]]
 key = "prefix+l"
 type = "shell"
-command = 'herdr pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
+command = '"$HERDR_BIN_PATH" pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
 description = "clear pane"
 
 # prefix+y yank pane
 [[keys.command]]
 key = "prefix+y"
 type = "shell"
-command = 'herdr pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null | xclip -selection clipboard'
+command = '"$HERDR_BIN_PATH" pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null | xclip -selection clipboard'
 description = "copy pane to clipboard"
 
 # a = Cursor agent
 [[keys.command]]
 key = "prefix+a"
 type = "pane"
-command = "/home/jordan/.local/bin/agent"
+command = "agent"
 description = "cursor agent"
 
 # A = Claude Code
@@ -150,6 +149,7 @@ sidebar_width = 26
 prompt_new_tab_name = false
 
 show_agent_labels_on_pane_borders = false
+agent_panel_sort = "spaces"
 [ui.toast]
 delivery = "system"
 

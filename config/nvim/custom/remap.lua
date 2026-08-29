@@ -3,11 +3,11 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", {desc="Move text chunk down"})
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", {desc="Move text chunk up"})
 
 --- keep cursor still
-vim.keymap.set("n", "J", "mzJ`z")
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half-page down (center)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half-page up (center)" })
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search match (center)" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search match (center)" })
 
 --- delete to empty clipboard and paste
 vim.keymap.set("x", "<leader>p", "\"_dp", {desc="Delete to empty clipboard, paste"})
@@ -22,14 +22,14 @@ vim.keymap.set("n", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 vim.keymap.set("v", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 
 --- make ctrl-c and esc the same
-vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape (same as Esc)" })
 
 --- insert mode: delete word backward / forward (ctrl+backspace / ctrl+delete)
 vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" })
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" })
 
 --- ignore Q
-vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "Q", "<nop>", { desc = "Disable Ex mode" })
 
 --- change all instances of a word in a file
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {desc="Change all instances of word in file"})

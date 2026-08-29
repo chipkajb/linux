@@ -78,17 +78,17 @@ plugins=(
   zsh-history-substring-search
 )
 
-
-
-# Key bindings for history substring search
-bindkey '^[[A' history-substring-search-up    # Up arrow for previous match
-bindkey '^[[B' history-substring-search-down  # Down arrow for next match
-bindkey '^[^M' autosuggest-accept # alt+enter
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8' # Use a light gray
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
-
 source $ZSH/oh-my-zsh.sh
+
+# after omz so widgets exist (atuin init below rebinds Up to its list UI)
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
+bindkey '^[^M' autosuggest-accept # alt+enter
 
 # User configuration
 
@@ -321,6 +321,22 @@ alias cd="z"
 [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 if command -v atuin &> /dev/null; then
     eval "$(atuin init zsh)"
+    # keep interactive UI to 36 lines (not full terminal)
+    # strip --shell-up-key-binding: that path uses inline_height_shell_up_key_binding
+    # from config (0 = fullscreen) and ignores --inline-height
+    atuin() {
+        if [[ "$1" == "search" ]]; then
+            shift
+            local -a args=()
+            for a in "$@"; do
+                [[ "$a" == "--shell-up-key-binding" ]] && continue
+                args+=("$a")
+            done
+            command atuin search --inline-height 36 "${args[@]}"
+        else
+            command atuin "$@"
+        fi
+    }
     alias h='atuin search'
     alias hs='atuin stats'
     alias hh='atuin history list'
