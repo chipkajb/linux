@@ -279,6 +279,14 @@ local plugins = {
             },
         },
     },
+    -- Cursor-style multi-line ghost-text tab completion
+    {
+        "supermaven-inc/supermaven-nvim",
+        event = "InsertEnter",
+        config = function()
+            require "custom.configs.supermaven"
+        end,
+    },
     {
         "MeanderingProgrammer/render-markdown.nvim",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
