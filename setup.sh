@@ -334,7 +334,7 @@ install_adlc() {
     printf "${GREEN}DONE${NC} -- adlc tooling installed\n"
     printf "  herdr: ${YELLOW}$(command -v herdr || echo "$HOME/.local/bin/herdr")${NC}\n"
     printf "  Launch from rofi (Mod+d) as ${YELLOW}herdr${NC}, or i3 ${YELLOW}Mod+Shift+t${NC}\n"
-    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (see config/herdr/CHEATSHEET.md)\n"
+    printf "  Prefix is ${YELLOW}Ctrl-Space${NC} (see config/herdr/config.toml)\n"
     printf "  caveman: type ${YELLOW}/caveman${NC} in a session (or say \"talk like caveman\")\n"
     printf "  superpowers: restart Claude Code / Cursor after install\n"
     printf "  Update herdr with ${YELLOW}herdr update${NC}\n"
