@@ -313,6 +313,11 @@ function M.lines()
     " KEYMAPS",
     " / search   n/N next match   q close",
     "",
+    " LEGEND  <leader> + ...",
+    "   b buffer       f find          g git            x trouble/errors",
+    "   m markdown     c chad/code     p python/paste   d debug/delete",
+    "   a harpoon-add  u undo          w workspace (nvchad default)",
+    "",
   }
 
   -- table of contents

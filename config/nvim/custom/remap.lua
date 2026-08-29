@@ -37,10 +37,10 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 --- run "chmod +x <file>" from inside file (<leader>x reserved for trouble)
 vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "chmod +x" })
 
---- close buffer
-vim.keymap.set("n", "<leader>bd", function()
+--- close buffer (mirrors vim's own :bw / bwipeout abbreviation)
+vim.keymap.set("n", "<leader>bw", function()
   require("nvchad.tabufline").close_buffer()
-end, { desc = "Close buffer" })
+end, { desc = "Buffer: wipe/close" })
 
 --- tabufline: next / prev buffer
 vim.keymap.set("n", "<Tab>", function()
