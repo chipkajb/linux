@@ -221,6 +221,21 @@ install_neovim_treesitter_parsers() {
     nvim --headless "+lua require('custom.configs.treesitter').install_parsers()" +qa
 }
 
+# install mason LSP/tool packages from chadrc M.mason.pkgs (jsonls needs vscode-json-language-server)
+install_neovim_mason_packages() {
+    if ! command -v nvim &> /dev/null; then
+        printf "${YELLOW}WARN${NC} -- nvim not on PATH, skipping mason package install\n"
+        return
+    fi
+    # json-lsp / yaml / ts servers need npm; lua-language-server etc. use github releases
+    if ! command -v npm &> /dev/null; then
+        printf "${YELLOW}WARN${NC} -- npm not on PATH; some mason packages (json-lsp, yaml-language-server, typescript-language-server) may fail\n"
+    fi
+    printf "Installing Neovim mason packages from chadrc...\n"
+    # headless: avoid :MasonInstallAll (opens UI). Install pkgs listed in chadrc.
+    nvim --headless "+lua local pkgs=require('nvconfig').mason.pkgs; if #pkgs==0 then vim.cmd('qa!') else vim.cmd('MasonInstall '..table.concat(pkgs,' ')) end" +qa
+}
+
 # install neovim (snap: current nvim on both 22.04 and 24.04; apt/PPA stay on 0.9.x)
 install_neovim() {
     printf "Installing neovim...\n"
@@ -254,6 +269,7 @@ install_neovim() {
     pipx install mypy
     install_tree_sitter_cli
     install_neovim_treesitter_parsers
+    install_neovim_mason_packages
 
     # git merge conflicts: `git mergetool` opens a 4-pane nvim diff (LOCAL/BASE/REMOTE/MERGED).
     # Prefer `nvim` + `:DiffviewOpen` (bound to <leader>gd) for resolving conflicts across a

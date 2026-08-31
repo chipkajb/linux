@@ -11,22 +11,9 @@ local plugins = {
         lazy = false,
     },
     {
-        "williamboman/mason.nvim",
+        -- package list lives in chadrc M.mason.pkgs (mason v2 + NvChad MasonInstallAll)
+        "mason-org/mason.nvim",
         opts = {
-            ensure_installed = {
-                "black",
-                "pyright",
-                "ruff",
-                "debugpy",
-                "lua-language-server",
-                "bash-language-server",
-                "json-lsp",
-                "yaml-language-server",
-                "marksman",
-                "typescript-language-server",
-                "rust-analyzer",
-                "gopls",
-            },
             ui = {
                 icons = {
                     package_pending = "P",
