@@ -51,6 +51,22 @@ detect_ubuntu() {
             printf "${YELLOW}WARN${NC}: Ubuntu %s is untested; 22.04 and 24.04 are supported\n" "$UBUNTU_VERSION"
             ;;
     esac
+    fix_vscode_apt_sources
+}
+
+# vscode.list (setup.sh) + vscode.sources (code package) both map the same repo with different Signed-By paths and break apt
+fix_vscode_apt_sources() {
+    local list="/etc/apt/sources.list.d/vscode.list"
+    local sources="/etc/apt/sources.list.d/vscode.sources"
+    if [ -f "$list" ] && { [ -f "$sources" ] || grep -q 'packages\.microsoft\.gpg' "$list" 2>/dev/null; }; then
+        printf "${YELLOW}WARN${NC}: removing conflicting vscode.list\n"
+        sudo rm -f "$list"
+    fi
+}
+
+apt_update() {
+    fix_vscode_apt_sources
+    sudo apt-get update
 }
 
 # true if $UBUNTU_VERSION >= $1 (e.g. ubuntu_at_least 24.04)
@@ -121,7 +137,7 @@ install_atuin() {
 # install zsh
 install_zsh() {
     printf "Installing zsh...\n"
-    sudo apt-get update
+    apt_update
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     source ~/.cargo/env
     cargo install eza --locked
@@ -155,8 +171,8 @@ install_zsh() {
 # install vim
 install_vim() {
     printf "Installing vim...\n"
-    sudo apt-get update
-    sudo apt-get install -y libclang-dev vim
+    apt_update || { printf "${RED}FAIL${NC}: apt-get update failed\n"; return 1; }
+    sudo apt-get install -y libclang-dev vim || { printf "${RED}FAIL${NC}: apt install vim failed\n"; return 1; }
     rm -rf /home/$USER/.viminfo 2> /dev/null
     rm -rf /home/$USER/.vim 2> /dev/null
     rm -rf /home/$USER/.vimrc 2> /dev/null
@@ -167,7 +183,8 @@ install_vim() {
     rm -rf /home/$USER/.vim/bundle
     mkdir -p ~/.vim/bundle
     git clone https://github.com/VundleVim/Vundle.vim.git /home/$USER/.vim/bundle/Vundle.vim
-    vim +PluginInstall +qall > /dev/null
+    printf "Installing vim plugins (may take a few minutes)...\n"
+    /usr/bin/vim -Nu "$HOME/.vimrc" -n -Es +PluginInstall +qall
 
     printf "\nRemember to change path to libclang.so in ~/.vimrc"
     printf "\nCurrent path is:\n"
@@ -248,7 +265,7 @@ install_neovim_mason_packages() {
 # install neovim (snap: current nvim on both 22.04 and 24.04; apt/PPA stay on 0.9.x)
 install_neovim() {
     printf "Installing neovim...\n"
-    sudo apt-get update
+    apt_update
     sudo apt-get install -y snapd python3-pip pipx gcc g++ make git unzip
     pipx ensurepath || true
     if ! snap list nvim &> /dev/null; then
@@ -295,14 +312,21 @@ install_neovim() {
 # install vs code (signed-by keyring works on 22.04 and 24.04; apt-key is gone on 24.04)
 install_vscode() {
     printf "Installing VS Code...\n"
-    sudo apt-get update
+    sudo rm -f /etc/apt/sources.list.d/vscode.list /etc/apt/sources.list.d/vscode.sources
+    apt_update
     sudo apt-get install -y wget gpg apt-transport-https
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/packages.microsoft.gpg
-    sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
-    rm -f /tmp/packages.microsoft.gpg
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
-        | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
-    sudo apt-get update
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/microsoft.gpg
+    sudo install -D -o root -g root -m 644 /tmp/microsoft.gpg /usr/share/keyrings/microsoft.gpg
+    rm -f /tmp/microsoft.gpg
+    sudo tee /etc/apt/sources.list.d/vscode.sources > /dev/null <<'EOF'
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/microsoft.gpg
+EOF
+    apt_update
     sudo apt-get install -y code
     code --install-extension Atishay-Jain.All-Autocomplete
     code --install-extension ms-python.black-formatter
@@ -336,7 +360,7 @@ install_vscode() {
 # install tmux
 install_tmux() {
     printf "Installing tmux...\n"
-    sudo apt-get update
+    apt_update
     sudo apt-get remove tmux -y
     sudo apt-get purge tmux -y
     rm -rf ~/.config/tmux 2> /dev/null
@@ -359,7 +383,7 @@ install_adlc() {
     export PATH="$HOME/.local/bin:$PATH"
 
     # clipboard helper used by pane-copy binding
-    sudo apt-get update
+    apt_update
     sudo apt-get install -y xclip
 
     # herdr binary
@@ -440,7 +464,7 @@ install_adlc() {
 # install i3
 install_i3() {
     printf "Installing i3...\n"
-    sudo apt-get update
+    apt_update
     # package renamed in 24.04 (22.04 still uses libgdk-pixbuf2.0-dev)
     local pixbuf_dev="libgdk-pixbuf2.0-dev"
     if ubuntu_at_least 24.04; then
@@ -531,7 +555,7 @@ install_i3() {
 # install alacritty
 install_alacritty() {
     printf "Installing alacritty...\n"
-    sudo apt-get update
+    apt_update
     sudo add-apt-repository ppa:aslatter/ppa -y
     sudo apt install alacritty -y
     sudo update-alternatives --config x-terminal-emulator
@@ -555,7 +579,7 @@ install_fff_mcp() {
 # misc setup
 misc_setup() {
     printf "Miscellaneous setup...\n"
-    sudo apt-get update
+    apt_update
     sudo apt install python3-gi unclutter-xfixes flameshot simplescreenrecorder gnome-tweaks -y
     # fd/rg/fzf remain for one-shot shell use; agents + nvim use fff
     sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
