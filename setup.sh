@@ -372,9 +372,10 @@ install_adlc() {
     fi
 
     # launcher for rofi / i3
-    chmod +x "$SETUP_ROOT/scripts/herdr-launch"
+    chmod +x "$SETUP_ROOT/scripts/herdr-launch" "$SETUP_ROOT/scripts/herdr-reset"
     mkdir -p ~/.local/bin ~/.local/share/applications
     ln -sfn "$SETUP_ROOT/scripts/herdr-launch" ~/.local/bin/herdr-launch
+    ln -sfn "$SETUP_ROOT/scripts/herdr-reset" ~/.local/bin/herdr-reset
     ln -sfn "$SETUP_ROOT/config/applications/herdr.desktop" ~/.local/share/applications/herdr.desktop
     # app icons (hicolor → rofi/desktop/dunst pick up Icon=herdr, slack, …)
     for size_dir in "$SETUP_ROOT"/assets/icons/hicolor/*/apps; do

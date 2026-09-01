@@ -56,7 +56,8 @@ vim.opt.colorcolumn = "120"
 --- leader key
 vim.g.mapleader = " "
 
---- yank / put: xclip locally, OSC 52 over SSH (via tmux client_tty when in tmux)
+--- yank / put: yy, y, visual-y, etc. sync to the system clipboard (+ register).
+--- Local desktop uses xclip; herdr remote / SSH uses OSC 52 (herdr bridges to host).
 require("custom.clipboard").setup()
 vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_create_autocmd("User", {

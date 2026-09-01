@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Stop herdr server(s) for a clean restart.
+# Closing the alacritty window (i3 mod+shift+q) only detaches the client — the
+# server keeps running and the next launch reattaches to the old session.
+
+set -euo pipefail
+
+stop_local() {
+    if herdr session list 2>/dev/null | rg -q 'running'; then
+        printf 'Stopping local herdr server...\n'
+        herdr server stop || true
+    else
+        printf 'Local herdr server is not running.\n'
+    fi
+}
+
+stop_remote() {
+    local host="$1"
+    printf 'Stopping herdr server on %s...\n' "$host"
+    ssh "$host" 'herdr server stop 2>/dev/null || true'
+}
+
+usage() {
+    cat <<'EOF'
+Usage:
+  herdr-reset              stop local herdr server
+  herdr-reset remote HOST  stop herdr server on a remote host (ssh config name)
+
+Herdr is client/server (like tmux):
+  Ctrl+Space q     detach client — server + panes keep running
+  Mod+Shift+Q      kill alacritty window — same as detach, server still runs
+  Ctrl+D           exit shell in current pane only — does NOT stop herdr
+  herdr-reset      actually stop the background server
+
+After reset, open a fresh session: Mod+Return (local) or Mod+Shift+S (remote).
+EOF
+}
+
+main() {
+    case "${1:-}" in
+        -h | --help | help)
+            usage
+            ;;
+        remote)
+            [[ -n "${2:-}" ]] || {
+                printf 'herdr-reset: remote requires an ssh host name\n' >&2
+                exit 1
+            }
+            stop_remote "$2"
+            ;;
+        "")
+            stop_local
+            ;;
+        *)
+            printf 'herdr-reset: unknown argument %s\n' "$1" >&2
+            usage >&2
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
