@@ -345,8 +345,9 @@ else
     alias h='fc -l 1 | grep'
 fi
 
-# herdr
+# herdr — use `herdr --remote host` over SSH so yanks reach your local clipboard (browser)
 alias hr='herdr'
+alias hr-remote='herdr --remote'
 alias herdr-stop='herdr server stop'
 alias herdr-reload='herdr server reload-config'
 export PATH="$HOME/.local/bin:$PATH"

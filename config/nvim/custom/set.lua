@@ -56,20 +56,8 @@ vim.opt.colorcolumn = "120"
 --- leader key
 vim.g.mapleader = " "
 
---- yank / put use the system clipboard (+) so you can paste in other apps
---- xclip without -quiet can hang and lock the X clipboard (breaks Chrome paste)
-vim.g.clipboard = {
-  name = "xclip-quiet",
-  copy = {
-    ["+"] = { "xclip", "-quiet", "-i", "-selection", "clipboard" },
-    ["*"] = { "xclip", "-quiet", "-i", "-selection", "primary" },
-  },
-  paste = {
-    ["+"] = { "xclip", "-quiet", "-o", "-selection", "clipboard" },
-    ["*"] = { "xclip", "-quiet", "-o", "-selection", "primary" },
-  },
-  cache_enabled = 1,
-}
+--- yank / put: xclip locally, OSC 52 over SSH (via tmux client_tty when in tmux)
+require("custom.clipboard").setup()
 vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",

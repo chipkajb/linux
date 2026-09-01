@@ -98,11 +98,11 @@ type = "shell"
 command = '"$HERDR_BIN_PATH" pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
 description = "clear pane"
 
-# prefix+y yank pane
+# prefix+y yank pane (herdr reads OSC 52 from pane output; xclip fails over SSH)
 [[keys.command]]
 key = "prefix+y"
 type = "shell"
-command = '"$HERDR_BIN_PATH" pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null | xclip -selection clipboard'
+command = 'content="$("$HERDR_BIN_PATH" pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null)"; [ -n "$content" ] && printf '\''\033]52;c;%s\033\\'\'' "$(printf "%s" "$content" | base64 | tr -d "\n")" > /dev/tty'
 description = "copy pane to clipboard"
 
 # a = Cursor agent

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pick an ssh host from ~/.ssh/config and open a terminal session
+# pick an ssh host from ~/.ssh/config and attach with herdr --remote
 
 set -euo pipefail
 
@@ -28,13 +28,18 @@ notify() {
     fi
 }
 
+if ! command -v herdr >/dev/null 2>&1; then
+    notify "Herdr" "herdr not found — install with: curl -fsSL https://herdr.dev/install.sh | sh"
+    exit 1
+fi
+
 hosts="$(list_hosts)"
 if [[ -z "$hosts" ]]; then
-    notify "SSH" "No hosts found in ~/.ssh/config"
+    notify "Herdr remote" "No hosts found in ~/.ssh/config"
     exit 0
 fi
 
-host="$(printf '%s\n' "$hosts" | rofi -dmenu -i -p "ssh" -config "$rofi_config" -lines 12)"
+host="$(printf '%s\n' "$hosts" | rofi -dmenu -i -p "herdr --remote" -config "$rofi_config" -lines 12)"
 [[ -n "${host:-}" ]] || exit 0
 
-exec alacritty --title "ssh ${host}" -e ssh "$host"
+exec herdr --remote "$host"

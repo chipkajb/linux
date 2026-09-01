@@ -78,7 +78,7 @@ LAYOUT & RESIZE
 LAUNCHERS (ROFI)
 ──────────────────────────────────────────────────────────────────────────────────────
   w           window switcher
-  s*          ssh host switcher — *S*SH (~/.ssh/config)
+  s*          herdr --remote host picker — *S*SH (~/.ssh/config)
 
 
 SCRATCH & TERMINAL

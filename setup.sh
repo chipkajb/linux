@@ -336,6 +336,9 @@ install_tmux() {
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     ln -s $PWD/config/tmux ~/.config/
     ln -sfn $PWD/config/tmux/tmux.conf ~/.tmux.conf
+    mkdir -p "$HOME/.local/bin"
+    ln -sfn "$PWD/scripts/osc52-copy" "$HOME/.local/bin/osc52-copy"
+    chmod +x "$PWD/scripts/osc52-copy"
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
 }

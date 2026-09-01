@@ -1,0 +1,28 @@
+#!/bin/sh
+# Copy stdin (or tmux paste buffer) to the system clipboard.
+# herdr / SSH / headless: OSC 52 on the pane or client tty.
+# Local desktop (no herdr): xclip when DISPLAY is available.
+set -e
+
+if [ ! -t 0 ]; then
+  content=$(cat)
+else
+  content=$(tmux save-buffer - 2>/dev/null || true)
+fi
+
+[ -n "$content" ] || exit 0
+
+if [ -z "${HERDR_ENV:-}" ] && [ -z "${SSH_CONNECTION:-}${SSH_CLIENT:-}" ] \
+  && [ -n "${DISPLAY:-}" ] && command -v xclip >/dev/null 2>&1; then
+  printf '%s' "$content" | xclip -quiet -i -selection clipboard
+  exit 0
+fi
+
+tty_path=$(tmux display -p '#{client_tty}' 2>/dev/null | tr -d '[:space:]')
+if [ -z "$tty_path" ]; then
+  tty_path=$(tty 2>/dev/null | tr -d '[:space:]')
+fi
+[ -n "$tty_path" ] || exit 1
+
+encoded=$(printf '%s' "$content" | base64 | tr -d '\n')
+printf '\033]52;c;%s\033\\' "$encoded" > "$tty_path"

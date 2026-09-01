@@ -31,7 +31,7 @@ set $scripts_dir ~/workspace/linux/scripts
 # r: resize window (*R*esize)
 # r*: restart i3 (*R*estart)
 # s: open slack (*S*lack)
-# s*: rofi ssh switcher (*S*SH)
+# s*: rofi herdr --remote host picker (*S*SH)
 # t: obsidian notes scratch (vim in vault) (*T*ext editor)
 # comma: move workspace left
 # period: move workspace right
