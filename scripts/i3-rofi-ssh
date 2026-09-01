@@ -45,4 +45,5 @@ host="$(printf '%s\n' "$hosts" | rofi -dmenu -i -p "herdr --remote" -config "$ro
 # --remote defaults to --remote-keybindings local, which replaces the server's profile
 # with this machine's and drops every [[keys.command]] on the way. Ask for the server's
 # profile so the remote's config.toml drives the prefix and the custom commands.
-exec herdr --remote-keybindings server --remote "$host"
+exec alacritty --title Herdr -e "$HOME/.local/bin/herdr-launch" \
+    --remote-keybindings server --remote "$host"
