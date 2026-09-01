@@ -14,7 +14,7 @@ readonly SUMMARY_MAX_LINES=2
 readonly SUMMARY_MAX_CHARS_PER_LINE=48
 readonly BODY_MAX_LINES=3
 readonly BODY_MAX_CHARS=100
-readonly WS_SCRIPT="${HOME}/workspace/linux/scripts/i3-notification-workspace.sh"
+readonly WS_SCRIPT="/usr/local/bin/i3-notification-workspace.sh"
 
 appname="${DUNST_APPNAME:-${DUNST_APP_NAME:-${1:-}}}"
 summary="${DUNST_SUMMARY:-${2:-}}"

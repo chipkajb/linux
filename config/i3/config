@@ -1,6 +1,6 @@
 # set mod key (Super)
 set $mod Mod4
-set $scripts_dir ~/workspace/linux/scripts
+set $scripts_dir /usr/local/bin
 
 ######
 # KEY

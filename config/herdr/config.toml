@@ -102,7 +102,7 @@ description = "clear pane"
 [[keys.command]]
 key = "prefix+y"
 type = "shell"
-command = 'content="$("$HERDR_BIN_PATH" pane read "$HERDR_ACTIVE_PANE_ID" --source recent-unwrapped 2>/dev/null)"; [ -n "$content" ] && printf '\''\033]52;c;%s\033\\'\'' "$(printf "%s" "$content" | base64 | tr -d "\n")" > /dev/tty'
+command = "\"$HERDR_BIN_PATH\" pane read \"$HERDR_ACTIVE_PANE_ID\" --source recent-unwrapped 2>/dev/null | \"$HOME/.local/bin/osc52-copy\""
 description = "copy pane to clipboard"
 
 # a = Cursor agent

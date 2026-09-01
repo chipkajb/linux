@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# repo root — never use bare $PWD; install steps cd into build dirs
+SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # define script parameters
 ACTION_LIST=(0 1 2 3 4 5 6 7 8 9 10)
 DESC_LIST=(
@@ -130,14 +133,14 @@ install_zsh() {
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-history-substring-search.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-history-substring-search
     git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
-    ln -sf $PWD/config/zshrc /home/$USER/.zshrc
-    for file in $PWD/scripts/*; do
+    ln -sf $SETUP_ROOT/config/zshrc /home/$USER/.zshrc
+    for file in $SETUP_ROOT/scripts/*; do
         if [[ $file != *.py ]]; then
             sudo ln -sf "$file" /usr/local/bin/
         fi
     done
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f
-    ln -sf $PWD/config/starship.toml /home/$USER/.config/starship.toml
+    ln -sf $SETUP_ROOT/config/starship.toml /home/$USER/.config/starship.toml
     curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
     install_atuin
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
@@ -152,8 +155,8 @@ install_vim() {
     rm -rf /home/$USER/.vim 2> /dev/null
     rm -rf /home/$USER/.vimrc 2> /dev/null
 
-    ln -s $PWD/config/vim /home/$USER/.vim
-    ln -s $PWD/config/vimrc /home/$USER/.vimrc
+    ln -s $SETUP_ROOT/config/vim /home/$USER/.vim
+    ln -s $SETUP_ROOT/config/vimrc /home/$USER/.vimrc
 
     rm -rf /home/$USER/.vim/bundle
     mkdir -p ~/.vim/bundle
@@ -256,12 +259,12 @@ install_neovim() {
     rm -rf ~/.config/nvim/ 2> /dev/null
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
     rm -rf ~/.config/nvim/after 2> /dev/null
-    ln -s $PWD/config/nvim/after ~/.config/nvim
+    ln -s $SETUP_ROOT/config/nvim/after ~/.config/nvim
     rm -rf ~/.config/nvim/lua/custom/ 2> /dev/null
-    ln -s $PWD/config/nvim/custom ~/.config/nvim/lua/custom
-    ln -sf $PWD/config/nvim/init.lua ~/.config/nvim/init.lua
-    ln -sf $PWD/config/nvim/lua/configs ~/.config/nvim/lua/configs
-    ln -sf $PWD/config/nvim/lua/chadrc.lua ~/.config/nvim/lua/chadrc.lua
+    ln -s $SETUP_ROOT/config/nvim/custom ~/.config/nvim/lua/custom
+    ln -sf $SETUP_ROOT/config/nvim/init.lua ~/.config/nvim/init.lua
+    ln -sf $SETUP_ROOT/config/nvim/lua/configs ~/.config/nvim/lua/configs
+    ln -sf $SETUP_ROOT/config/nvim/lua/chadrc.lua ~/.config/nvim/lua/chadrc.lua
     sudo apt-get install ripgrep -y
     sudo apt-get install python3-venv -y
     sudo apt-get install jq -y
@@ -316,11 +319,11 @@ install_vscode() {
     code --install-extension ms-vscode-remote.remote-ssh-edit
     code --install-extension ms-vscode-remote.remote-explorer
     code --install-extension tomoki1207.pdf
-    ln -sfn $PWD/config/vscode/settings.json ~/.config/Code/User/
-    ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Code/User/
-    ln -sfn $PWD/config/vscode/settings.json ~/.config/Cursor/User/
-    ln -sfn $PWD/config/vscode/keybindings.json ~/.config/Cursor/User/
-    python3 "$PWD/config/vscode/hide-staged-gutter-diffs.py" || true
+    ln -sfn $SETUP_ROOT/config/vscode/settings.json ~/.config/Code/User/
+    ln -sfn $SETUP_ROOT/config/vscode/keybindings.json ~/.config/Code/User/
+    ln -sfn $SETUP_ROOT/config/vscode/settings.json ~/.config/Cursor/User/
+    ln -sfn $SETUP_ROOT/config/vscode/keybindings.json ~/.config/Cursor/User/
+    python3 "$SETUP_ROOT/config/vscode/hide-staged-gutter-diffs.py" || true
     printf "${GREEN}DONE${NC} -- VS Code installed to ${YELLOW}$(which code)${NC} -- ${YELLOW}v$(code --version | head -n 1)${NC}\n"
 }
 
@@ -334,11 +337,11 @@ install_tmux() {
     sudo apt-get install tmux libevent-dev xclip ncurses-dev -y
     rm -rf ~/.tmux/plugins/tpm 2> /dev/null
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-    ln -s $PWD/config/tmux ~/.config/
-    ln -sfn $PWD/config/tmux/tmux.conf ~/.tmux.conf
+    ln -s $SETUP_ROOT/config/tmux ~/.config/
+    ln -sfn $SETUP_ROOT/config/tmux/tmux.conf ~/.tmux.conf
     mkdir -p "$HOME/.local/bin"
-    ln -sfn "$PWD/scripts/osc52-copy" "$HOME/.local/bin/osc52-copy"
-    chmod +x "$PWD/scripts/osc52-copy"
+    ln -sfn "$SETUP_ROOT/scripts/osc52-copy" "$HOME/.local/bin/osc52-copy"
+    chmod +x "$SETUP_ROOT/scripts/osc52-copy"
     rm -rf tmux* 2> /dev/null
     printf "${GREEN}DONE${NC} -- tmux installed to ${YELLOW}$(which tmux)${NC} -- ${YELLOW}$(tmux -V)${NC}\n"
 }
@@ -363,18 +366,18 @@ install_adlc() {
 
     # application config
     mkdir -p ~/.config/herdr
-    ln -sfn "$PWD/config/herdr/config.toml" ~/.config/herdr/config.toml
+    ln -sfn "$SETUP_ROOT/config/herdr/config.toml" ~/.config/herdr/config.toml
     if command -v herdr &> /dev/null; then
         herdr config check || true
     fi
 
     # launcher for rofi / i3
-    chmod +x "$PWD/scripts/herdr-launch"
+    chmod +x "$SETUP_ROOT/scripts/herdr-launch"
     mkdir -p ~/.local/bin ~/.local/share/applications
-    ln -sfn "$PWD/scripts/herdr-launch" ~/.local/bin/herdr-launch
-    ln -sfn "$PWD/config/applications/herdr.desktop" ~/.local/share/applications/herdr.desktop
+    ln -sfn "$SETUP_ROOT/scripts/herdr-launch" ~/.local/bin/herdr-launch
+    ln -sfn "$SETUP_ROOT/config/applications/herdr.desktop" ~/.local/share/applications/herdr.desktop
     # app icons (hicolor → rofi/desktop/dunst pick up Icon=herdr, slack, …)
-    for size_dir in "$PWD"/assets/icons/hicolor/*/apps; do
+    for size_dir in "$SETUP_ROOT"/assets/icons/hicolor/*/apps; do
         size=$(basename "$(dirname "$size_dir")")
         mkdir -p "$HOME/.local/share/icons/hicolor/$size/apps"
         for icon in "$size_dir"/*.png; do
@@ -474,7 +477,7 @@ install_i3() {
         brightnessctl \
         fonts-font-awesome -y
     sudo usermod -aG video "$USER"
-    sudo ln -sf "$PWD/scripts/set_brightness" /usr/local/bin/set_brightness
+    sudo ln -sf "$SETUP_ROOT/scripts/set_brightness" /usr/local/bin/set_brightness
     fc-cache -fv
     rm -rf rofi-1.7.5 2> /dev/null
     wget https://github.com/davatorium/rofi/releases/download/1.7.5/rofi-1.7.5.tar.gz
@@ -486,33 +489,33 @@ install_i3() {
     mv rofi-1.7.5 ~/software/rofi-1.7.5
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
-    ln -s $PWD/config/i3 ~/.config/
-    ln -s $PWD/assets/background.png ~/Pictures/
-    ln -sfn $PWD/assets/fonts ~/.fonts
+    ln -s $SETUP_ROOT/config/i3 ~/.config/
+    ln -s $SETUP_ROOT/assets/background.png ~/Pictures/
+    ln -sfn $SETUP_ROOT/assets/fonts ~/.fonts
     mkdir -p ~/.config/gtk-2.0
     mkdir -p ~/.config/gtk-3.0
     mkdir -p ~/.config/gtk-4.0
-    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-2.0/settings.ini
-    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-3.0/settings.ini
-    ln -sfn $PWD/config/gtk/settings.ini ~/.config/gtk-4.0/settings.ini
-    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
-    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-3.0/gtkfilechooser.ini
-    ln -sfn $PWD/config/gtk/gtkfilechooser.ini ~/.config/gtk-4.0/gtkfilechooser.ini
-    ln -sfn $PWD/config/gtk/set_theme.sh ~/.config/gtk-4.0/set_theme.sh
+    ln -sfn $SETUP_ROOT/config/gtk/settings.ini ~/.config/gtk-2.0/settings.ini
+    ln -sfn $SETUP_ROOT/config/gtk/settings.ini ~/.config/gtk-3.0/settings.ini
+    ln -sfn $SETUP_ROOT/config/gtk/settings.ini ~/.config/gtk-4.0/settings.ini
+    ln -sfn $SETUP_ROOT/config/gtk/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
+    ln -sfn $SETUP_ROOT/config/gtk/gtkfilechooser.ini ~/.config/gtk-3.0/gtkfilechooser.ini
+    ln -sfn $SETUP_ROOT/config/gtk/gtkfilechooser.ini ~/.config/gtk-4.0/gtkfilechooser.ini
+    ln -sfn $SETUP_ROOT/config/gtk/set_theme.sh ~/.config/gtk-4.0/set_theme.sh
     chmod +x ~/.config/gtk-4.0/set_theme.sh
-    ln -sfn $PWD/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
-    ln -sfn $PWD/config/rofi ~/.config/
-    ln -sfn $PWD/config/dunst ~/.config/
-    ln -sfn $PWD/config/picom ~/.config/
-    ln -sfn $PWD/config/polybar ~/.config/
-    ln -sfn $PWD/config/xbindkeys/xbindkeysrc ~/.xbindkeysrc
-    sudo ln -sfn $PWD/config/i3/gpu_memory /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/wifi /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/cpu_usage /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/load_average /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/battery /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/temperature /usr/share/i3blocks
-    sudo ln -sfn $PWD/config/i3/x11-common /etc/X11/Xresources
+    ln -sfn $SETUP_ROOT/config/gtk/gtkrc-2.0 ~/.gtkrc-2.0
+    ln -sfn $SETUP_ROOT/config/rofi ~/.config/
+    ln -sfn $SETUP_ROOT/config/dunst ~/.config/
+    ln -sfn $SETUP_ROOT/config/picom ~/.config/
+    ln -sfn $SETUP_ROOT/config/polybar ~/.config/
+    ln -sfn $SETUP_ROOT/config/xbindkeys/xbindkeysrc ~/.xbindkeysrc
+    sudo ln -sfn $SETUP_ROOT/config/i3/gpu_memory /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/wifi /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/cpu_usage /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/load_average /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/battery /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/temperature /usr/share/i3blocks
+    sudo ln -sfn $SETUP_ROOT/config/i3/x11-common /etc/X11/Xresources
     mkdir -p ~/.icons
     ln -sfn /usr/share/icons/Yaru ~/.icons/default
     printf "${GREEN}DONE${NC} -- i3 installed to ${YELLOW}$(which i3)${NC} -- ${YELLOW}$(i3 --version)${NC}\n"
@@ -526,7 +529,7 @@ install_alacritty() {
     sudo apt install alacritty -y
     sudo update-alternatives --config x-terminal-emulator
     rm -rf ~/.config/alacritty 2> /dev/null
-    ln -s $PWD/config/alacritty ~/.config/
+    ln -s $SETUP_ROOT/config/alacritty ~/.config/
     mkdir -p ~/.config/alacritty/themes
     git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
     printf "${GREEN}DONE${NC} -- alacritty installed to ${YELLOW}$(which alacritty)${NC} -- ${YELLOW}$(alacritty --version)${NC}\n"
@@ -550,10 +553,15 @@ misc_setup() {
     # fd/rg/fzf remain for one-shot shell use; agents + nvim use fff
     sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
     install_fff_mcp
-    ln -s $PWD/scripts/python_startup.py /home/$USER/.python_startup.py
+    ln -s $SETUP_ROOT/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
-    cd ~/.local/share/gedit/plugins && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.py && wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.plugin
+    (
+        cd ~/.local/share/gedit/plugins
+        wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.py
+        wget https://raw.githubusercontent.com/nparkanyi/gedit3-vim-mode/master/vim-mode.plugin
+    )
+    cd "$SETUP_ROOT"
     printf "${GREEN}DONE${NC} -- miscellaneous setup complete\n"
 }
 
