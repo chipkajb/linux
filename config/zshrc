@@ -353,7 +353,11 @@ alias herdr-reload='herdr server reload-config'
 alias herdr-reset='~/.local/bin/herdr-reset 2>/dev/null || herdr server stop'
 export PATH="$HOME/.local/bin:$PATH"
 
+# caveman
 export CAVEMAN_DEFAULT_MODE=lite
+
+# claude
+export ENABLE_CLAUDEAI_MCP_SERVERS=false
 
 # credentials live outside this repo so they can't be committed
 # template: config/zsh_secrets.example
