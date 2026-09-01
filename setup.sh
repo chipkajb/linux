@@ -134,6 +134,12 @@ install_zsh() {
     git clone https://github.com/zsh-users/zsh-history-substring-search.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-history-substring-search
     git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
     ln -sf $SETUP_ROOT/config/zshrc /home/$USER/.zshrc
+    # credentials stay outside the repo; seed an empty copy so zshrc has something to source
+    if [[ ! -f /home/$USER/.zsh_secrets ]]; then
+        cp $SETUP_ROOT/config/zsh_secrets.example /home/$USER/.zsh_secrets
+        chmod 600 /home/$USER/.zsh_secrets
+        printf "  Fill in ${YELLOW}~/.zsh_secrets${NC} with real credentials\n"
+    fi
     for file in $SETUP_ROOT/scripts/*; do
         if [[ $file != *.py ]]; then
             sudo ln -sf "$file" /usr/local/bin/

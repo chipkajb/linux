@@ -42,4 +42,7 @@ fi
 host="$(printf '%s\n' "$hosts" | rofi -dmenu -i -p "herdr --remote" -config "$rofi_config" -lines 12)"
 [[ -n "${host:-}" ]] || exit 0
 
-exec herdr --remote "$host"
+# --remote defaults to --remote-keybindings local, which replaces the server's profile
+# with this machine's and drops every [[keys.command]] on the way. Ask for the server's
+# profile so the remote's config.toml drives the prefix and the custom commands.
+exec herdr --remote-keybindings server --remote "$host"

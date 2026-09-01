@@ -1,6 +1,11 @@
 # herdr keybindings — optimized for learnability
 # docs: https://herdr.dev/docs/configuration/
 #
+# Remote attach: use `herdr --remote-keybindings server --remote <host>` (the hr-remote
+# function in zshrc). The default is --remote-keybindings local, which swaps in the
+# client's profile for the whole attach and drops every [[keys.command]] below, so both
+# the prefix and the custom commands come from whatever config the client happens to have.
+#
 # Mental model (hjkl-first; arrows trimmed from help):
 #   1) Tmux habits: Ctrl-Space, c/[ copy, t new tab, p/n tabs, l clear,
 #      y yank, |/-/v/; splits, ctrl+hjkl panes, z zoom, x close, q detach

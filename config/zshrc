@@ -347,9 +347,14 @@ fi
 
 # herdr
 alias hr='herdr'
-alias hr-remote='herdr --remote'
+hr-remote() { herdr --remote-keybindings server --remote "$@" }
 alias herdr-stop='herdr server stop'
 alias herdr-reload='herdr server reload-config'
 alias herdr-reset='~/.local/bin/herdr-reset 2>/dev/null || herdr server stop'
 export PATH="$HOME/.local/bin:$PATH"
 
+export CAVEMAN_DEFAULT_MODE=lite
+
+# credentials live outside this repo so they can't be committed
+# template: config/zsh_secrets.example
+[[ -f ~/.zsh_secrets ]] && source ~/.zsh_secrets

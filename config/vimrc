@@ -124,3 +124,49 @@ nnoremap J  mzJ`z
 " make H and L go to the beginning and end of the line
 nnoremap H ^
 nnoremap L $
+
+" Clipboard
+" This vim is built without +clipboard, so there is no "+ register to sync with.
+" Inside herdr or over SSH there is no usable X display either, so yanks are pushed
+" to the terminal as OSC 52 and the terminal (or herdr) sets the system clipboard.
+function! s:Osc52Encode(text) abort
+    if exists('*base64_encode')
+        return base64_encode(str2list(a:text))
+    endif
+    return substitute(system('base64 | tr -d "\n"', a:text), '\n', '', 'g')
+endfunction
+
+function! s:Osc52Send(text) abort
+    if empty(a:text)
+        return
+    endif
+    let l:seq = "\<Esc>]52;c;" . s:Osc52Encode(a:text) . "\<Esc>\\"
+    if exists('*echoraw')
+        call echoraw(l:seq)
+    else
+        " older vim: no echoraw(), but vim keeps its controlling terminal
+        silent! call writefile([l:seq], '/dev/tty', 'b')
+    endif
+endfunction
+
+function! s:Osc52Yank() abort
+    if v:event.operator !=# 'y'
+        return
+    endif
+    " only the unnamed yank and explicit clipboard registers; "a.."z stay local
+    if !empty(v:event.regname) && v:event.regname !~# '^[+*]$'
+        return
+    endif
+    let l:text = join(v:event.regcontents, "\n")
+    if v:event.regtype ==# 'V'
+        let l:text .= "\n"
+    endif
+    call s:Osc52Send(l:text)
+endfunction
+
+if exists('##TextYankPost')
+    augroup Osc52Clipboard
+        autocmd!
+        autocmd TextYankPost * call s:Osc52Yank()
+    augroup END
+endif

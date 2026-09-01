@@ -1,6 +1,6 @@
 #!/bin/sh
 # Copy stdin (or tmux paste buffer) to the system clipboard.
-# herdr / SSH / headless: OSC 52 on the pane or client tty.
+# herdr / SSH / headless: OSC 52 on a terminal the multiplexer can see.
 # Local desktop (no herdr): xclip when DISPLAY is available.
 set -e
 
@@ -14,15 +14,44 @@ fi
 
 if [ -z "${HERDR_ENV:-}" ] && [ -z "${SSH_CONNECTION:-}${SSH_CLIENT:-}" ] \
   && [ -n "${DISPLAY:-}" ] && command -v xclip >/dev/null 2>&1; then
-  printf '%s' "$content" | xclip -quiet -i -selection clipboard
+  # no -quiet here: xclip has to fork and return instead of holding the selection
+  printf '%s' "$content" | xclip -i -selection clipboard
   exit 0
 fi
 
-tty_path=$(tmux display -p '#{client_tty}' 2>/dev/null | tr -d '[:space:]')
-if [ -z "$tty_path" ]; then
-  tty_path=$(tty 2>/dev/null | tr -d '[:space:]')
-fi
-[ -n "$tty_path" ] || exit 1
+# herdr runs keybinding commands detached, with no controlling terminal of their own.
+# Writing to the focused pane's pty surfaces the bytes as pane output, which is where
+# herdr looks for OSC 52.
+herdr_pane_tty() {
+  pane="${HERDR_ACTIVE_PANE_ID:-${HERDR_PANE_ID:-}}"
+  [ -n "$pane" ] || return 0
+  pid=$("${HERDR_BIN_PATH:-herdr}" pane process-info --pane "$pane" 2>/dev/null |
+    sed -n 's/.*"shell_pid":[[:space:]]*\([0-9][0-9]*\).*/\1/p')
+  [ -n "$pid" ] || return 0
+  readlink "/proc/$pid/fd/0" 2>/dev/null || true
+}
+
+# `tty` prints "not a tty" on stdout and exits 1, so every candidate is checked for
+# being a writable character device rather than merely non-empty.
+resolve_tty() {
+  for candidate in \
+    "$(herdr_pane_tty)" \
+    "$(tmux display -p '#{client_tty}' 2>/dev/null | tr -d '[:space:]')" \
+    "$(tty 2>/dev/null || true)" \
+    "${TTY:-}" \
+    /dev/tty; do
+    if [ -n "$candidate" ] && [ -c "$candidate" ] && [ -w "$candidate" ]; then
+      printf '%s' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+tty_path=$(resolve_tty) || {
+  echo "osc52-copy: no writable terminal found for OSC 52" >&2
+  exit 1
+}
 
 encoded=$(printf '%s' "$content" | base64 | tr -d '\n')
 printf '\033]52;c;%s\033\\' "$encoded" > "$tty_path"
