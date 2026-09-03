@@ -315,16 +315,16 @@ install_vscode() {
     sudo rm -f /etc/apt/sources.list.d/vscode.list /etc/apt/sources.list.d/vscode.sources
     apt_update
     sudo apt-get install -y wget gpg apt-transport-https
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/microsoft.gpg
-    sudo install -D -o root -g root -m 644 /tmp/microsoft.gpg /usr/share/keyrings/microsoft.gpg
-    rm -f /tmp/microsoft.gpg
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/packages.microsoft.gpg
+    sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
+    rm -f /tmp/packages.microsoft.gpg
     sudo tee /etc/apt/sources.list.d/vscode.sources > /dev/null <<'EOF'
 Types: deb
 URIs: https://packages.microsoft.com/repos/code
 Suites: stable
 Components: main
 Architectures: amd64
-Signed-By: /usr/share/keyrings/microsoft.gpg
+Signed-By: /usr/share/keyrings/packages.microsoft.gpg
 EOF
     apt_update
     sudo apt-get install -y code
