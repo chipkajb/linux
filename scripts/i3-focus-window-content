@@ -61,8 +61,8 @@ click_window_safe_spot() {
     local wid="$1"
     # shellcheck disable=SC2034
     eval "$(xdotool getwindowgeometry --shell "$wid")"
-    # left margin, vertical center — usually padding, not a button
-    local x=$((WIDTH / 20))
+    # window center
+    local x=$((WIDTH / 2))
     local y=$((HEIGHT / 2))
     xdotool mousemove --window "$wid" --sync "$x" "$y"
     xdotool click 1
