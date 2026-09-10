@@ -180,6 +180,7 @@ assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7
 assign [class="Claude"] $workspace10
 assign [class="MongoDB Compass"] $workspace10
+assign [class="Postman"] $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
