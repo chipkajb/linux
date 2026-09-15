@@ -23,7 +23,7 @@ set $scripts_dir /usr/local/bin
 # m: open mongodb compass (*M*ongoDB Compass)
 # n: open nautilus (*N*autilus)
 # o: open obsidian (*O*bsidian)
-# o*: open work apps (Google Chrome, Obsidian, Claude, Slack) (*O*pen work apps)
+# o*: open work apps (Google Chrome, Obsidian, Slack) (*O*pen work apps)
 # p: open pithos (*P*ithos)
 # p*: printscreen (*P*rintscreen)
 # q: toggle notification quiet mode (*Q*uiet)
@@ -138,7 +138,7 @@ set $workspace6 "6: 📝 Notes"
 set $workspace7 "7: 🎵 Music"
 set $workspace8 "8: ⚪ Terminal+"
 set $workspace9 "9: 🖥️ Code+"
-set $workspace10 "10: 🧠 Data/AI"
+set $workspace10 "10: 🗄️ Data"
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
@@ -319,7 +319,7 @@ bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager
 bindsym $mod+o exec obsidian
-bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec claude-desktop; exec slack
+bindsym $mod+Shift+o exec google-chrome; exec obsidian; exec slack
 
 # notification and navigation shortcuts
 bindsym $mod+q exec --no-startup-id $scripts_dir/i3-dunst-quiet-toggle
