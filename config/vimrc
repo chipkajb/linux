@@ -62,8 +62,10 @@ set expandtab " tabs are spaces
 set shiftwidth=4 " indent with 4 spaces
 set autoindent " use indentation of previous line
 set smartindent " use intelligent indentation for C
-set textwidth=120 " wrap lines at 120 characters
+set textwidth=0 " no hard wraps; paste/type stay one logical line
 set colorcolumn=120
+set wrap " soft wrap long lines in the display only
+set linebreak " wrap at word boundaries when soft-wrapping
 
 " UI Config
 set number " show line numbers
