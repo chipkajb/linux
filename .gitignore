@@ -14,3 +14,10 @@ skills-lock.json
 # real credentials live in ~/.zsh_secrets; only the template is tracked
 zsh_secrets
 .zsh_secrets
+
+# machine-specific includes live outside the repo; only templates are tracked
+zsh_local
+.zsh_local
+i3_local
+.i3_local
+config/i3/config.local

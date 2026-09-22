@@ -362,3 +362,7 @@ export ENABLE_CLAUDEAI_MCP_SERVERS=false
 # credentials live outside this repo so they can't be committed
 # template: config/zsh_secrets.example
 [[ -f ~/.zsh_secrets ]] && source ~/.zsh_secrets
+
+# machine-specific config lives outside this repo so it can't be committed
+# template: config/zsh_local.example
+[[ -f ~/.zsh_local ]] && source ~/.zsh_local

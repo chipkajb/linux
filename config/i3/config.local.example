@@ -1,0 +1,5 @@
+# Template for ~/.i3_local, which config/i3/config includes if it exists.
+# Put host-specific i3 directives (monitor scripts, display layout) here.
+# Copy to ~/.i3_local and edit. Never commit the filled copy.
+#
+#   cp config/i3/config.local.example ~/.i3_local

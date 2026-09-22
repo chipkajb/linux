@@ -156,12 +156,6 @@
     "*.csv": "default"
   },
 
-  // remote
-  "remote.SSH.remotePlatform": {
-    "Hercules": "linux"
-  },
-  "remote.autoForwardPortsSource": "hybrid",
-
   // debug
   "debug.focusWindowOnBreak": false,
 

@@ -156,6 +156,16 @@ install_zsh() {
         chmod 600 /home/$USER/.zsh_secrets
         printf "  Fill in ${YELLOW}~/.zsh_secrets${NC} with real credentials\n"
     fi
+    # host-specific shell config lives gitignored in the repo, symlinked to ~/.zsh_local
+    if [[ ! -f $SETUP_ROOT/config/zsh_local ]]; then
+        # adopt an existing real ~/.zsh_local if present, else start from the template
+        if [[ -f /home/$USER/.zsh_local && ! -L /home/$USER/.zsh_local ]]; then
+            cp /home/$USER/.zsh_local $SETUP_ROOT/config/zsh_local
+        else
+            cp $SETUP_ROOT/config/zsh_local.example $SETUP_ROOT/config/zsh_local
+        fi
+    fi
+    ln -sfn $SETUP_ROOT/config/zsh_local /home/$USER/.zsh_local
     for file in $SETUP_ROOT/scripts/*; do
         if [[ $file != *.py ]]; then
             sudo ln -sf "$file" /usr/local/bin/
@@ -521,6 +531,16 @@ install_i3() {
     rm -rf ~/.config/i3 2> /dev/null
     rm ~/Pictures/background.png 2> /dev/null
     ln -s $SETUP_ROOT/config/i3 ~/.config/
+    # host-specific i3 directives live gitignored in the repo, symlinked to ~/.i3_local
+    if [[ ! -f $SETUP_ROOT/config/i3/config.local ]]; then
+        # adopt an existing real ~/.i3_local if present, else start from the template
+        if [[ -f ~/.i3_local && ! -L ~/.i3_local ]]; then
+            cp ~/.i3_local $SETUP_ROOT/config/i3/config.local
+        else
+            cp $SETUP_ROOT/config/i3/config.local.example $SETUP_ROOT/config/i3/config.local
+        fi
+    fi
+    ln -sfn $SETUP_ROOT/config/i3/config.local ~/.i3_local
     ln -s $SETUP_ROOT/assets/background.png ~/Pictures/
     ln -sfn $SETUP_ROOT/assets/fonts ~/.fonts
     mkdir -p ~/.config/gtk-2.0

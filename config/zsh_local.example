@@ -1,0 +1,5 @@
+# Template for ~/.zsh_local, which config/zshrc sources if it exists.
+# Put host-specific settings (paths, brew, machine-only exports) here.
+# Copy to ~/.zsh_local and edit. Never commit the filled copy.
+#
+#   cp config/zsh_local.example ~/.zsh_local

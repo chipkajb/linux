@@ -349,3 +349,7 @@ exec_always --no-startup-id systemctl --user set-environment GTK_THEME=Yaru-blue
 
 # set brightness
 exec_always --no-startup-id /usr/local/bin/set_brightness
+
+# machine-specific config lives outside this repo so it can't be committed
+# template: config/i3/config.local.example
+include ~/.i3_local
