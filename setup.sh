@@ -15,8 +15,8 @@ DESC_LIST=(
     "Install i3" 
     "Install alacritty"
     "Misc setup"
-    "Install adlc"
     "Install claude"
+    "Install adlc"
     "Install all"
 )
 
@@ -704,14 +704,14 @@ while [ "$exit_condition" = false ]; do
             misc_setup
         fi
 
-        # install adlc (herdr + caveman + superpowers)
-        if [[ "$user_input" -eq 9 ]]; then
-            install_adlc
-        fi
-       
         # install claude config
-        if [[ "$user_input" -eq 10 ]]; then
+        if [[ "$user_input" -eq 9 ]]; then
             install_claude
+        fi
+
+        # install adlc (herdr + caveman + superpowers)
+        if [[ "$user_input" -eq 10 ]]; then
+            install_adlc
         fi
 
         # install all
