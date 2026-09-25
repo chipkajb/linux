@@ -46,9 +46,7 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
    b. [Cursor](https://cursor.com/)
 
-   c. [Warp](https://app.warp.dev/get_warp?package=deb)
-
-   d. [uv](https://docs.astral.sh/uv/) (installed by `setup.sh`; replaces Anaconda)
+   c. [uv](https://docs.astral.sh/uv/) (installed by `setup.sh`; replaces Anaconda)
 
    ```
    uv python install 3.12     # managed python
@@ -56,11 +54,11 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
    uv tool install ruff       # global CLI tools (replaces pipx)
    ```
 
-   e. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
+   d. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
-   f. [Obsidian](https://obsidian.md/download)
+   e. [Obsidian](https://obsidian.md/download)
 
-   g. [Pithos](https://ubuntuhandbook.org/index.php/2024/03/pithos-pandora-radio-client-released-1-6-2/) - use Option 2
+   f. [Pithos](https://ubuntuhandbook.org/index.php/2024/03/pithos-pandora-radio-client-released-1-6-2/) - use Option 2
 
    ```
    sudo add-apt-repository ppa:ubuntuhandbook1/apps
@@ -68,11 +66,11 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
    sudo apt install pithos
    ```
 
-   h. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
+   g. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
 
-   i. [Zoom](https://zoom.us/download)
+   h. [Zoom](https://zoom.us/download)
 
-   j. [VLC](https://www.videolan.org/vlc/download-ubuntu.html)
+   i. [VLC](https://www.videolan.org/vlc/download-ubuntu.html)
 
 ## Additional Setup
 

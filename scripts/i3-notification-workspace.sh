@@ -75,7 +75,7 @@ resolve_notification_workspace() {
                 printf '%s\n' "$WS_TERMINAL"
             fi
             ;;
-        alacritty|*alacritty*|kitty|*kitty*|warp|*warp*|*terminator*|*xterm*|*foot*|*wezterm*)
+        alacritty|*alacritty*|kitty|*kitty*|*terminator*|*xterm*|*foot*|*wezterm*)
             printf '%s\n' "$WS_TERMINAL"
             ;;
         claude|claude-desktop|*claude*|*anthropic*)
