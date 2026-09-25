@@ -17,7 +17,7 @@
 #   7) Panes: ctrl+hjkl (prefix+h left; prefix+l = clear)
 #   8) Numbers: 1..9 tabs, Shift-1..9 workspaces, Alt-1..9 agents
 #   9) Shift-Enter = scratch terminal; Shift-r = reload (r = resize)
-#  10) Custom: a agent, G git (lazygit), Y yank, V reviewr, l clear
+#  10) Custom: a agent, G git (lazygit), y yank pane, V reviewr, l clear
 
 onboarding = false
 

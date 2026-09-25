@@ -415,6 +415,8 @@ install_adlc() {
     ln -sfn "$SETUP_ROOT/config/herdr/config.toml" ~/.config/herdr/config.toml
     if command -v herdr &> /dev/null; then
         herdr config check || true
+        # a server started before the symlink keeps default keys (prefix ctrl+b)
+        herdr server reload-config &> /dev/null || true
     fi
 
     # launcher for rofi / i3
