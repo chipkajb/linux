@@ -4,7 +4,7 @@
 SETUP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # define script parameters
-ACTION_LIST=(0 1 2 3 4 5 6 7 8 9 10)
+ACTION_LIST=(0 1 2 3 4 5 6 7 8 9 10 11)
 DESC_LIST=(
     "Exit" 
     "Install zsh"
@@ -16,6 +16,7 @@ DESC_LIST=(
     "Install alacritty"
     "Misc setup"
     "Install adlc"
+    "Install claude"
     "Install all"
 )
 
@@ -479,6 +480,28 @@ install_adlc() {
     printf "  Update herdr with ${YELLOW}herdr update${NC}\n"
 }
 
+# install claude code + versioned config (config/claude → ~/.claude)
+# only curated files are linked; ~/.claude also holds credentials, history, and caches
+install_claude() {
+    printf "Installing Claude Code config...\n"
+    export PATH="$HOME/.local/bin:$PATH"
+    if ! command -v claude &> /dev/null; then
+        curl -fsSL https://claude.ai/install.sh | bash
+    fi
+    sudo apt-get install -y jq nodejs  # statusline + ponytail hook
+    mkdir -p ~/.claude/skills
+    for item in CLAUDE.md settings.json statusline.sh statusline-wrapper.sh hooks commands skills/graphify; do
+        target="$HOME/.claude/$item"
+        # keep a real (non-repo) copy around rather than clobbering it
+        if [[ -e "$target" && ! -L "$target" ]]; then
+            mv "$target" "$target.bak-$(date +%F)"
+        fi
+        ln -sfn "$SETUP_ROOT/config/claude/$item" "$target"
+    done
+    printf "${GREEN}DONE${NC} -- Claude Code config linked into ${YELLOW}~/.claude${NC}\n"
+    printf "  Plugins (caveman, superpowers) come from ${YELLOW}Install adlc${NC}\n"
+}
+
 # install i3
 install_i3() {
     printf "Installing i3...\n"
@@ -686,8 +709,13 @@ while [ "$exit_condition" = false ]; do
             install_adlc
         fi
        
-        # install all
+        # install claude config
         if [[ "$user_input" -eq 10 ]]; then
+            install_claude
+        fi
+
+        # install all
+        if [[ "$user_input" -eq 11 ]]; then
             install_zsh
             install_vim
             install_neovim
@@ -696,6 +724,7 @@ while [ "$exit_condition" = false ]; do
             install_i3
             install_alacritty
             misc_setup
+            install_claude
             install_adlc
         fi
 
