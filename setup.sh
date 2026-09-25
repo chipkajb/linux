@@ -134,6 +134,14 @@ install_atuin() {
     fi
 }
 
+# install uv (python versions, venvs, and CLI tools; replaces anaconda + pipx)
+install_uv() {
+    if ! command -v uv &> /dev/null; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    fi
+    export PATH="$HOME/.local/bin:$PATH"
+}
+
 # install zsh
 install_zsh() {
     printf "Installing zsh...\n"
@@ -175,6 +183,7 @@ install_zsh() {
     ln -sf $SETUP_ROOT/config/starship.toml /home/$USER/.config/starship.toml
     curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
     install_atuin
+    install_uv
     printf "${GREEN}DONE${NC} -- zsh installed to ${YELLOW}$(which zsh)${NC} as ${YELLOW}$(zsh --version)${NC}\n"
 }
 
@@ -276,8 +285,8 @@ install_neovim_mason_packages() {
 install_neovim() {
     printf "Installing neovim...\n"
     apt_update
-    sudo apt-get install -y snapd python3-pip pipx gcc g++ make git unzip
-    pipx ensurepath || true
+    sudo apt-get install -y snapd gcc g++ make git unzip
+    install_uv
     if ! snap list nvim &> /dev/null; then
         sudo snap install nvim --classic
     else
@@ -299,10 +308,10 @@ install_neovim() {
     ln -sf $SETUP_ROOT/config/nvim/lua/configs ~/.config/nvim/lua/configs
     ln -sf $SETUP_ROOT/config/nvim/lua/chadrc.lua ~/.config/nvim/lua/chadrc.lua
     sudo apt-get install ripgrep -y
-    sudo apt-get install python3-venv -y
+    sudo apt-get install python3-venv -y  # mason pip packages (debugpy) build venvs
     sudo apt-get install jq -y
-    pipx install black
-    pipx install mypy
+    uv tool install black
+    uv tool install mypy
     install_tree_sitter_cli
     install_neovim_treesitter_parsers
     install_neovim_mason_packages
@@ -604,7 +613,6 @@ misc_setup() {
     # fd/rg/fzf remain for one-shot shell use; agents + nvim use fff
     sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
     install_fff_mcp
-    ln -s $SETUP_ROOT/scripts/python_startup.py /home/$USER/.python_startup.py
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
     (

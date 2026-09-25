@@ -19,7 +19,7 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 3. Install packages
 
    ```
-   sudo apt install git neovim libfuse2 flatpak libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0 curl pipx
+   sudo apt install git neovim libfuse2 flatpak libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0 curl
    ```
 
 4. Clone [this repo](https://github.com/chipkajb/linux) in the new `workspace` directory
@@ -48,12 +48,12 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
    c. [Warp](https://app.warp.dev/get_warp?package=deb)
 
-   d. [Anaconda](https://www.anaconda.com/download/success)
+   d. [uv](https://docs.astral.sh/uv/) (installed by `setup.sh`; replaces Anaconda)
 
    ```
-   # to install mamba also...
-   conda activate
-   conda install mamba -n base -c conda-forge -y
+   uv python install 3.12     # managed python
+   uv venv && source .venv/bin/activate
+   uv tool install ruff       # global CLI tools (replaces pipx)
    ```
 
    e. [MongoDB Compass](https://www.mongodb.com/try/download/compass)

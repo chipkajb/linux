@@ -24,7 +24,7 @@ end
 local function pick_python()
   local choices = pyenv.choices()
   if #choices == 0 then
-    vim.notify("no python envs found under ~/software/anaconda3/envs or .venv", vim.log.levels.WARN)
+    vim.notify("no python envs found (.venv / venv; create one with `uv venv`)", vim.log.levels.WARN)
     return
   end
   local lines = { "Pick python for pyright:" }

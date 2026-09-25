@@ -2,7 +2,7 @@ local dap = require("dap")
 local dapui = require("dapui")
 local pyenv = require("custom.python_env")
 
--- Adapter = mason debugpy; debuggee python = conda/venv when present
+-- Adapter = mason debugpy; debuggee python = uv/venv when present
 local debugpy = pyenv.mason_debugpy()
 if vim.fn.executable(debugpy) == 0 then
   vim.notify("debugpy missing — run :MasonInstall debugpy", vim.log.levels.WARN)
