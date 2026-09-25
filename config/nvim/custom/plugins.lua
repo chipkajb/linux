@@ -1,12 +1,5 @@
 local plugins = {
     {
-        "nvimtools/none-ls.nvim",
-        ft = {"python"},
-        opts = function()
-            return require "custom.configs.null-ls"
-        end,
-    },
-    {
         "christoomey/vim-tmux-navigator",
         lazy = false,
     },

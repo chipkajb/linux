@@ -39,6 +39,7 @@ end
 
 local servers = {
   "pyright",
+  "ruff", -- lint + format (replaces black); pyright keeps hover/types
   "bashls",
   "jsonls",
   "yamlls",
@@ -63,6 +64,10 @@ for _, name in ipairs(servers) do
         config.settings.python.pythonPath = py
       end
     end
+  end
+  if name == "ruff" then
+    -- only used when the project has no ruff config of its own
+    opts.init_options = { settings = { lineLength = 120 } }
   end
   vim.lsp.config(name, opts)
   vim.lsp.enable(name)
@@ -106,5 +111,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>ca", vim.lsp.buf.code_action, opts("code action"))
     map("n", "[d", vim.diagnostic.goto_prev, opts("prev diagnostic"))
     map("n", "]d", vim.diagnostic.goto_next, opts("next diagnostic"))
+
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client.name == "ruff" then
+      client.server_capabilities.hoverProvider = false -- defer to pyright
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("RuffFormat" .. ev.buf, { clear = true }),
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = ev.buf, name = "ruff" })
+        end,
+      })
+    end
   end,
 })

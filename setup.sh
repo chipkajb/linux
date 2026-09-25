@@ -310,7 +310,7 @@ install_neovim() {
     sudo apt-get install ripgrep -y
     sudo apt-get install python3-venv -y  # mason pip packages (debugpy) build venvs
     sudo apt-get install jq -y
-    uv tool install black
+    uv tool install ruff
     uv tool install mypy
     install_tree_sitter_cli
     install_neovim_treesitter_parsers
@@ -348,7 +348,6 @@ EOF
     apt_update
     sudo apt-get install -y code
     code --install-extension Atishay-Jain.All-Autocomplete
-    code --install-extension ms-python.black-formatter
     code --install-extension anysphere.pyright
     code --install-extension IronGeek.vscode-env
     code --install-extension ZainChen.json
