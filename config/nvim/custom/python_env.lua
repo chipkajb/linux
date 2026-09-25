@@ -1,4 +1,4 @@
--- Shared python interpreter detection (pyright + dap)
+-- Shared python interpreter detection (ty + dap)
 local M = {}
 
 function M.project_root(bufnr)
@@ -8,7 +8,7 @@ function M.project_root(bufnr)
     "pyproject.toml",
     "setup.py",
     "setup.cfg",
-    "pyrightconfig.json",
+    "ty.toml",
     ".git",
   }) or vim.fn.getcwd()
 end

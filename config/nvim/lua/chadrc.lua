@@ -15,7 +15,7 @@ M.ui = {
 -- mason v2 ignores opts.ensure_installed; NvChad reads these via :MasonInstallAll
 M.mason = {
   pkgs = {
-    "pyright",
+    "ty",
     "ruff",
     "debugpy",
     "lua-language-server",

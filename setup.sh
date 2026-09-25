@@ -311,7 +311,7 @@ install_neovim() {
     sudo apt-get install python3-venv -y  # mason pip packages (debugpy) build venvs
     sudo apt-get install jq -y
     uv tool install ruff
-    uv tool install mypy
+    uv tool install ty
     install_tree_sitter_cli
     install_neovim_treesitter_parsers
     install_neovim_mason_packages
@@ -348,11 +348,10 @@ EOF
     apt_update
     sudo apt-get install -y code
     code --install-extension Atishay-Jain.All-Autocomplete
-    code --install-extension anysphere.pyright
+    code --install-extension astral-sh.ty
     code --install-extension IronGeek.vscode-env
     code --install-extension ZainChen.json
     code --install-extension esbenp.prettier-vscode
-    code --install-extension ms-python.vscode-pylance
     code --install-extension ms-python.python
     code --install-extension mechatroner.rainbow-csv
     code --install-extension tickleforce.scrolloff
@@ -360,7 +359,6 @@ EOF
     code --install-extension Ransh.ransh
     code --install-extension jdinhlife.gruvbox
     code --install-extension charliermarsh.ruff
-    code --install-extension matangover.mypy
     code --install-extension lucien-martijn.parquet-visualizer
     code --install-extension ms-python.debugpy
     code --install-extension ms-vscode-remote.remote-ssh
