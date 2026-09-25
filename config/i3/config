@@ -315,6 +315,7 @@ bindsym $mod+c exec /usr/share/cursor/cursor --classic
 bindsym $mod+s exec slack
 bindsym $mod+p exec pithos
 bindsym $mod+Shift+p exec --no-startup-id $scripts_dir/i3-flameshot-screen
+bindsym $mod+Shift+y exec --no-startup-id $scripts_dir/clipboard-join
 bindsym $mod+n exec GTK_THEME=Yaru-blue-dark:dark nautilus
 bindsym $mod+m exec mongodb-compass
 bindsym $mod+b exec blueman-manager

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Join the clipboard into one line: strip each line's edge whitespace, drop newlines.
+# Undoes terminal wrap breaks in copied tokens/URLs/paths (herdr copy-on-select).
+# Runs on the desktop that owns the clipboard, so it works for remote herdr too.
+set -e
+text=$(xclip -o -selection clipboard 2>/dev/null) || exit 0
+printf '%s' "$text" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | tr -d '\r\n' |
+    xclip -i -selection clipboard
+command -v notify-send >/dev/null && notify-send -t 1500 "Clipboard joined" || true

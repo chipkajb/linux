@@ -28,6 +28,7 @@ NOTIFICATIONS & QUICK NAV
   x         pop last dismissed notification (dunst history)
   z         goto latest dunst notification workspace
   y         move window to overflow (9) and go there
+  y*        join clipboard into one line (undo wrap breaks) — *Y*ank joined
 
   Tab       workspace back and forth
   u         next workspace
