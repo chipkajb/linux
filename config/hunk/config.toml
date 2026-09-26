@@ -1,0 +1,12 @@
+# Hunk defaults for agent-authored changeset review.
+# Docs: https://github.com/modem-dev/hunk#config
+#
+# Watch mode keeps the review live while an agent edits the working tree.
+# agent_notes=true renders .hunk/agent-context.json rationale without extra flags.
+watch = true
+mode = "auto"
+theme = "auto"
+line_numbers = true
+wrap_lines = false
+agent_notes = true
+exclude_untracked = false

@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Manage the Hunk agent-rationale sidecar (.hunk/agent-context.json).
+#
+#   hunk-context path                 # print sidecar path
+#   hunk-context write <json|->      # validate + install sidecar (stdin if omitted)
+#   hunk-context show                 # print current sidecar
+#   hunk-context clear                # remove sidecar
+#   hunk-context reload [target]      # re-read a live Hunk session from disk
+#   hunk-context notes                # list YOUR inline notes from a live session
+#
+# Schema (Hunk, version 1; line ranges are 1-based inclusive):
+#   { "version": 1, "summary": "...",
+#     "files": [ { "path": "src/x.ts", "summary": "...",
+#       "annotations": [ { "summary": "required",
+#         "rationale": "...", "oldRange": [s,e], "newRange": [s,e],
+#         "tags": ["..."], "confidence": "low|medium|high" } ] } ] }
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+sidecar="$repo_root/.hunk/agent-context.json"
+
+validate() {
+    jq -e '
+      def goodrange:
+        (type == "array") and (length == 2)
+        and (.[0] | type == "number") and (.[1] | type == "number")
+        and (.[0] >= 1) and (.[1] >= .[0]);
+      (type == "object")
+      and ((.files // empty) | type == "array")
+      and all(.files[];
+        (.path | type == "string") and (.path | length > 0)
+        and ((.annotations // []) | type == "array")
+        and all((.annotations // [])[];
+          (.summary | type == "string") and (.summary | length > 0)
+          and (if has("oldRange") then (.oldRange | goodrange) else true end)
+          and (if has("newRange") then (.newRange | goodrange) else true end)
+        )
+      )
+    ' "$1" >/dev/null
+}
+
+case "${1:-help}" in
+    help|-h|--help)
+        sed -n '2,16p' "$0" | sed 's/^# \?//'
+        ;;
+    path)
+        printf '%s\n' "$sidecar"
+        ;;
+    show)
+        [ -f "$sidecar" ] && cat "$sidecar" || printf '(none)\n'
+        ;;
+    clear)
+        rm -f "$sidecar"
+        printf 'cleared %s\n' "$sidecar"
+        ;;
+    write)
+        src="${2:--}"
+        tmp="$(mktemp)"
+        trap 'rm -f "$tmp"' EXIT
+        if [ "$src" = "-" ]; then cat >"$tmp"; else cp "$src" "$tmp"; fi
+        if ! validate "$tmp"; then
+            printf 'invalid agent-context: needs files[].path + annotations[].summary; ranges are 1-based [start,end]\n' >&2
+            exit 1
+        fi
+        mkdir -p "$(dirname "$sidecar")"
+        mv "$tmp" "$sidecar"
+        trap - EXIT
+        printf 'wrote %s\n' "$sidecar"
+        ;;
+    reload)
+        target="${2:-}"
+        if [ -n "$target" ]; then
+            exec hunk session reload --repo "$repo_root" -- diff "$target"
+        else
+            exec hunk session reload --repo "$repo_root" -- diff
+        fi
+        ;;
+    notes)
+        # human notes left in the live Hunk UI (key `c`); session-scoped, JSON out
+        exec hunk session comment list --repo "$repo_root" --type user --json
+        ;;
+    *)
+        printf 'unknown subcommand: %s\n' "$1" >&2
+        printf 'usage: hunk-context {path|write [json|-]|show|clear|reload [target]|notes}\n' >&2
+        exit 2
+        ;;
+esac

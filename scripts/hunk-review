@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Launch Hunk for reviewing agent-authored changes.
+#
+#   hunk-review                      # working tree, live watch
+#   hunk-review --staged             # staged changes
+#   hunk-review show HEAD~1          # review a commit
+#   hunk-review diff main...feature  # review a branch range
+#
+# Auto-attaches .hunk/agent-context.json when present so agent rationale shows
+# inline. Any extra args are forwarded to `hunk` verbatim.
+set -euo pipefail
+
+if ! command -v hunk >/dev/null 2>&1; then
+    printf 'hunk not found. Install with: npm i -g hunkdiff\n' >&2
+    exit 1
+fi
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+sidecar="$repo_root/.hunk/agent-context.json"
+
+# default action: live working-tree review
+if [ "$#" -eq 0 ]; then
+    set -- diff --watch
+fi
+
+# decide whether to auto-attach the sidecar
+want_sidecar=1
+case " $* " in
+    *" --agent-context "*) want_sidecar=0 ;;
+esac
+case "${1}" in
+    patch|stash|difftool|pager|session|daemon|skill) want_sidecar=0 ;;
+esac
+[ -f "$sidecar" ] || want_sidecar=0
+
+if [ "$want_sidecar" -eq 1 ]; then
+    # insert before any `--` pathspec separator (options must precede it)
+    out=()
+    inserted=0
+    for arg in "$@"; do
+        if [ "$arg" = "--" ] && [ "$inserted" -eq 0 ]; then
+            out+=(--agent-context "$sidecar")
+            inserted=1
+        fi
+        out+=("$arg")
+    done
+    [ "$inserted" -eq 1 ] || out+=(--agent-context "$sidecar")
+    set -- "${out[@]}"
+fi
+
+exec hunk "$@"

@@ -8,6 +8,9 @@ cuda*.run
 .agents/
 skills-lock.json
 
+# Hunk review sidecar — per-changeset agent rationale, regenerated each review
+.hunk/
+
 # real credentials live in ~/.zsh_secrets; only the template is tracked
 zsh_secrets
 .zsh_secrets

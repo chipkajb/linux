@@ -627,6 +627,26 @@ install_fff_mcp() {
     printf "${GREEN}DONE${NC} -- fff-mcp at ${YELLOW}$HOME/.local/bin/fff-mcp${NC}\n"
 }
 
+# Hunk — terminal diff review for agent-authored changesets (watch + inline rationale)
+install_hunk() {
+    printf "Installing Hunk (agent diff review)...\n"
+    if ! command -v npm &> /dev/null; then
+        printf "${YELLOW}WARN${NC} -- npm not found, skipping Hunk install\n"
+        return
+    fi
+    npm install -g hunkdiff
+    mkdir -p ~/.config/hunk ~/.local/bin
+    ln -sfn "$SETUP_ROOT/config/hunk/config.toml" ~/.config/hunk/config.toml
+    chmod +x "$SETUP_ROOT/scripts/hunk-review" "$SETUP_ROOT/scripts/hunk-context"
+    ln -sfn "$SETUP_ROOT/scripts/hunk-review" ~/.local/bin/hunk-review
+    ln -sfn "$SETUP_ROOT/scripts/hunk-context" ~/.local/bin/hunk-context
+    # pi skill: teach agents to emit review rationale sidecars
+    mkdir -p ~/.pi/agent/skills
+    ln -sfn "$SETUP_ROOT/config/pi/skills/hunk-review" ~/.pi/agent/skills/hunk-review
+    printf "${GREEN}DONE${NC} -- hunk at ${YELLOW}$(command -v hunk)${NC}; run ${YELLOW}hunk-review${NC} in a repo\n"
+    printf "  pi skill linked into ${YELLOW}~/.pi/agent/skills/hunk-review${NC}\n"
+}
+
 # misc setup
 misc_setup() {
     printf "Miscellaneous setup...\n"
@@ -635,6 +655,7 @@ misc_setup() {
     # fd/rg/fzf remain for one-shot shell use; agents + nvim use fff
     sudo apt install fd-find ripgrep bat fzf htop tree jq sysstat screen -y
     install_fff_mcp
+    install_hunk
     rm -rf ~/.local/share/gedit 2> /dev/null
     mkdir -p ~/.local/share/gedit/plugins
     (

@@ -76,6 +76,37 @@ Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
 
 Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
 
+## Hunk Diff Review (agent-authored changes)
+
+[Hunk](https://github.com/modem-dev/hunk) is a terminal diff reviewer with watch mode
+and inline agent rationale. It is installed by the `Misc setup` step.
+
+Review the working tree while an agent edits it:
+
+```
+hunk-review              # working tree, live watch
+hunk-review --staged     # staged changes only
+hunk-review show HEAD~1  # review a commit
+```
+
+If `.hunk/agent-context.json` exists, `hunk-review` attaches it automatically, so
+per-file/per-hunk notes and rationale render inline. Agents write that sidecar with
+`hunk-context write` (schema in `scripts/hunk-context`); `hunk-context reload` re-reads
+a live session after new edits. The sidecar is gitignored — it is per-changeset, not
+committed. `pi` picks up the matching `hunk-review` skill from
+`config/pi/skills/hunk-review` (linked into `~/.pi/agent/skills`).
+
+Hunk is review-only — it cannot stage or revert. Do that in Neovim with gitsigns:
+
+```
+]c / [c          next / prev hunk
+<leader>ga        stage hunk (or visual range = selected lines)
+<leader>gr        reset hunk (or visual range = selected lines)
+<leader>gA / gR   stage / reset whole buffer
+<leader>gU        undo last staged hunk
+<leader>gp        preview hunk      <leader>gb  blame line
+```
+
 ## CUDA Setup
 
 ```
