@@ -32,4 +32,3 @@ untracked = "✚ "
 deleted = "✖ "
 conflicted = "⚔ "
 disabled = false  # Ensure the Git status module is enabled
-

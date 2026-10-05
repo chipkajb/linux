@@ -18,7 +18,7 @@ APPLICATIONS
   p         Pithos — *P*ithos
   s         Slack — *S*lack
 
-  o*        open work apps (Chrome, Obsidian, Claude, Slack) — *O*pen work apps
+  o*        open work apps (Chrome, Obsidian, Slack) — *O*pen work apps
   p*        screenshot monitor under mouse (Flameshot) — *P*rintscreen
 
 
@@ -27,7 +27,7 @@ NOTIFICATIONS & QUICK NAV
   q         toggle notification quiet mode — *Q*uiet
   x         pop last dismissed notification (dunst history)
   z         goto latest dunst notification workspace
-  y         move window to overflow (9) and go there
+  y         move window to Code+ (9) and go there
   y*        join clipboard into one line (undo wrap breaks) — *Y*ank joined
 
   Tab       workspace back and forth
@@ -49,9 +49,9 @@ WORKSPACES
   5   📁 Files
   6   📝 Notes
   7   🎵 Music
-  8   🤖 Claude
-  9   🔀 Overflow
-  10  💾 Database
+  8   ⚪ Terminal+
+  9   🖥️ Code+
+  10  🗄️ Data
 
 
 WINDOW FOCUS & MOVE
@@ -90,6 +90,8 @@ SCRATCH & TERMINAL
 
 MONITORS
 ──────────────────────────────────────────────────────────────────────────────────────
+  m*          switch monitor profile (office / home / laptop)
+
   ,           move workspace to output left
   .           move workspace to output right
   =           move workspace to output up

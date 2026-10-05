@@ -3,8 +3,8 @@
 QUALITY=$(nmcli -f IN-USE,SIGNAL dev wifi | grep "^\*" | awk '{print $2}')
 
 
-echo $QUALITY%
-echo $QUALITY%
+echo "${QUALITY}%"
+echo "${QUALITY}%"
 
 # color
 if (( QUALITY >= 80 )); then

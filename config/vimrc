@@ -86,7 +86,7 @@ set hlsearch " highlight matches
 " nnoremap <leader><space> :nohlsearch<CR>
 set smartcase " no case-sensitive search unless specified
 
-" Folding 
+" Folding
 set foldenable " enable folding (hiding parts of the file)
 set foldlevelstart=10 " open most folds by default (only fold very nested blocks of code)
 set foldnestmax=10 " 10 nested fold max

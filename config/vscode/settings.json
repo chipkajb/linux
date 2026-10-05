@@ -165,5 +165,8 @@
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "claudeCode.preferredLocation": "sidebar",
   "window.autoDetectColorScheme": false,
-  "python.defaultInterpreterPath": "/bin/python3"
+  "python.defaultInterpreterPath": "/bin/python3",
+  "remote.SSH.remotePlatform": {
+    "home-server": "linux"
+  }
 }

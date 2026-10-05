@@ -6,4 +6,6 @@ set -e
 text=$(xclip -o -selection clipboard 2>/dev/null) || exit 0
 printf '%s' "$text" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | tr -d '\r\n' |
     xclip -i -selection clipboard
-command -v notify-send >/dev/null && notify-send -t 1500 "Clipboard joined" || true
+if command -v notify-send >/dev/null 2>&1; then
+    notify-send -t 1500 "Clipboard joined" || true
+fi

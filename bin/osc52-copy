@@ -54,4 +54,5 @@ tty_path=$(resolve_tty) || {
 }
 
 encoded=$(printf '%s' "$content" | base64 | tr -d '\n')
+# shellcheck disable=SC1003  # trailing \\ is the OSC terminator (ESC \\)
 printf '\033]52;c;%s\033\\' "$encoded" > "$tty_path"

@@ -1,0 +1,38 @@
+name: lint
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Lint shell
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(
+            {
+              git ls-files --cached --others --exclude-standard -z |
+                xargs -0 grep -Il -m1 -E '^#!.*(bash|/sh| sh)' 2>/dev/null || true
+              git ls-files --cached --others --exclude-standard '*.sh' '*.bash'
+            } | sort -u
+          )
+          echo "linting ${#files[@]} shell files"
+          for file in "${files[@]}"; do
+            bash -n "$file"
+            shellcheck -x "$file"
+          done
+
+      - name: CLI smoke test
+        run: |
+          ./setup.sh --help >/dev/null
+          ./setup.sh list >/dev/null
+          ./bin/i3-monitors list >/dev/null
+          ./bin/i3-monitors detect || true

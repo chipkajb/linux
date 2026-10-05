@@ -1,139 +1,111 @@
-# Linux
+# linux
 
-Helpful Linux files: setup scripts, dotfiles, config files, assets, etc.
+[![lint](https://github.com/chipkajb/linux/actions/workflows/lint.yml/badge.svg)](https://github.com/chipkajb/linux/actions/workflows/lint.yml)
 
-## End-to-End Setup Guide for New Computer
+Personal Ubuntu workstation setup — i3 desktop, dotfiles, CLI tooling, and agent
+configuration. Everything is installed by an idempotent, modular `setup.sh` and
+symlinked out of this repository, so a step can be re-run at any time without
+breaking an existing machine.
 
-1. Update/upgrade system
+- **Ubuntu 22.04 (jammy) and 24.04 (noble)** are supported and detected at runtime.
+- **Idempotent**: every step guards its clones, installs, and symlinks.
+- **Modular**: each component is a small step in `setup/` with a name you can run
+  on its own.
+- **Role-based monitors**: the same apps land on the same physical monitor in
+  every setup — office, home, or laptop-only.
 
-   ```
-   sudo apt update && sudo apt upgrade
-   ```
+## Quick start
 
-2. Make `workspace` directory
-
-   ```
-   mkdir workspace
-   ```
-
-3. Install packages
-
-   ```
-   sudo apt install git neovim libfuse2 flatpak libxcb-xinerama0 libxcb-xtest0 libxcb-cursor0 curl
-   ```
-
-4. Clone [this repo](https://github.com/chipkajb/linux) in the new `workspace` directory
-
-   a. First, add an ssh key for the new computer in your github account
-
-   ```
-   cd ~/.ssh && ssh-keygen
-   ```
-
-   b. Copy the output of the `pub` file that was generated
-
-   c. Paste it as a new ssh key [here](https://github.com/settings/keys)
-
-   d. Install git and clone the repo
-
-   ```
-   cd ~/workspace && git clone git@github.com:chipkajb/linux.git
-   ```
-
-5. Apps to install
-
-   a. [Slack](https://snapcraft.io/slack)
-
-   b. [Cursor](https://cursor.com/)
-
-   c. [uv](https://docs.astral.sh/uv/) (installed by `setup.sh`; replaces Anaconda)
-
-   ```
-   uv python install 3.12     # managed python
-   uv venv && source .venv/bin/activate
-   uv tool install ruff       # global CLI tools (replaces pipx)
-   ```
-
-   d. [MongoDB Compass](https://www.mongodb.com/try/download/compass)
-
-   e. [Obsidian](https://obsidian.md/download)
-
-   f. [Pithos](https://ubuntuhandbook.org/index.php/2024/03/pithos-pandora-radio-client-released-1-6-2/) - use Option 2
-
-   ```
-   sudo add-apt-repository ppa:ubuntuhandbook1/apps
-   sudo apt update
-   sudo apt install pithos
-   ```
-
-   g. [Blender](https://docs.blender.org/manual/en/latest/getting_started/installing/linux.html)
-
-   h. [Zoom](https://zoom.us/download)
-
-   i. [VLC](https://www.videolan.org/vlc/download-ubuntu.html)
-
-## Additional Setup
-
-Run `./setup.sh` to setup various aspects of my preferred Linux environment. You will be presented with an enumerated list of things that you can set up. Choose to setup whatever you desire from that list, then select `0` to exit.
-
-## Hunk Diff Review (agent-authored changes)
-
-[Hunk](https://github.com/modem-dev/hunk) is a terminal diff reviewer with watch mode
-and inline agent rationale. It is installed by the `Misc setup` step.
-
-Review the working tree while an agent edits it:
-
-```
-hunk-review              # working tree, live watch
-hunk-review --staged     # staged changes only
-hunk-review show HEAD~1  # review a commit
+```bash
+git clone git@github.com:chipkajb/linux.git ~/workspace/linux
+cd ~/workspace/linux
+./setup.sh                 # interactive menu
 ```
 
-If `.hunk/agent-context.json` exists, `hunk-review` attaches it automatically, so
-per-file/per-hunk notes and rationale render inline. Agents write that sidecar with
-`hunk-context write` (schema in `scripts/hunk-context`); `hunk-context reload` re-reads
-a live session after new edits. The sidecar is gitignored — it is per-changeset, not
-committed. `pi` picks up the matching `hunk-review` skill from
-`config/pi/skills/hunk-review` (linked into `~/.pi/agent/skills`).
+Prefer the CLI:
 
-Hunk is review-only — it cannot stage or revert. Do that in Neovim with gitsigns:
-
-```
-]c / [c          next / prev hunk
-<leader>ga        stage hunk (or visual range = selected lines)
-<leader>gr        reset hunk (or visual range = selected lines)
-<leader>gA / gR   stage / reset whole buffer
-<leader>gU        undo last staged hunk
-<leader>gp        preview hunk      <leader>gb  blame line
+```bash
+./setup.sh list                 # list steps
+./setup.sh install zsh i3       # run specific steps
+./setup.sh all                  # run everything
+./setup.sh install monitors     # just the display profiles
 ```
 
-## CUDA Setup
+With [`just`](https://github.com/casey/just):
+
+```bash
+just                       # list recipes
+just install i3 monitors
+just lint
+just monitors
+```
+
+## What's included
+
+| Area | Steps |
+| --- | --- |
+| Shell | `zsh` — oh-my-zsh, starship, zoxide, atuin, uv, eza |
+| Editors | `vim` (Vundle), `neovim` (NvChad + LSP/treesitter), `vscode` |
+| Terminal | `alacritty`, `tmux` + TPM, OSC 52 clipboard |
+| Desktop | `i3` — rofi, dunst, picom, i3blocks, GTK dark theme |
+| Displays | `monitors` — office / home / laptop profiles |
+| Agent tooling | `claude`, `adlc` (herdr, caveman, superpowers), `misc` (Hunk, fff-mcp) |
+
+## Monitor profiles
+
+The i3 config binds each workspace to a semantic **role** — `left`, `middle`,
+`right`, `bottom` — instead of a physical output. `i3-monitors` writes those role
+mappings for the active profile, so switching between desks keeps the same apps
+on the same monitors.
+
+```bash
+i3-monitors                 # pick a profile with rofi
+i3-monitors list            # list profiles
+i3-monitors status          # active profile + connected outputs
+i3-monitors home            # switch profile
+i3-monitors auto            # detect from connected outputs
+```
+
+Or press **`Super+Shift+m`**. Add your own profile by dropping a file in
+`config/i3/monitors/` — see [docs/monitors.md](docs/monitors.md).
+
+## Repository layout
 
 ```
-# download cuda toolkit runfile
-wget https://developer.download.nvidia.com/compute/cuda/13.0.0/local_installers/cuda_13.0.0_580.65.06_linux.run
-
-# disable nouveau drivers
-sudo touch /usr/lib/modprobe.d/blacklist-nouveau.conf
-echo 'blacklist nouveau' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.conf
-echo 'options nouveau modeset=0' | sudo tee -a /usr/lib/modprobe.d/blacklist-nouveau.conf
-sudo update-initramfs -u
-
-# completely remove previous Nvidia driver (see NVIDIA_DRIVERS.md)
-
-# disable Secure Boot in UEFI/BIOS settings (press F2 on boot, or maybe F12)
-
-# reboot into text mode (i.e. without graphics interface)
-
-# stop display manager
-sudo service gdm stop
-
-# install cuda toolkit
-sudo sh cuda_13.0.0_580.65.06_linux.run
-
-# start display manager
-sudo service gdm start
-
-# reboot
-reboot
+.
+├── setup.sh              # entrypoint: interactive menu + CLI
+├── justfile              # dev tasks (lint, fmt, setup, monitors)
+├── bin/                  # CLI tools, linked into /usr/local/bin
+├── lib/                  # shared shell: log.sh (output), common.sh (helpers)
+├── setup/                # one module per component, idempotent
+├── config/               # dotfiles, symlinked into $HOME
+│   └── i3/monitors/      # office.sh, home.sh, laptop.sh
+├── assets/               # background, fonts, icons
+└── docs/                 # installation, monitors, keybindings, …
 ```
+
+## Documentation
+
+- [Installation](docs/installation.md) — prerequisites, per-step detail, apps
+  installed outside `setup.sh`
+- [Monitor profiles](docs/monitors.md) — roles, adding a desk, troubleshooting
+- [Keybindings](docs/keybindings.md) — i3 reference (also `Super+i`)
+- [Architecture](docs/architecture.md) — how the repo, symlinks, and steps fit
+- [Troubleshooting](docs/troubleshooting.md)
+- [CUDA toolkit](docs/cuda.md) · [NVIDIA driver removal](docs/nvidia-drivers.md)
+
+## Development
+
+```bash
+just lint                 # bash -n + shellcheck
+uv tool install pre-commit && pre-commit install
+```
+
+CI runs shellcheck and a CLI smoke test on every push and pull request.
+
+## Notes
+
+- Machine-specific config is gitignored: `config/zsh_local` (→ `~/.zsh_local`),
+  `config/i3/config.local` (→ `~/.i3_local`), and credentials in
+  `~/.zsh_secrets`. Templates are committed as `*.example`.
+- Host-specific shell secrets and local overrides are never committed.

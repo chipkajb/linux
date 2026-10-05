@@ -1,0 +1,5 @@
+# shellcheck configuration for repo scripts.
+shell=bash
+external-sources=true
+source-path=SCRIPTDIR
+disable=SC1091

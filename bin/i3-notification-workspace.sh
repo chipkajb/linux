@@ -3,15 +3,33 @@
 
 set -euo pipefail
 
-readonly WS_WEB='1: 🌍 Web'
-readonly WS_TERMINAL='2: ⚫ Terminal'
-readonly WS_CODE='3: 💻 Code'
-readonly WS_MESSAGES='4: 💬 Messages'
-readonly WS_FILES='5: 📁 Files'
-readonly WS_NOTES='6: 📝 Notes'
-readonly WS_MUSIC='7: 🎵 Music'
-readonly WS_CLAUDE='8: 🤖 Claude'
-readonly WS_DATABASE='10: 💾 Database'
+# Workspace numbers only — names live in config/i3/config, so this file never
+# drifts from the i3 binding list. `i3-msg workspace number N` matches by number
+# regardless of the workspace's display name.
+readonly WS_WEB=1
+readonly WS_TERMINAL=2
+readonly WS_CODE=3
+readonly WS_MESSAGES=4
+readonly WS_FILES=5
+readonly WS_NOTES=6
+readonly WS_MUSIC=7
+readonly WS_DATA=10
+
+workspace_label() {
+    case "$1" in
+        1) printf 'Web' ;;
+        2) printf 'Terminal' ;;
+        3) printf 'Code' ;;
+        4) printf 'Messages' ;;
+        5) printf 'Files' ;;
+        6) printf 'Notes' ;;
+        7) printf 'Music' ;;
+        8) printf 'Terminal+' ;;
+        9) printf 'Code+' ;;
+        10) printf 'Data' ;;
+        *) printf 'workspace %s' "$1" ;;
+    esac
+}
 
 notify() {
     if [[ -x /usr/bin/notify-send ]]; then
@@ -62,7 +80,7 @@ resolve_notification_workspace() {
         grid-*|*grid*|*teamworks*|*slack*|*discord*|*telegram*|*signal*|*teams*|*mattermost*|*element*|*franz*|*rambox*)
             printf '%s\n' "$WS_MESSAGES"
             ;;
-        *google*chrome*|google-chrome|*chromium*|*firefox*|*brave*|*vivaldi*|*opera*|*microsoft-edge*|*edge*)
+        *google*chrome*|*chromium*|*firefox*|*brave*|*vivaldi*|*opera*|*microsoft-edge*|*edge*)
             printf '%s\n' "$WS_WEB"
             ;;
         cursor|*cursor*|code|*vscode*|*vscodium*|*sublime*|*intellij*|*pycharm*|*webstorm*)
@@ -79,19 +97,19 @@ resolve_notification_workspace() {
             printf '%s\n' "$WS_TERMINAL"
             ;;
         claude|claude-desktop|*claude*|*anthropic*)
-            printf '%s\n' "$WS_CLAUDE"
+            printf '%s\n' "$WS_DATA"
             ;;
         obsidian|*obsidian*|gedit|*notion*|*logseq*)
             printf '%s\n' "$WS_NOTES"
             ;;
-        *nautilus*|org.gnome.nautilus|*thunar*|*dolphin*|files)
+        *nautilus*|*thunar*|*dolphin*|files)
             printf '%s\n' "$WS_FILES"
             ;;
         pithos|*pithos*|pavucontrol|*pavucontrol*|*blueman*|*spotify*|*rhythmbox*|*clementine*)
             printf '%s\n' "$WS_MUSIC"
             ;;
-        *mongodb*compass*|*mongodb*|mongodb-compass)
-            printf '%s\n' "$WS_DATABASE"
+        *mongodb*)
+            printf '%s\n' "$WS_DATA"
             ;;
         *)
             return 1
@@ -134,9 +152,9 @@ goto_workspace_for_notification() {
         return 1
     fi
 
-    i3-msg "workspace $workspace" >/dev/null
+    i3-msg "workspace number $workspace" >/dev/null
     if [[ "$quiet" != "quiet" ]]; then
-        notify "Notifications" "Switched to ${workspace} (${appname:-app})" -i dialog-information -t 2500
+        notify "Notifications" "Switched to $(workspace_label "$workspace") (${appname:-app})" -i dialog-information -t 2500
     fi
 }
 

@@ -1,11 +1,11 @@
 #! /bin/bash
 
-export TOTAL_MEM=$(nvidia-smi -q -d MEMORY | grep "Total" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
-export USED_MEM=$(nvidia-smi -q -d MEMORY | grep "Used" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
-export MEM_UTILIZATION=$(echo "scale=1; 100*$USED_MEM/$TOTAL_MEM" | bc)
+TOTAL_MEM=$(nvidia-smi -q -d MEMORY | grep "Total" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
+USED_MEM=$(nvidia-smi -q -d MEMORY | grep "Used" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4)
+MEM_UTILIZATION=$(echo "scale=1; 100*$USED_MEM/$TOTAL_MEM" | bc)
 
-echo ${MEM_UTILIZATION}%
-echo ${MEM_UTILIZATION}%
+echo "${MEM_UTILIZATION}%"
+echo "${MEM_UTILIZATION}%"
 
 # color
 if (( $(echo "$MEM_UTILIZATION >= 80" | bc -l) )); then
