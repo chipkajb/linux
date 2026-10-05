@@ -10,6 +10,13 @@ CLAUDE_LINKS=(
     hooks
     commands
     skills/graphify
+    skills/asd-ste100
+)
+
+# Skills that both Claude Code and pi read; pi is pointed at the same vendored
+# copy instead of keeping a second one that can drift.
+SHARED_SKILLS=(
+    asd-ste100
 )
 
 step_claude() {
@@ -28,5 +35,11 @@ step_claude() {
             mv "$target" "$target.bak-$(date +%F)"
         fi
         symlink_force "$REPO_ROOT/config/claude/$item" "$target"
+    done
+
+    ensure_dir "$HOME/.pi/agent/skills"
+    local skill
+    for skill in "${SHARED_SKILLS[@]}"; do
+        symlink_force "$REPO_ROOT/config/claude/skills/$skill" "$HOME/.pi/agent/skills/$skill"
     done
 }

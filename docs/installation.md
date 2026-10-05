@@ -64,7 +64,7 @@ just all
 | `alacritty` | alacritty + color themes |
 | `monitors` | Generates the i3 monitor include (see [monitors.md](monitors.md)) |
 | `misc` | CLI tools, fff-mcp, Hunk, gedit vim-mode, shellcheck, pre-commit |
-| `claude` | Claude Code + `~/.claude` config |
+| `claude` | Claude Code + `~/.claude` config, shared agent skills |
 | `adlc` | herdr, caveman, superpowers |
 
 `i3` also runs `monitors` so a fresh host always has a valid display include.
@@ -96,6 +96,21 @@ These are installed manually (licences, proprietary builds, or app stores):
 uv python install 3.12       # managed interpreter
 uv venv && source .venv/bin/activate
 uv tool install ruff         # global CLI tools
+```
+
+## Agent skills
+
+Skills live in `config/claude/skills/<name>` and are linked into
+`~/.claude/skills/<name>`. A skill that both agents should read is also linked
+into `~/.pi/agent/skills/<name>` from the same copy, so the two never drift —
+see `SHARED_SKILLS` in `setup/claude.sh`.
+
+`asd-ste100` ([danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill),
+MIT) rewrites ambiguous English into ASD-STE100 Simplified Technical English. It
+ships a stdlib-only linter:
+
+```bash
+python3 ~/.claude/skills/asd-ste100/scripts/ste-lint.py FILE [--json]
 ```
 
 ## Hunk diff review
