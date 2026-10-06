@@ -109,6 +109,7 @@ CI runs shellcheck and a CLI smoke test on every push and pull request.
   `config/i3/config.local` (→ `~/.i3_local`), and credentials in
   `~/.zsh_secrets`. Templates are committed as `*.example`.
 - `config/vscode/settings.json` is symlinked into the editor's user settings, so
-  the editor writes back to it. Remote host names are kept out of the repo with
-  `git update-index --skip-worktree config/vscode/settings.json`. Clear the flag
-  with `--no-skip-worktree` before you pull changes to that file.
+  the editor writes back to it. A clean filter drops the ssh host alias map
+  before content reaches git, because those aliases are local state and not
+  config. Run `config/vscode/setup-git-filter.sh` once per machine. Without the
+  filter, `git add` commits your host aliases.

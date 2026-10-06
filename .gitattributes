@@ -1,0 +1,7 @@
+# Keep machine-local editor state out of the repo.
+#
+# config/vscode/settings.json is symlinked into the editor's user settings, so
+# the editor writes back to it. The clean filter drops the ssh host alias map
+# before content reaches git. Run config/vscode/setup-git-filter.sh once per
+# machine, or the filter is undefined and the aliases get committed.
+config/vscode/settings.json filter=strip-local-hosts

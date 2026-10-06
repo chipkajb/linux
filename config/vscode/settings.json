@@ -167,6 +167,5 @@
   "window.autoDetectColorScheme": false,
   "python.defaultInterpreterPath": "/bin/python3",
   "remote.SSH.remotePlatform": {
-    "home-server": "linux"
   }
 }
