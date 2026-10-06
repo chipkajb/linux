@@ -1,0 +1,20 @@
+# Paths protected from every transfer and from --delete on the receiver.
+
+# Per-machine state: history, transcripts, mission tracking
+sessions/
+missions/
+run-history.jsonl
+
+# Regenerable caches
+mcp-cache.json
+models-store.json
+
+# Local backups
+backup.*/
+
+# Version control metadata
+.git/
+
+# Editor and OS noise
+.DS_Store
+*.log

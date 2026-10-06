@@ -21,3 +21,6 @@ zsh_local
 i3_local
 .i3_local
 config/i3/config.local
+
+# sync-pi-setup mirror targets — real host names stay out of the repo
+config/pi/skills/sync-pi-setup/targets.local.txt

@@ -1,0 +1,20 @@
+# sync-pi-setup manifest
+#
+# Format:  <local path> | <remote path> | <extra rsync flags>
+#
+# local path    Absolute path, or ~/... on this machine.
+# remote path   Path relative to the remote home directory.
+# extra flags   Optional. Example: -L to dereference symlinks.
+#
+# Directories need a trailing slash.
+# Lines starting with # are comments.
+
+# --- Pi agent directory: config, extensions, prompts, skills, packages ---
+~/.pi/agent/  |  .pi/agent/  |  -L
+
+# --- Shared agent skills, used by Pi through ~/.agents/skills ---
+~/.agents/skills/          |  .agents/skills/          |
+~/.agents/.skill-lock.json |  .agents/.skill-lock.json |
+
+# --- ADLC plugin skills and commands, referenced by settings.json ---
+~/workspace/adlc/plugins/  |  workspace/adlc/plugins/  |

@@ -108,4 +108,7 @@ CI runs shellcheck and a CLI smoke test on every push and pull request.
 - Machine-specific config is gitignored: `config/zsh_local` (→ `~/.zsh_local`),
   `config/i3/config.local` (→ `~/.i3_local`), and credentials in
   `~/.zsh_secrets`. Templates are committed as `*.example`.
-- Host-specific shell secrets and local overrides are never committed.
+- `config/vscode/settings.json` is symlinked into the editor's user settings, so
+  the editor writes back to it. Remote host names are kept out of the repo with
+  `git update-index --skip-worktree config/vscode/settings.json`. Clear the flag
+  with `--no-skip-worktree` before you pull changes to that file.

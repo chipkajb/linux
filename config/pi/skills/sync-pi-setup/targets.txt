@@ -1,0 +1,10 @@
+# Default remote hosts for sync-pi-setup.
+# Each line is an ssh host alias from ~/.ssh/config.
+# Lines starting with # are comments.
+#
+# This file is tracked in a public repo. Keep real host names out of it.
+# Put your own hosts in targets.local.txt, which git ignores.
+# You can also pass hosts on the command line: sync-pi-setup.sh myhost
+
+# example-gpu-box
+# example-work-server
