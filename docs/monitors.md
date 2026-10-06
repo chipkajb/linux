@@ -37,7 +37,8 @@ i3-monitors list            # list profiles, marks the active one
 i3-monitors status          # active profile + connected outputs
 i3-monitors home            # apply a profile
 i3-monitors auto            # detect the profile from connected outputs
-i3-monitors apply           # re-apply the active profile's geometry
+i3-monitors apply           # re-apply geometry and workspace placement
+i3-monitors place           # move existing workspaces onto their role's output
 i3-monitors generate office # rewrite the i3 include only (no X changes)
 ```
 
@@ -45,7 +46,8 @@ Press **`Super+Shift+m`** for the rofi picker.
 
 At i3 startup, `exec_always i3-monitors auto` re-applies the active layout and
 detects a change of desk: if the connected outputs match a different profile, it
-switches and restarts i3 once so the workspace assignments take effect.
+switches, moves the existing workspaces onto their new roles, and restarts i3
+once so the role mappings apply to workspaces created later.
 
 ## How it works
 
@@ -61,8 +63,12 @@ switches and restarts i3 once so the workspace assignments take effect.
 
 2. `config/i3/config` includes that file and assigns workspaces to the resulting
    variables.
-3. If the include changed, i3 is restarted (preserves the layout) so the new
-   output assignments apply. If it did not change, only `xrandr` runs — no
+3. Existing workspaces are moved onto their role's output and focus is put
+   back. This step is required: i3 only honours `workspace <n> output <out>`
+   while a workspace is being *created*, so an existing workspace keeps the
+   output it is already on — even across `i3-msg restart`.
+4. If the include changed, i3 is restarted so the new role mappings apply to
+   workspaces created later. If it did not change, only `xrandr` runs — no
    restart, no disruption.
 
 The generated include is deliberately outside the repository (`~/.i3_monitors`),
@@ -86,8 +92,11 @@ so `~/.config/i3` can stay a symlink to `config/i3`.
 
 - **i3 fails to parse the config / no monitors assigned** — the include is
   missing. Run `i3-monitors generate office` (or `auto`) and reload i3.
-- **Workspaces stay on the old monitor after switching** — i3 was not restarted.
-  `i3-msg restart`, or re-run `i3-monitors <profile>` with `DISPLAY` set.
+- **Workspaces stay on the old monitor after switching** — run
+  `i3-monitors place`, which moves every existing workspace onto the output its
+  role maps to. `i3-msg restart` does *not* fix this: i3 applies
+  `workspace <n> output <out>` only when a workspace is created, and a restart
+  keeps the existing workspaces where they are.
 - **Wrong profile detected** — `i3-monitors status` shows connected outputs;
   compare with the profile's enabled outputs, then adjust `PROFILE_ORDER`.
 - **`xrandr` reports the output as disconnected** — check the cable/adapter, then

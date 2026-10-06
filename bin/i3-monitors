@@ -6,8 +6,9 @@
 #   i3-monitors status          active profile + connected outputs
 #   i3-monitors <profile>       apply a profile (xrandr + regenerate i3 include)
 #   i3-monitors auto            detect and apply the matching profile
-#   i3-monitors apply           re-apply the active profile's xrandr only
+#   i3-monitors apply           re-apply the active profile (xrandr + workspaces)
 #   i3-monitors generate <p>    regenerate the i3 include without touching X
+#   i3-monitors place           move existing workspaces onto their role's output
 #
 # Profiles live in config/i3/monitors/<name>.sh and define semantic roles
 # (left/middle/right/bottom). config/i3/config includes the generated
@@ -26,6 +27,7 @@ REPO_ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
 # shellcheck source=../lib/common.sh
 . "$REPO_ROOT/lib/common.sh"
 
+CONFIG_FILE="$REPO_ROOT/config/i3/config"
 MONITORS_DIR="$REPO_ROOT/config/i3/monitors"
 STATE_DIR="$HOME/.config/i3-monitors"
 PROFILE_FILE="$STATE_DIR/current"
@@ -44,9 +46,10 @@ Switch the display layout between saved monitor profiles.
   i3-monitors status          active profile + connected outputs
   i3-monitors <profile>       apply a profile (xrandr + regenerate i3 include)
   i3-monitors auto            detect and apply the matching profile
-  i3-monitors apply           re-apply the active profile's xrandr only
+  i3-monitors apply           re-apply the active profile (xrandr + workspaces)
   i3-monitors generate <p>    regenerate the i3 include without touching X
   i3-monitors detect          print the profile matching the connected outputs
+  i3-monitors place           move existing workspaces onto their role's output
 
 Profiles live in config/i3/monitors/<name>.sh and define semantic roles
 (left/middle/right/bottom). config/i3/config includes the generated
@@ -82,6 +85,14 @@ current_profile() {
     if [[ -f "$PROFILE_FILE" ]]; then
         cat "$PROFILE_FILE"
     fi
+}
+
+# Active profile, falling back to detection (then office) when unset.
+active_profile() {
+    local current
+    current="$(current_profile)"
+    [[ -n "$current" ]] || current="$(detect_profile || printf 'office')"
+    printf '%s' "$current"
 }
 
 connected_outputs() {
@@ -172,6 +183,63 @@ apply_xrandr() {
     xrandr "${XRANDR_ARGS[@]}"
 }
 
+# "<workspace number> <role>" for every assignment in the i3 config, so the
+# config stays the single source of truth for which workspace lives on which
+# role.
+workspace_roles() {
+    # shellcheck disable=SC2016  # $workspace/$monitor_ are i3 variables, not shell
+    sed -n 's/^workspace \$workspace\([0-9]\+\) output \$monitor_\([a-z]\+\)$/\1 \2/p' "$CONFIG_FILE"
+}
+
+# role_output <role> — output name for the currently loaded profile
+role_output() {
+    case "$1" in
+        left) printf '%s' "$OUTPUT_LEFT" ;;
+        middle) printf '%s' "$OUTPUT_MIDDLE" ;;
+        right) printf '%s' "$OUTPUT_RIGHT" ;;
+        bottom) printf '%s' "$OUTPUT_BOTTOM" ;;
+        *) return 1 ;;
+    esac
+}
+
+# i3 applies `workspace <n> output <out>` only while a workspace is being
+# *created* — an existing workspace keeps the output it is already on, even
+# across `i3-msg restart`. So after a profile switch (or a hotplug) the
+# workspaces have to be moved by hand. Everything goes in one i3-msg batch, so
+# i3 redraws once and focus lands back on the workspace it started on.
+place_workspaces() {
+    [[ -n "${DISPLAY:-}" ]] || return 0
+    have i3-msg || return 0
+    have jq || return 0
+
+    local state
+    state="$(i3-msg -t get_workspaces 2>/dev/null)" || return 0
+    [[ -n "$state" ]] || return 0
+
+    local -a moves=()
+    local number role output current
+    while read -r number role; do
+        output="$(role_output "$role")" || continue
+        current="$(jq -r --argjson n "$number" '[.[] | select(.num == $n) | .output][0] // ""' <<<"$state")"
+        # empty means the workspace does not exist yet — i3 places it correctly
+        # on creation, so there is nothing to do
+        [[ -n "$current" && "$current" != "$output" ]] || continue
+        moves+=("workspace number $number" "move workspace to output $output")
+    done < <(workspace_roles)
+
+    ((${#moves[@]})) || return 0
+
+    local focused
+    focused="$(jq -r '[.[] | select(.focused) | .num][0] // -1' <<<"$state")"
+    if ((focused >= 0)); then
+        moves+=("workspace number $focused")
+    fi
+
+    local cmd
+    cmd="$(printf '%s; ' "${moves[@]}")"
+    i3-msg "${cmd%; }" >/dev/null || ui::warn "could not move workspaces onto their role's output"
+}
+
 switch_profile() {
     local name="$1" changed=0
     load_profile "$name"
@@ -185,6 +253,7 @@ switch_profile() {
     if generate_include "$name"; then
         changed=1
     fi
+    place_workspaces
     ui::done "layout applied"
     if ((changed)); then
         i3_restart_if_running
@@ -250,6 +319,7 @@ cmd_auto() {
         # profile unchanged — re-apply geometry (handles monitor hotplug), no restart
         load_profile "$detected"
         apply_xrandr
+        place_workspaces
         return 0
     fi
     switch_profile "$detected"
@@ -275,11 +345,18 @@ main() {
             ;;
         apply)
             local current
-            current="$(current_profile)"
-            [[ -n "$current" ]] || current="$(detect_profile || printf 'office')"
+            current="$(active_profile)"
             load_profile "$current"
             apply_xrandr
+            place_workspaces
             ui::ok "applied $current"
+            ;;
+        place)
+            local current
+            current="$(active_profile)"
+            load_profile "$current"
+            place_workspaces
+            ui::ok "workspaces placed for $current"
             ;;
         generate)
             [[ -n "${2:-}" ]] || {
