@@ -12,9 +12,9 @@ workspaces to monitor **roles**.
 | Role | Workspaces |
 | --- | --- |
 | `left` | 1 Web, 7 Music |
-| `middle` | 2 Terminal, 3 Code, 8 Terminal+, 9 Code+ |
+| `middle` | 2 Terminal, 3 Code, 8 Overflow |
 | `right` | 4 Messages, 10 Data |
-| `bottom` | 5 Files, 6 Notes |
+| `bottom` | 5 Files, 6 Notes, 9 Wispr |
 
 Because apps are assigned to workspaces (`assign [class="…"] $workspaceN`), they
 follow the role automatically when you switch desks.

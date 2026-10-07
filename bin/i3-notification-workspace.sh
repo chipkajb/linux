@@ -24,8 +24,8 @@ workspace_label() {
         5) printf 'Files' ;;
         6) printf 'Notes' ;;
         7) printf 'Music' ;;
-        8) printf 'Terminal+' ;;
-        9) printf 'Code+' ;;
+        8) printf 'Overflow' ;;
+        9) printf 'Wispr' ;;
         10) printf 'Data' ;;
         *) printf 'workspace %s' "$1" ;;
     esac
