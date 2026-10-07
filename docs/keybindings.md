@@ -32,7 +32,7 @@ list is [`config/i3/i3-hotkeys.txt`](../config/i3/i3-hotkeys.txt) — press
 | `Super+Shift+1…0` | move the focused window to workspace 1–10 |
 | `Super+Tab` | previous workspace |
 | `Super+u` | next workspace |
-| `Super+y` | move window to Overflow (8) and follow it |
+| `Super+y` | move window to Code+ (9) and follow it |
 
 | # | Workspace | Role |
 | --- | --- | --- |
@@ -43,8 +43,8 @@ list is [`config/i3/i3-hotkeys.txt`](../config/i3/i3-hotkeys.txt) — press
 | 5 | 📁 Files | bottom |
 | 6 | 📝 Notes | bottom |
 | 7 | 🎵 Music | left |
-| 8 | ➕ Overflow | middle |
-| 9 | 🎤 Wispr | bottom |
+| 8 | ⚪ Terminal+ | middle |
+| 9 | 🖥️ Code+ | middle |
 | 10 | 🗄️ Data | right |
 
 ## Windows & layout

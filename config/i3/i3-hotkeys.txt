@@ -27,7 +27,7 @@ NOTIFICATIONS & QUICK NAV
   q         toggle notification quiet mode — *Q*uiet
   x         pop last dismissed notification (dunst history)
   z         goto latest dunst notification workspace
-  y         move window to Overflow (8) and go there
+  y         move window to Code+ (9) and go there
   y*        join clipboard into one line (undo wrap breaks) — *Y*ank joined
 
   Tab       workspace back and forth
@@ -49,8 +49,8 @@ WORKSPACES
   5   📁 Files
   6   📝 Notes
   7   🎵 Music
-  8   ➕ Overflow
-  9   🎤 Wispr
+  8   ⚪ Terminal+
+  9   🖥️ Code+
   10  🗄️ Data
 
 
