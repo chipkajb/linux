@@ -25,8 +25,10 @@ vim.keymap.set("v", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape (same as Esc)" })
 
 --- insert mode: delete word backward / forward (ctrl+backspace / ctrl+delete)
+--- alacritty maps ctrl+delete to ESC d, so nvim sees <M-d>; <C-Del> covers other terminals
 vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" })
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" })
+vim.keymap.set("i", "<M-d>", "<C-o>dw", { desc = "Delete word forward" })
 
 --- ignore Q
 vim.keymap.set("n", "Q", "<nop>", { desc = "Disable Ex mode" })

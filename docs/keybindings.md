@@ -13,7 +13,6 @@ list is [`config/i3/i3-hotkeys.txt`](../config/i3/i3-hotkeys.txt) — press
 | `Super+Return` | terminal (Herdr) |
 | `Super+g` | Google Chrome |
 | `Super+c` | Cursor |
-| `Super+d` | Claude |
 | `Super+o` | Obsidian |
 | `Super+s` | Slack |
 | `Super+m` | MongoDB Compass |

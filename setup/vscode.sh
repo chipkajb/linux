@@ -58,5 +58,8 @@ step_vscode() {
     done
 
     link_vscode_config
+    # .gitattributes marks settings.json with filter=strip-local-hosts; register
+    # the clean filter so git never commits machine-local ssh host aliases.
+    "$REPO_ROOT/config/vscode/setup-git-filter.sh" || ui::warn "strip-local-hosts git filter skipped"
     python3 "$REPO_ROOT/config/vscode/hide-staged-gutter-diffs.py" || ui::warn "gutter-diff patch skipped"
 }

@@ -10,7 +10,6 @@ set $scripts_dir /usr/local/bin
 # b: open bluetooth manager (*B*luetooth)
 # c: open cursor (*C*ursor)
 # c*: reload configuration (*C*onfiguration)
-# d: open claude (clau*D*e)
 # e: layout toggle split
 # e*: logout (*E*xit)
 # f: full screen toggle (*F*ull screen)
@@ -53,8 +52,8 @@ set $scripts_dir /usr/local/bin
 # font
 font pango:System San Francisco Display 13
 
-# set up screen lock before suspend/hibernate
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# set up screen lock before suspend/hibernate; i3-lock pauses dunst while locked
+exec --no-startup-id xss-lock --transfer-sleep-lock -- $scripts_dir/i3-lock
 
 # set up network manager gui
 exec --no-startup-id nm-applet
@@ -247,13 +246,8 @@ bar {
         }
 }
 
-# # polybar
-# exec_always --no-startup-id killall -q polybar
-# exec_always --no-startup-id polybar example
-# exec_always --no-startup-id polybar example > ~/.config/polybar/polybar.log 2>&1
-
 # lock screen
-bindsym $mod+Shift+x exec i3lock -i ~/Pictures/background.png -t
+bindsym $mod+Shift+x exec $scripts_dir/i3-lock -i ~/Pictures/background.png -t
 
 # wallpaper
 exec_always --no-startup-id feh --bg-fill --zoom fill ~/Pictures/background.png
@@ -316,7 +310,6 @@ exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 exec --no-startup-id xbindkeys
 
 # open applications
-bindsym $mod+d exec claude-desktop
 bindsym $mod+g exec google-chrome
 bindsym $mod+c exec /usr/share/cursor/cursor --classic
 bindsym $mod+s exec slack

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Lock the screen with i3lock and pause dunst for the duration, so notifications
+# queue instead of painting over the lock screen (dunstctl set-paused).
+#
+# Used as the xss-lock locker and by the i3 lock binding. i3lock must not fork,
+# so we background it, hand the sleep-delay lock to it, then wait.
+
+set -uo pipefail
+
+# queue notifications while locked; flush them on unlock
+dunstctl set-paused true 2>/dev/null || true
+
+i3lock --nofork "$@" &
+locker_pid=$!
+
+# xss-lock kills the locker on forced unlock; stop i3lock and restore dunst
+trap 'kill "$locker_pid" 2>/dev/null || true' TERM INT
+trap 'dunstctl set-paused false 2>/dev/null || true' EXIT
+
+# i3lock inherited the sleep-delay fd; drop our copy so it alone releases the
+# lock once the screen is locked (it closes the fd after locking).
+if [[ "${XSS_SLEEP_LOCK_FD:-}" =~ ^[0-9]+$ ]]; then
+    exec {XSS_SLEEP_LOCK_FD}<&-
+fi
+
+wait "$locker_pid"

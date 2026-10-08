@@ -17,7 +17,9 @@ i3_packages() {
         libxcb-xinerama0-dev libxcb-randr0-dev \
         libxkbcommon-dev libxkbcommon-x11-dev libxcb-util-dev \
         libstartup-notification0-dev "$pixbuf_dev" libpango1.0-dev \
-        numlockx xdotool xbindkeys lm-sensors brightnessctl fonts-font-awesome
+        numlockx xdotool xbindkeys lm-sensors brightnessctl fonts-font-awesome \
+        picom dunst i3lock xss-lock network-manager-gnome \
+        acpi xinput x11-xkb-utils bc libnotify-bin
 }
 
 install_rofi() {
@@ -75,7 +77,7 @@ link_gtk_theme() {
 
 link_desktop_configs() {
     local component
-    for component in rofi dunst picom polybar; do
+    for component in rofi dunst picom; do
         symlink_force "$REPO_ROOT/config/$component" "$HOME/.config/$component"
     done
     symlink_force "$REPO_ROOT/config/xbindkeys/xbindkeysrc" "$HOME/.xbindkeysrc"

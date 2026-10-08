@@ -10,7 +10,6 @@ APPLICATIONS
   a*        rofi run
   b         Bluetooth Manager — *B*luetooth
   c         Cursor — *C*ursor
-  d         Claude — clau*D*e
   g         Google Chrome — *G*oogle Chrome
   m         MongoDB Compass — *M*ongoDB Compass
   n         Nautilus — *N*autilus

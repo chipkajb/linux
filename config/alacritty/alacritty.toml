@@ -30,3 +30,9 @@ save_to_clipboard = true
 key = "Backspace"
 mods = "Control"
 chars = "\u0017"
+
+# ctrl+delete: send ESC d (kill-word forward in zsh/bash; <M-d> in nvim)
+[[keyboard.bindings]]
+key = "Delete"
+mods = "Control"
+chars = "\u001bd"

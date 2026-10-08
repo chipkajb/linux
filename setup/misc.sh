@@ -26,8 +26,16 @@ install_hunk() {
     chmod +x "$REPO_ROOT/bin/hunk-review" "$REPO_ROOT/bin/hunk-context"
     symlink_force "$REPO_ROOT/bin/hunk-review" "$HOME/.local/bin/hunk-review"
     symlink_force "$REPO_ROOT/bin/hunk-context" "$HOME/.local/bin/hunk-context"
+}
+
+# Link every vendored pi skill (config/pi/skills/*) into ~/.pi/agent/skills.
+link_pi_skills() {
     ensure_dir "$HOME/.pi/agent/skills"
-    symlink_force "$REPO_ROOT/config/pi/skills/hunk-review" "$HOME/.pi/agent/skills/hunk-review"
+    local skill
+    for skill in "$REPO_ROOT"/config/pi/skills/*; do
+        [[ -d "$skill" ]] || continue
+        symlink_force "$skill" "$HOME/.pi/agent/skills/$(basename "$skill")"
+    done
 }
 
 install_gedit_vim_mode() {
@@ -50,5 +58,6 @@ step_misc() {
     fi
     install_fff_mcp
     install_hunk
+    link_pi_skills
     install_gedit_vim_mode
 }
