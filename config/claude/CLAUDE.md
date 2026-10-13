@@ -45,3 +45,5 @@
 - **Output modes:** `caveman` (lite) via the caveman plugin; `ponytail` via `~/.claude/hooks/ponytail-hook.js`. Toggle ponytail with `/ponytail`, caveman with `/caveman <level>`.
 - **MCP:** `fff` (file finder), `graphify` (knowledge graph; needs a `graphify-out/graph.json` in the working tree).
 - **Skills:** `~/.claude/skills/` (currently just `graphify`). Deliberately starting fresh — caveman and ponytail come from the plugin and hooks above, not from skills.
+
+@RTK.md

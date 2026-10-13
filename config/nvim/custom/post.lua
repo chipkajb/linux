@@ -183,6 +183,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Markdown list editing: Enter continues/removes items, Tab nests them
+require("custom.markdown_lists").setup()
+
 -- Set subtle color column for non-markdown files
 vim.opt.colorcolumn = "120"
 vim.cmd([[
