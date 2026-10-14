@@ -17,7 +17,7 @@
 #   7) Panes: ctrl+hjkl (prefix+h left; prefix+l = clear)
 #   8) Numbers: 1..9 tabs, Shift-1..9 workspaces, Alt-1..9 agents
 #   9) Shift-Enter = scratch terminal; Shift-r = reload (r = resize)
-#  10) Custom: a agent, G git (lazygit), y yank pane, V reviewr, l clear
+#  10) Custom: a agent, G git (lazygit), y yank pane, V reviewr
 
 onboarding = false
 
@@ -67,6 +67,7 @@ close_tab = "prefix+shift+x"
 # panes (ctrl+hjkl; prefix+j/k = sessions; prefix+l = clear)
 copy_mode = ["prefix+c", "prefix+["]
 edit_scrollback = "prefix+e"
+clear_pane = "prefix+l"
 rename_pane = "prefix+shift+p"
 focus_pane_left = ["prefix+h", "ctrl+h"]
 focus_pane_down = "ctrl+j"
@@ -95,13 +96,6 @@ navigate_pane_up = "shift+k"
 navigate_pane_right = "l"
 
 # --- custom commands -------------------------------------------------------
-
-# tmux: prefix+l clear (HERDR_BIN_PATH — shell cmds use /bin/sh -lc, not zsh PATH)
-[[keys.command]]
-key = "prefix+l"
-type = "shell"
-command = '"$HERDR_BIN_PATH" pane send-keys "$HERDR_ACTIVE_PANE_ID" ctrl+l'
-description = "clear pane"
 
 # prefix+y yank pane (herdr reads OSC 52 from pane output; xclip fails over SSH)
 [[keys.command]]
