@@ -335,6 +335,11 @@ exec xinput set-prop "SYNA1202:00 06CB:CD79 Touchpad" "libinput Tapping Enabled"
 # start notification daemon
 exec --no-startup-id dunst
 
+# Wispr Flow's dictation overlay is override-redirect, so i3 cannot move it and
+# Wispr parks it over the bar. This nudges it clear. See the script for why the
+# bar is not the thing at fault.
+exec --no-startup-id ~/.config/i3/wispr-overlay-fix
+
 # hide mouse cursor
 exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 

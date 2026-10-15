@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Keep the Wispr Flow dictation overlay clear of the i3bar.
+#
+# The overlay is an override-redirect window, so i3 does not manage it and
+# cannot move or restack it. Wispr places it flush with the bottom of the raw
+# screen and ignores the space i3bar reserves through _NET_WM_STRUT_PARTIAL,
+# which leaves the lower half of the pill behind the bar.
+#
+# The bar is not at fault: it sits at the bottom of its output and advertises a
+# 31px bottom strut, which every managed window honours. Only this overlay
+# ignores it.
+#
+# This watches for the overlay and, whenever it overlaps a bar, moves it just
+# clear of the bar. Two deliberate choices:
+#
+#   - It moves the window only, never restacks it. The overlay stays below the
+#     bar, so it cannot steal clicks from the bar or from windows above it. The
+#     canvas is transparent apart from the pill, so the move is otherwise
+#     invisible.
+#   - It re-checks on a timer rather than once, because Wispr recreates the
+#     window on restart and would put it straight back over the bar.
+#
+# This is a workaround for upstream placement. Delete this file and the `exec`
+# line in config/i3/config once Wispr honours the strut.
+
+set -uo pipefail
+
+readonly POLL_SECONDS=5
+readonly OVERLAY_CLASS="wispr-flow"
+readonly OVERLAY_NAME="^Status$"
+readonly GAP=8
+
+geom() { # geom <window>; sets X Y WIDTH HEIGHT
+    eval "$(xdotool getwindowgeometry --shell "$1" 2>/dev/null)" || return 1
+    [[ -n "${X:-}" && -n "${Y:-}" && -n "${WIDTH:-}" && -n "${HEIGHT:-}" ]]
+}
+
+overlays() {
+    local w
+    for w in $(xdotool search --name "$OVERLAY_NAME" 2>/dev/null); do
+        # Name alone is not enough to be sure it is ours.
+        [[ "$(xprop -id "$w" WM_CLASS 2>/dev/null)" == *"$OVERLAY_CLASS"* ]] && printf '%s\n' "$w"
+    done
+}
+
+# Move the overlay clear of the first bar it overlaps. Prints the move, so the
+# session log shows what happened.
+move_clear_of_bar() {
+    local win="$1" ox oy ow oh bx by bw bh top bottom overlap
+
+    geom "$win" || return 1
+    ox=$X oy=$Y ow=$WIDTH oh=$HEIGHT
+
+    local bar
+    for bar in $(xdotool search --class i3bar 2>/dev/null); do
+        geom "$bar" || continue
+        bx=$X by=$Y bw=$WIDTH bh=$HEIGHT
+
+        # Needs a horizontal overlap before a vertical one means anything.
+        (( ox < bx + bw && bx < ox + ow )) || continue
+
+        top=$(( oy > by ? oy : by ))
+        bottom=$(( oy + oh < by + bh ? oy + oh : by + bh ))
+        overlap=$(( bottom - top ))
+        (( overlap > 0 )) || continue
+
+        if (( by + bh / 2 > oy + oh / 2 )); then
+            xdotool windowmove "$win" "$ox" $(( oy - overlap - GAP )) || return 1
+        else
+            xdotool windowmove "$win" "$ox" $(( oy + overlap + GAP )) || return 1
+        fi
+        printf 'wispr overlay 0x%x: moved %dpx clear of the bar\n' "$win" $(( overlap + GAP ))
+        return 0
+    done
+    return 1
+}
+
+while :; do
+    for win in $(overlays); do
+        move_clear_of_bar "$win"
+    done
+    sleep "$POLL_SECONDS"
+done
