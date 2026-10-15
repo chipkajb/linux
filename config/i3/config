@@ -188,7 +188,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -f 'pango:System San Francisco Display 11' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -218,31 +218,63 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # define colors
-set $bg-color              #282828
-set $inactive-bg-color     #282828
-set $text-color            #fbf1c7
-set $inactive-text-color   #a89984
-set $urgent-bg-color       #928374
-set $indicator-color       #a89984
+#
+# Gruvbox dark, arranged as one surface ramp plus a single accent. The bar,
+# window borders, rofi and dunst all draw from these, so the desktop reads as
+# one piece rather than four separately-themed apps.
+set $bg-hard       #1d2021
+set $bg            #282828
+set $bg-raised     #3c3836
+set $bg-raised-2   #504945
+set $fg            #ebdbb2
+set $fg-bright     #fbf1c7
+set $fg-muted      #a89984
+set $fg-dim        #7c6f64
+# $accent is the one "look here" colour: the focused window border, rofi's
+# prompt, and a workspace asking for attention. Red is deliberately absent —
+# a workspace that wants attention is not an error. Red is reserved for real
+# errors, and only dunst's critical urgency uses it.
+set $accent        #d79921
 
 # window colors
-#                        border              background          text                  indicator
-client.focused           $bg-color           $bg-color           $text-color           $indicator-color
-client.unfocused         $inactive-bg-color  $inactive-bg-color  $inactive-text-color  $indicator-color
-client.focused_inactive  $inactive-bg-color  $inactive-bg-color  $inactive-text-color  $indicator-color
-client.urgent            $urgent-bg-color    $urgent-bg-color    $text-color           $indicator-color
+#
+# Focused windows get a raised title bar and a visible border; unfocused
+# windows stay flat against the wallpaper, so focus is readable at a glance
+# without a saturated colour block.
+#                        border         background     text           indicator
+client.focused           $bg-raised-2   $bg-raised     $fg-bright     $accent
+client.focused_inactive  $bg            $bg            $fg-muted      $bg
+client.unfocused         $bg            $bg            $fg-dim        $bg
+client.urgent            $accent        $bg-raised     $fg-bright     $accent
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
+#
+# Workspace buttons carry a chip only when they have something to say:
+#
+#   focused   raised chip, bright text   "you are here"
+#   urgent    raised chip, amber text    "this one wants you"
+#   active    flat, muted text           visible on another output
+#   inactive  flat, dim text             just sitting there
+#
+# `active_workspace` used to be left undefined, which made i3bar fall back to
+# its own grey/white default for any workspace visible on a monitor you were
+# not typing in — that was the block that looked out of place.
 bar {
         status_command i3blocks -c ~/.config/i3/i3blocks.conf
+        position bottom
+        # i3bar's default of 2 leaves the systray flush against the screen edge.
+        tray_padding 6
         colors {
-            background $bg-color
-            separator #a89984
-            #                   border              background          text
-            focused_workspace   $bg-color           $bg-color           $text-color
-            inactive_workspace  $inactive-bg-color  $inactive-bg-color  $inactive-text-color
-            urgent_workspace    $urgent-bg-color    $urgent-bg-color    $text-color
+            background          $bg-hard
+            statusline          $fg
+            separator           $bg-raised
+            #                    border     background  text
+            focused_workspace    $bg-hard   $bg-raised  $fg-bright
+            urgent_workspace     $bg-hard   $bg-raised  $accent
+            active_workspace     $bg-hard   $bg-hard    $fg-muted
+            inactive_workspace   $bg-hard   $bg-hard    $fg-dim
+            binding_mode         $bg-hard   $bg-raised  $fg-bright
         }
 }
 
@@ -335,6 +367,9 @@ bindsym Mod1+r exec --no-startup-id dunstctl close
 
 # Hide all displayed notifications using Alt+Space
 bindsym Mod1+space exec --no-startup-id dunstctl close-all
+
+# Recall the notification history (moved out of dunstrc's removed [shortcuts])
+bindsym Mod1+u exec --no-startup-id dunstctl history-pop
 
 # force dark mode for gtk apps
 exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-blue-dark'

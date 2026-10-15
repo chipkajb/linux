@@ -7,6 +7,21 @@
 
 set -uo pipefail
 
+readonly default_image="$HOME/Pictures/background.png"
+
+# xss-lock invokes this with no arguments, so without a default the suspend and
+# lid-close lock would fall back to i3lock's blank screen while the manual lock
+# (Mod+Shift+x) shows the wallpaper. Fill in the image when the caller did not.
+image_arg=""
+for arg in "$@"; do
+    case "$arg" in
+        -i | --image | -i=* | --image=*) image_arg="$arg" ;;
+    esac
+done
+if [[ -z "$image_arg" && -f "$default_image" ]]; then
+    set -- -i "$default_image" "$@"
+fi
+
 # queue notifications while locked; flush them on unlock
 dunstctl set-paused true 2>/dev/null || true
 

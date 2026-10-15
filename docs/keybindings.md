@@ -77,6 +77,7 @@ See [monitors.md](monitors.md) for profiles.
 | `Super+x` | pop the last dismissed notification |
 | `Super+z` | jump to the latest notification's workspace |
 | `Alt+r` / `Alt+Space` | close one / all notifications |
+| `Alt+u` | recall notification history |
 | `Super+Shift+y` | join the clipboard into one line |
 | `Super+Shift+c` | reload i3 |
 | `Super+Shift+r` | restart i3 |

@@ -108,6 +108,7 @@ NOTIFICATIONS (ALT)
 ──────────────────────────────────────────────────────────────────────────────────────
   Alt+r         close most recent notification
   Alt+Space     close all notifications
+  Alt+u         recall notification history
 
 
 MEDIA KEYS

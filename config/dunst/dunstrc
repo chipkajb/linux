@@ -45,18 +45,29 @@
     sort = yes
     idle_threshold = 120
 
+    # Notification shortcuts are bound in config/i3/config rather than here:
+    # dunst's own grab loses to i3 for the keys i3 already owns, and the
+    # [shortcuts] section was removed in dunst 1.9.
+
+    # The sanitizer rebuilds every notification body as explicit lines, so
+    # newlines have to survive. Ignoring them collapsed multi-line Slack and
+    # Chrome bodies into one long line.
+    ignore_newline = no
+
     ### Text ###
 
     font = pango:System San Francisco Display 12
     line_height = 0
     markup = full
-    format = "<b><span color='#fabd2f'>%s</span></b>\n<span color='#d5c4a1'>%b</span>"
+    # The title takes the urgency's foreground colour, the body stays muted.
+    # Colour is reserved for urgency, so a normal toast does not compete with
+    # the app icon sitting next to it.
+    format = "<b>%s</b>\n<span color='#a89984'>%b</span>"
     alignment = left
     vertical_alignment = top
     show_age_threshold = 45
     word_wrap = yes
     ellipsize = end
-    ignore_newline = yes
     stack_duplicates = true
     hide_duplicate_count = true
     show_indicators = no
@@ -97,9 +108,9 @@
     per_monitor_dpi = false
 
 [urgency_low]
-    background = "#32302f"
+    background = "#282828"
     foreground = "#a89984"
-    frame_color = "#504945"
+    frame_color = "#3c3836"
     timeout = 6
     # blue "i" — used only when the app sends no icon
     default_icon = /usr/share/icons/Yaru/48x48/status/dialog-information.png
@@ -107,7 +118,7 @@
 [urgency_normal]
     background = "#282828"
     foreground = "#ebdbb2"
-    frame_color = "#458588"
+    frame_color = "#504945"
     timeout = 8
     default_icon = /usr/share/icons/Yaru/48x48/status/dialog-information.png
 
@@ -118,11 +129,6 @@
     timeout = 0
     # red / warning mark for critical
     default_icon = /usr/share/icons/Yaru/48x48/status/dialog-error.png
-
-[shortcuts]
-    close = mod1+r
-    close_all = mod1+space
-    history = mod1+u
 
 # --- App icons (default_icon keeps any icon the app already sent, e.g. avatars) ---
 
@@ -197,7 +203,6 @@
     category = "x-sanitized*"
     word_wrap = yes
     ellipsize = end
-    ignore_newline = no
-    format = "<b><span color='#fabd2f'>%s</span></b>\n<span color='#d5c4a1'>%b</span>"
+    format = "<b>%s</b>\n<span color='#a89984'>%b</span>"
 
 # vim: ft=cfg
