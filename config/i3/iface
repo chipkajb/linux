@@ -19,12 +19,21 @@ fi
 # Nothing to report with no default route, or a tunnel as the default route.
 [[ -n "$IF" && -d "/sys/class/net/$IF" ]] || exit 0
 
-# fa-ethernet for a wired link, fa-wifi for a wireless one. The kernel exposes
-# a `wireless` directory only for wireless interfaces.
+# A globe for a wired link, fa-wifi for a wireless one. The kernel exposes a
+# `wireless` directory only for wireless interfaces.
+#
+# Do not reach for fa-ethernet (U+F796) or fa-network-wired (U+F6FF) here. The
+# AR PL UMing and AR PL UKai CJK fonts also claim those codepoints in their
+# private-use area, and fontconfig prefers them, so those two render as CJK
+# glyphs rather than Font Awesome ones. fa-tv (U+F26C) is caught by the same
+# trap. Everything used in this bar was checked with:
+#
+#   fc-list ":charset=f796" family
+#
 if [[ -d "/sys/class/net/$IF/wireless" ]]; then
     ICON=$'\uf1eb'
 else
-    ICON=$'\uf796'
+    ICON=$'\uf0ac'
 fi
 
 if [[ "$(cat "/sys/class/net/$IF/operstate")" == 'down' ]]; then

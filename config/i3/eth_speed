@@ -1,0 +1,52 @@
+#!/bin/bash
+# Negotiated link rate of the wired interface, coloured by how good it is.
+#
+# A wired link that has negotiated 100 Mb/s on 2.5 GbE hardware looks healthy in
+# every other indicator: traffic flows, no errors are counted, and only the rate
+# gives it away. Colour is what makes a degraded link visible at a glance.
+#
+# Shown only while the wired link owns the default route, mirroring [wifi],
+# which shows only while wireless owns it. The two are mutually exclusive, so
+# the pair answers "which link, and how good is it" without ambiguity.
+#
+# Thresholds, higher is better:
+#
+#   neutral  1000 Mb/s and up
+#   amber    100 Mb/s
+#   red      10 Mb/s
+#   half duplex counts as one step worse at any rate
+#
+#   BLOCK_INSTANCE  interface to report (default: the default-route device)
+
+set -uo pipefail
+
+IF="${BLOCK_INSTANCE:-$(ip route | awk '/^default/ { print $5; exit }')}"
+[[ -n "$IF" && -d "/sys/class/net/$IF" ]] || exit 0
+
+# Wired only. Wireless has no /sys speed, and [wifi] covers it.
+[[ -d "/sys/class/net/$IF/wireless" ]] && exit 0
+
+SPEED="$(cat "/sys/class/net/$IF/speed" 2>/dev/null)"
+# -1 or unreadable means the link is down.
+[[ "$SPEED" =~ ^[0-9]+$ && "$SPEED" -gt 0 ]] || exit 0
+
+DUPLEX="$(cat "/sys/class/net/$IF/duplex" 2>/dev/null)"
+
+RATE="${SPEED}Mb/s"
+[[ "$DUPLEX" == "half" ]] && RATE+=" HD"
+
+echo "$RATE"
+echo "$RATE"
+
+# Rank, so half duplex degrades the colour without duplicating the ladder.
+rank=0
+(( SPEED < 1000 )) && rank=1
+(( SPEED < 100 )) && rank=2
+[[ "$DUPLEX" == "half" ]] && rank=$(( rank + 1 ))
+(( rank > 2 )) && rank=2
+
+case "$rank" in
+    0) echo "#d5c4a1" ;;
+    1) echo "#d79921" ;;
+    *) echo "#cc241d" ;;
+esac

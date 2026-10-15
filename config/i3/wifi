@@ -24,12 +24,10 @@ DEFAULT_IF="$(ip route | awk '/^default/ { print $5; exit }')"
 QUALITY="$(nmcli -f IN-USE,SIGNAL dev wifi 2>/dev/null | grep '^\*' | awk '{ print $2 }')"
 [[ -n "$QUALITY" ]] || exit 0
 
-ICON=$'\uf1eb'
-
-# fa-wifi, emitted here so the block needs no label in i3blocks.conf, the same
-# way memory, disk and battery emit their own icons.
-echo "$ICON ${QUALITY}%"
-echo "$ICON ${QUALITY}%"
+# No icon: [iface] already shows the link-type glyph for the active link, and
+# this block sits in the same cluster, so a second wifi glyph would be noise.
+echo "${QUALITY}%"
+echo "${QUALITY}%"
 
 if (( QUALITY >= 80 )); then
     echo "#d5c4a1"
