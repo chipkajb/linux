@@ -1,0 +1,19 @@
+# sync-pi-to-claude manifest
+#
+# Format:  <pi source> | <claude destination> | <kind>
+#
+# pi source          Directory on this machine. Absolute path, or ~/... .
+# claude destination Directory under ~/.claude. The script creates it.
+# kind               skill   -> link each subdirectory that holds a SKILL.md
+#                    command -> link each *.md file
+#
+# Lines starting with # are comments.
+
+# Pi skills, including the pi-specific set.
+~/.pi/agent/skills/   |  ~/.claude/skills/    |  skill
+
+# Shared agent skills, which pi reads through ~/.agents/skills.
+~/.agents/skills/     |  ~/.claude/skills/    |  skill
+
+# Pi prompt files, linked as Claude Code slash commands.
+~/.pi/agent/prompts/  |  ~/.claude/commands/  |  command

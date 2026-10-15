@@ -68,3 +68,7 @@ monitors:
 # list monitor profiles
 profiles:
     ./bin/i3-monitors list
+
+# mirror pi skills and commands into Claude Code (add --dry-run to preview)
+sync-claude *args:
+    config/pi/skills/sync-pi-to-claude/scripts/sync-pi-to-claude.sh {{args}}

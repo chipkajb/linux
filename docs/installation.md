@@ -113,6 +113,23 @@ ships a stdlib-only linter:
 python3 ~/.claude/skills/asd-ste100/scripts/ste-lint.py FILE [--json]
 ```
 
+### Mirroring pi skills into Claude Code
+
+Pi and Claude Code keep separate skill directories. The `sync-pi-to-claude`
+skill links pi skills and prompt files into `~/.claude`, so both agents read the
+same content:
+
+```bash
+just sync-claude --dry-run   # preview
+just sync-claude             # apply
+just sync-claude --prune     # apply and remove stale links
+```
+
+The skill lives in `config/pi/skills/sync-pi-to-claude`. Edit `manifest.txt` to
+change the sources. Edit `exclude.txt` to skip a name that a Claude Code plugin
+already provides. The script never overwrites a real path, and it never removes
+a link that it does not manage.
+
 ## Hunk diff review
 
 [Hunk](https://github.com/modem-dev/hunk) is a terminal diff reviewer with watch

@@ -1,0 +1,15 @@
+# Names that Claude Code already provides.
+#
+# The sync skips these names. A Claude Code plugin installs them. A second
+# copy makes Claude Code list the same skill two times.
+#
+# One skill name per line. Lines starting with # are comments.
+
+# caveman plugin (marketplace: caveman)
+cavecrew
+caveman
+caveman-commit
+caveman-compress
+caveman-help
+caveman-review
+caveman-stats
