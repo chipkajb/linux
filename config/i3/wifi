@@ -1,18 +1,42 @@
 #!/bin/bash
+# Wi-Fi signal quality, shown only while wifi is the link carrying traffic.
+#
+# Upstream reported the signal whenever a wireless connection was up. On a
+# machine that is also wired — and this one has both links on the same subnet —
+# that meant the bar showed a wifi signal, and a wifi warning colour, while
+# every packet went out over ethernet. That reads as "I am on wifi" and it is
+# not true.
+#
+# The block reappears on its own as soon as wifi owns the default route, so it
+# still works on the road.
+#
+# Thresholds, signal quality, low is bad:
+#   amber 80%   orange 60%   red 40%
 
-QUALITY=$(nmcli -f IN-USE,SIGNAL dev wifi | grep "^\*" | awk '{print $2}')
+set -uo pipefail
 
+WIFI_IF="$(nmcli -t -f DEVICE,TYPE device 2>/dev/null | awk -F: '$2 == "wifi" { print $1; exit }')"
+[[ -n "$WIFI_IF" ]] || exit 0
 
-echo "${QUALITY}%"
-echo "${QUALITY}%"
+DEFAULT_IF="$(ip route | awk '/^default/ { print $5; exit }')"
+[[ "$DEFAULT_IF" == "$WIFI_IF" ]] || exit 0
 
-# color
+QUALITY="$(nmcli -f IN-USE,SIGNAL dev wifi 2>/dev/null | grep '^\*' | awk '{ print $2 }')"
+[[ -n "$QUALITY" ]] || exit 0
+
+ICON=$'\uf1eb'
+
+# fa-wifi, emitted here so the block needs no label in i3blocks.conf, the same
+# way memory, disk and battery emit their own icons.
+echo "$ICON ${QUALITY}%"
+echo "$ICON ${QUALITY}%"
+
 if (( QUALITY >= 80 )); then
-	echo "#d5c4a1"
-elif (( QUALITY < 80 && QUALITY >= 60 )); then
-	echo "#d79921"
-elif (( QUALITY < 60 && QUALITY >= 40 )); then
-	echo "#d65d0e"
-elif (( QUALITY < 40 )); then
-	echo "#cc241d"
+    echo "#d5c4a1"
+elif (( QUALITY >= 60 )); then
+    echo "#d79921"
+elif (( QUALITY >= 40 )); then
+    echo "#d65d0e"
+else
+    echo "#cc241d"
 fi

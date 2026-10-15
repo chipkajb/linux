@@ -1,0 +1,49 @@
+#!/bin/bash
+# The IP of the interface carrying the default route, plus an icon that says
+# whether that link is wired or wireless.
+#
+# Replaces /usr/share/i3blocks/iface. Upstream always drew a globe, so a bar
+# with both a wired and a wireless link up could not answer "which one am I
+# actually on?". The icon now answers it without reading the IP.
+#
+#   BLOCK_INSTANCE  interface to report (default: the default-route interface)
+
+set -uo pipefail
+
+if [[ -n "${BLOCK_INSTANCE:-}" ]]; then
+    IF="$BLOCK_INSTANCE"
+else
+    IF="$(ip route | awk '/^default/ { print $5; exit }')"
+fi
+
+# Nothing to report with no default route, or a tunnel as the default route.
+[[ -n "$IF" && -d "/sys/class/net/$IF" ]] || exit 0
+
+# fa-ethernet for a wired link, fa-wifi for a wireless one. The kernel exposes
+# a `wireless` directory only for wireless interfaces.
+if [[ -d "/sys/class/net/$IF/wireless" ]]; then
+    ICON=$'\uf1eb'
+else
+    ICON=$'\uf796'
+fi
+
+if [[ "$(cat "/sys/class/net/$IF/operstate")" == 'down' ]]; then
+    echo "$ICON down"
+    echo "$ICON down"
+    echo "#cc241d"
+    exit 0
+fi
+
+# Global scope only: this skips link-local and the temporary IPv6 privacy
+# addresses, so one stable address is shown.
+IPADDR="$(ip addr show "$IF" | perl -n -e '/inet ([^\/]+).* scope global/ && print $1 and exit')"
+
+[[ -n "$IPADDR" ]] || exit 0
+
+# Middle click copies the address.
+if [[ "${BLOCK_BUTTON:-}" == 3 ]] && command -v xclip >/dev/null 2>&1; then
+    printf '%s' "$IPADDR" | xclip -q -se c
+fi
+
+echo "$ICON $IPADDR"
+echo "$ICON $IPADDR"
