@@ -7,13 +7,19 @@ MEM_UTILIZATION=$(echo "scale=1; 100*$USED_MEM/$TOTAL_MEM" | bc)
 echo "${MEM_UTILIZATION}%"
 echo "${MEM_UTILIZATION}%"
 
-# color
-if (( $(echo "$MEM_UTILIZATION >= 80" | bc -l) )); then
+# Colour by VRAM in use. Red is set below 100% on purpose: a CUDA allocation
+# that does not fit fails outright, so the warning has to arrive while there is
+# still room to react.
+#
+#   amber 60%   orange 80%   red 92%
+#
+# Upstream warned from 20%, which is an ordinary working state on a 16G card.
+if (( $(echo "$MEM_UTILIZATION >= 92" | bc -l) )); then
 	echo "#cc241d"
-elif (( $(echo "$MEM_UTILIZATION < 80" | bc -l) && $(echo "$MEM_UTILIZATION >= 50" | bc -l) )); then
+elif (( $(echo "$MEM_UTILIZATION >= 80" | bc -l) )); then
 	echo "#d65d0e"
-elif (( $(echo "$MEM_UTILIZATION < 50" | bc -l) && $(echo "$MEM_UTILIZATION >= 20" | bc -l) )); then
+elif (( $(echo "$MEM_UTILIZATION >= 60" | bc -l) )); then
 	echo "#d79921"
-elif (( $(echo "$MEM_UTILIZATION < 20" | bc -l) )); then
-	echo "#98971a"
+else
+	echo "#d5c4a1"
 fi

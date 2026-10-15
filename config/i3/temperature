@@ -24,24 +24,30 @@ use Getopt::Long;
 
 binmode(STDOUT, ":utf8");
 
-# default values
-my $t_warn = 65;
-my $t_warn2 = 75;
-my $t_crit = 85;
+# Default values, in degrees Celsius, for a CPU package sensor. The upstream
+# defaults (65/75/85) suit the low-power sensors that used to be read here, but
+# a CPU package idles near 60 and runs into the 80s under load, so those
+# thresholds left the block permanently amber.
+my $t_warn = 80;
+my $t_warn2 = 90;
+my $t_crit = 98;
 my $chip = "";
 my $temperature = -9999;
 
 sub help {
-    print "Usage: temperature [-w <warning>] [-c <critical>] [--chip <chip>]\n";
-    print "-w <percent>: warning threshold to become yellow\n";
-    print "-w <percent>: 2nd warning threshold to become orange\n";
-    print "-c <percent>: critical threshold to become red\n";
+    print "Usage: temperature [-w <warning>] [-w2 <warning2>] [-c <critical>] [--chip <chip>]\n";
+    print "-w <degrees>:  warning threshold to become amber\n";
+    print "-w2 <degrees>: 2nd warning threshold to become orange\n";
+    print "-c <degrees>:  critical threshold to become red\n";
     print "--chip <chip>: sensor chip\n";
     exit 0;
 }
 
+# Upstream declared a second warning threshold but never exposed it, which made
+# -w unreachable whenever it was set above the hardcoded 75.
 GetOptions("help|h" => \&help,
            "w=i"    => \$t_warn,
+           "w2=i"   => \$t_warn2,
            "c=i"    => \$t_crit,
            "chip=s" => \$chip);
 
@@ -71,7 +77,7 @@ elsif ($temperature >= $t_warn) {
     print "#d79921\n";
 }
 else  {
-    print "#98971a\n";
+    print "#d5c4a1\n";
 }
 
 exit 0;

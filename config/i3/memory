@@ -1,0 +1,58 @@
+#!/bin/sh
+# Memory in use, and swap in use.
+#
+# Replaces /usr/share/i3blocks/memory. Upstream prints free memory
+# (MemFree + Buffers + Cached), which reads as "used" at a glance — a machine
+# with 62G total showing 50G looks like it is nearly full when it is nearly
+# empty. This prints what is actually consumed.
+#
+#   used = MemTotal - MemAvailable
+#
+# MemAvailable is the kernel's own estimate of how much can be handed to a new
+# allocation without swapping, so it accounts for reclaimable page cache
+# correctly. A plain MemTotal - MemFree would count cache as used.
+#
+# Thresholds, as a percentage in use:
+#   memory   amber 80  orange 90  red 95   (red means swapping is imminent)
+#   swap     amber 25  orange 60  red 90   (any swap at all is worth a glance)
+
+TYPE="${BLOCK_INSTANCE:-mem}"
+
+awk -v type="$TYPE" '
+/^MemTotal:/     { mem_total = $2 }
+/^MemAvailable:/ { mem_avail = $2 }
+/^SwapTotal:/    { swap_total = $2 }
+/^SwapFree:/     { swap_free = $2 }
+
+END {
+    if (type == "swap") {
+        used = swap_total - swap_free
+        total = swap_total
+        warn = 25
+        warn2 = 60
+        crit = 90
+    } else {
+        used = mem_total - mem_avail
+        total = mem_total
+        warn = 80
+        warn2 = 90
+        crit = 95
+    }
+
+    pct = (total > 0) ? used * 100 / total : 0
+
+    # full text, short text, then the colour
+    printf("%.1fG\n", used / 1024 / 1024)
+    printf("%.1fG\n", used / 1024 / 1024)
+
+    if (pct >= crit) {
+        print "#cc241d"
+    } else if (pct >= warn2) {
+        print "#d65d0e"
+    } else if (pct >= warn) {
+        print "#d79921"
+    } else {
+        print "#d5c4a1"
+    }
+}
+' /proc/meminfo

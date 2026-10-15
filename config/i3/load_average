@@ -23,14 +23,25 @@ echo "$load / $cpus"
 # short text
 echo "$load / $cpus"
 
-# color if load is too high
+# Colour by load relative to the core count, so the same thresholds work on any
+# machine. Upstream only had a single red step at load >= cores, which left
+# everything below that neutral and gave no early warning.
+#
+#   amber  50% of cores   half busy
+#   orange 100%           every core has something to run
+#   red    200%           heavily oversubscribed
 awk -v cpus="$cpus" -v cpuload="$load" '
     BEGIN {
-        if (cpus <= cpuload) {
+        ratio = (cpus > 0) ? cpuload / cpus : 0;
+
+        if (ratio >= 2.0) {
             print "#cc241d";
+        } else if (ratio >= 1.0) {
+            print "#d65d0e";
+        } else if (ratio >= 0.5) {
+            print "#d79921";
+        } else {
+            print "#d5c4a1";
         }
-	else {
-            print "#98971a";
-	}
     }
 '

@@ -1,0 +1,39 @@
+#!/bin/sh
+# Disk space in use on the filesystem holding the given directory.
+#
+# Replaces /usr/share/i3blocks/disk. Upstream prints df's Avail column, which is
+# easy to misread as "used" — 188G free out of 926G looks like a lot until you
+# notice the filesystem is 79% full. This prints the Used column.
+#
+# The colour still keys off the fill percentage, so a filesystem about to run
+# out still turns red even though the number shown is usage, not headroom.
+#
+# Thresholds, as a percentage of the filesystem full:
+#   amber 80   orange 90   red 95
+#
+#   BLOCK_INSTANCE  directory to check (default: $HOME)
+
+DIR="${BLOCK_INSTANCE:-$HOME}"
+
+df -h -P -l "$DIR" | awk '
+/\/.*/ {
+    use = $5
+    gsub(/%$/, "", use)
+
+    # full text, short text, then the colour
+    print $3
+    print $3
+
+    if (use + 0 >= 95) {
+        print "#cc241d"
+    } else if (use + 0 >= 90) {
+        print "#d65d0e"
+    } else if (use + 0 >= 80) {
+        print "#d79921"
+    } else {
+        print "#d5c4a1"
+    }
+
+    exit 0
+}
+'

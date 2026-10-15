@@ -83,6 +83,10 @@ link_desktop_configs() {
     symlink_force "$REPO_ROOT/config/xbindkeys/xbindkeysrc" "$HOME/.xbindkeysrc"
 }
 
+# These shadow the copies shipped by the i3blocks package, so the bar keeps
+# working if the config dir is not present. config/i3/memory and
+# config/i3/disk are called by path instead (see config/i3/i3blocks.conf),
+# because they change what the block reports rather than only fixing it.
 install_i3blocks_scripts() {
     local script
     for script in gpu_memory wifi cpu_usage load_average battery temperature; do

@@ -8,7 +8,7 @@ echo "${QUALITY}%"
 
 # color
 if (( QUALITY >= 80 )); then
-	echo "#98971a"
+	echo "#d5c4a1"
 elif (( QUALITY < 80 && QUALITY >= 60 )); then
 	echo "#d79921"
 elif (( QUALITY < 60 && QUALITY >= 40 )); then

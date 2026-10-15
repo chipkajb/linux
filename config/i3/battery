@@ -16,11 +16,16 @@ use strict;
 use warnings;
 use utf8;
 
+# The status arrows below are wide characters. Without this, perl prints the
+# right bytes but also a "Wide character in print" warning on every update.
+binmode(STDOUT, ":utf8");
+
 my $acpi;
 my $status;
 my $percent;
 my $full_text;
 my $short_text;
+my $icon;
 
 # Get the output of acpi -b and find the first battery not at 0%
 my $acpi_output = `acpi -b`;
@@ -46,13 +51,31 @@ if (!defined $acpi) {
 
 
 # fail on unexpected output
-if ($acpi !~ /: (\w+), (\d+)%/) {
+# The status can be more than one word: acpi reports "Not charging" when the
+# machine is plugged in but holding below the charge threshold. The upstream
+# single-word pattern rejected that and made the block die every interval.
+if ($acpi !~ /: ([\w ]+), (\d+)%/) {
 	die "$acpi\n";
 }
 
 $status = $1;
 $percent = $2;
-$full_text = "$percent%";
+
+# Level icon, so the glyph shape tracks the charge. The block now emits its own
+# icon, which is why i3blocks.conf sets no label for [battery].
+if ($percent >= 90) {
+	$icon = "\x{f240}"; # fa-battery-full
+} elsif ($percent >= 60) {
+	$icon = "\x{f241}"; # fa-battery-three-quarters
+} elsif ($percent >= 40) {
+	$icon = "\x{f242}"; # fa-battery-half
+} elsif ($percent >= 20) {
+	$icon = "\x{f243}"; # fa-battery-quarter
+} else {
+	$icon = "\x{f244}"; # fa-battery-empty
+}
+
+$full_text = "$icon $percent%";
 
 if ($status eq 'Discharging') {
 	$full_text .= '  ';
@@ -70,15 +93,21 @@ if ($acpi =~ /(\d\d:\d\d):/) {
 print "$full_text\n";
 print "$short_text\n";
 
-# consider color and urgent flag only on discharge
-if ($percent < 25) {
+# Colour by charge, but only while discharging. On AC a low number is not a
+# warning, and a machine charging at 40% is fine. The old comment said "only on
+# discharge" but the status check was missing, so it painted that case orange.
+#
+#   amber 50%   orange 30%   red 15%
+if ($status ne 'Discharging') {
+    print "#d5c4a1\n";
+} elsif ($percent < 15) {
     print "#cc241d\n";
-} elsif ($percent < 50) {
+} elsif ($percent < 30) {
     print "#d65d0e\n";
-} elsif ($percent < 75) {
+} elsif ($percent < 50) {
     print "#d79921\n";
 } else {
-    print "#98971a\n";
+    print "#d5c4a1\n";
 }
 
 exit(0);
