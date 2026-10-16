@@ -120,6 +120,19 @@ export PATH=$HOME/.local/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# --- Thread caps: stop one job from claiming all 24 cores ---------------------
+# OpenMP/MKL/BLAS default to nproc (24 here). Each concurrent pytest or torch
+# process then spawns 24 threads, so N jobs put N*24 threads on 24 cores. The
+# scheduler thrashes (~260k context switches/s) and the desktop stalls while the
+# CPU reads as merely "busy".
+#
+# Override per command when you genuinely want the whole machine:
+#   OMP_NUM_THREADS=24 uv run playbook train ...
+export OMP_NUM_THREADS=4
+export MKL_NUM_THREADS=4
+export OPENBLAS_NUM_THREADS=4
+export NUMEXPR_NUM_THREADS=4
+
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
