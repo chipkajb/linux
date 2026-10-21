@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Run picom under a restart loop.
+#
+# Two things in this desktop need a compositor:
+#
+#   - The look: inactive-opacity, shadows, blur and rounded corners.
+#   - Wispr Flow's dictation pill.
+#
+# The pill is the reason this script exists. Wispr's overlay is a 512x614
+# window whose canvas must be transparent, with only a ~100x30 pill painted
+# inside it. Chromium asks X for a 32-bit ARGB visual only when a compositing
+# manager owns the _NET_WM_CM_S0 selection at the moment the window is
+# created. With no compositor the window falls back to an opaque 24-bit
+# visual. The transparent canvas then paints solid black and the pill sits in
+# the middle of a black rectangle.
+#
+# Restarting picom does not clear that rectangle. The window keeps its 24-bit
+# visual for its whole life, so only a Wispr Flow restart can fix it. The
+# rectangle also appears whenever an already-ARGB overlay loses its
+# compositor, because X ignores alpha with nothing to blend it.
+#
+# picom 10.2 (Ubuntu 24.04) aborts on an upstream assertion in its shadow and
+# corner-mask path (win.c:349 win_bind_mask). Upstream fixed this in 11.x, and
+# noble has no fixed package, so the compositor goes away on its own every
+# few days. This loop brings it straight back.
+#
+# Delete this file and restore the plain `exec picom` line in config/i3/config
+# once picom is upgraded past 10.2.
+
+set -uo pipefail
+
+readonly CONFIG="$HOME/.config/picom/picom.conf"
+readonly LOCK="${XDG_RUNTIME_DIR:-/tmp}/picom-supervisor.lock"
+
+# One supervisor per session. i3 re-runs its `exec` lines on reload, and a
+# second supervisor would fight this one over the compositor selection.
+exec 9>"$LOCK"
+flock -n 9 || exit 0
+
+failures=0
+while :; do
+    started=$SECONDS
+    picom --config "$CONFIG"
+    rc=$?
+
+    # A long run means a genuine crash. A run that ended at once means picom
+    # cannot start at all — a bad config, or X gone — and retrying every
+    # second would spin.
+    if (( SECONDS - started < 3 )); then
+        (( failures++ ))
+    else
+        failures=0
+    fi
+
+    if (( failures >= 5 )); then
+        printf 'picom-supervisor: 5 failed starts, backing off 30s\n'
+        failures=0
+        sleep 30
+    else
+        printf 'picom-supervisor: picom exited (%d), restarting\n' "$rc"
+        sleep 1
+    fi
+done
