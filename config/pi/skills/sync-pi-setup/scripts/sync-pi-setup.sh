@@ -155,11 +155,16 @@ sync_target() {
 }
 
 local_pi_version() {
-  local root pkg
-  root="$(npm root -g 2>/dev/null)" || return 0
+  local root pkg ver cur
+  root="$(npm root -g 2>/dev/null)" || root=""
   pkg="${root}/@earendil-works/pi-coding-agent/package.json"
-  [[ -r "$pkg" ]] || return 0
-  node -p "require('${pkg}').version" 2>/dev/null || true
+  if [[ -r "$pkg" ]]; then
+    ver="$(node -p "require('${pkg}').version" 2>/dev/null || true)"
+    if [[ -n "$ver" ]]; then printf '%s' "$ver"; return 0; fi
+  fi
+  # Pi installed by the managed installer: version lives in a file, not npm.
+  cur="${HOME}/.pi/agent/install/current-version"
+  [[ -r "$cur" ]] && tr -d '[:space:]' < "$cur"
 }
 
 post_sync() {

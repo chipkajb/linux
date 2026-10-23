@@ -9,6 +9,10 @@ run-history.jsonl
 mcp-cache.json
 models-store.json
 
+# Pi runtime and launcher: reinstalled on the target by --post
+/install/
+/bin/
+
 # Local backups
 backup.*/
 
