@@ -1,8 +1,34 @@
 {
   "permissions": {
     "allow": [],
+    "deny": [
+      "Read(~/.zshenv)",
+      "Read(~/.git-credentials)",
+      "Read(~/.netrc)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.config/glab-cli/**)",
+      "Read(~/.config/secrets/**)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.codeaf/config.json*)",
+      "Read(~/.pi/agent/auth.json*)",
+      "Read(~/.pi/agent/models.json)",
+      "Read(~/.ssh/id_*)",
+      "Read(**/.zsh_secrets)",
+      "Read(**/zsh_secrets)",
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.production)",
+      "Read(**/.env.development)",
+      "Read(//proc/*/environ)",
+      "Edit(~/.zshenv)",
+      "Edit(~/.git-credentials)",
+      "Edit(~/.codeaf/config.json*)",
+      "Edit(~/.pi/agent/auth.json*)"
+    ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -27,6 +53,17 @@
       }
     ],
     "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Edit|Write|Grep|Glob|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.local/bin/secret-guard claude",
+            "onFailure": "block",
+            "statusMessage": "secret-guard"
+          }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [

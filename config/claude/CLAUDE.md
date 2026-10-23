@@ -39,6 +39,15 @@
 
 ---
 
+## Secret Hygiene
+
+- **Never print a secret value** (API key, token, password) in command output, a file view, a diff, or a message.
+- **Never dump a config, env, or credentials file whole.** Select only the non-secret fields you need. To check whether two secrets match, compare a short sha256 prefix.
+- **Never put a token in a git remote URL**, clone URL, script, commit, doc, or tracker issue. Use a credential helper.
+- **`secret-guard` blocks risky tool calls** (`~/.local/bin/secret-guard`, from `bin/` in this repo; the Claude hook and the Pi extension both use it). If it blocks a call, do not work around it. Ask me to run the command myself.
+
+---
+
 ## Environment
 
 - **Harness:** Claude Code, model `opus`.
