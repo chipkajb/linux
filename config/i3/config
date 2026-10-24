@@ -342,6 +342,11 @@ exec --no-startup-id dunst
 # bar is not the thing at fault.
 exec --no-startup-id ~/.config/i3/wispr-overlay-fix
 
+# Wispr Flow can hang while quitting, and then hold its single-instance lock:
+# dictation stays dead and every later launch hands off to the dead process.
+# This restarts it. See the script for why the renderer count is the signal.
+exec --no-startup-id ~/.config/i3/wispr-flow-guard
+
 # hide mouse cursor
 exec --no-startup-id unclutter --timeout 1 --ignore-scrolling --fork
 

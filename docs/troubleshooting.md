@@ -54,6 +54,18 @@ Run `./setup.sh install links` (or `zsh`/`i3`) to symlink `bin/*` into
 `bin/osc52-copy` writes OSC 52 to the focused pane. Ensure it is on `PATH`
 (`link_bin`) and that the terminal supports OSC 52.
 
+**Dictation stops and Wispr Flow will not reopen.**
+The app can hang while quitting: its shutdown waits on a close callback that
+nothing bounds, so it never exits and never releases its single-instance lock.
+Every later launch then hands its arguments to the wedged process and exits.
+`config/i3/wispr-flow-guard` detects that shape and restarts it. SIGTERM is not
+a workaround — it enters the same stuck cleanup, so the process needs SIGKILL:
+
+```bash
+kill -9 "$(readlink ~/.config/'Wispr Flow'/SingletonLock | sed 's/.*-//')"
+wispr-flow --hidden
+```
+
 ## Development
 
 **`just lint` fails on a shell file.**

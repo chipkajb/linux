@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+# Restart Wispr Flow when it wedges on quit.
+#
+# Wispr Flow can hang while quitting. Its shutdown sequence opens with
+#
+#     await (close an internal client handle, if one is set)
+#
+# and that close is wrapped in a promise that settles only from its callback.
+# Nothing bounds it. One callback that never arrives stops the whole cleanup
+# at its first step: no later step runs, the process never exits, and it never
+# releases its single-instance lock. Dictation is dead from then on, because
+# every later launch hands its arguments to the wedged instance and exits.
+# SIGTERM goes into the same stuck cleanup, so only SIGKILL ends it.
+# Measured on 1.6.957-1.0.4: 2 of the last 10 quits, and 12 stale locks in the
+# launcher log from earlier wedges.
+#
+# The wedge has a shape this script can read:
+#
+#   - the process that owns the single-instance lock is still alive,
+#   - it has no renderer child left, though a healthy instance holds several
+#     (the dictation pill, the context menu, the pre-warmed meeting window),
+#   - the launcher log ends in "Blocking shutdown on cleanup tasks" with no
+#     "Cleanup tasks complete" after it.
+#
+# All three must hold, twice in a row, before a restart. Zombie children and
+# an idle log are deliberately not signals: a healthy instance has both.
+#
+# The restart is SIGTERM, a short grace, then SIGKILL. The launcher clears the
+# stale lock on the way back up, and logs that it did.
+#
+# Delete this file and its `exec` line in config/i3/config once upstream
+# bounds the close in the shutdown path.
+
+set -uo pipefail
+
+readonly POLL_SECONDS=10
+readonly STRIKES=2
+readonly MIN_UPTIME=60
+readonly TERM_GRACE=5
+readonly RESTART_SETTLE=3
+readonly LOG_WINDOW=500
+readonly MARKER='Blocking shutdown on cleanup tasks'
+readonly MARKER_DONE='Cleanup tasks complete'
+
+readonly CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/Wispr Flow"
+readonly LOCK_FILE="$CONFIG_DIR/SingletonLock"
+readonly LAUNCHER_LOG="${XDG_CACHE_HOME:-$HOME/.cache}/wispr-flow/launcher.log"
+readonly GUARD_LOCK="${XDG_RUNTIME_DIR:-/tmp}/wispr-flow-guard.lock"
+
+# One guard per session: i3 re-runs its `exec` lines on reload.
+exec 9>"$GUARD_LOCK"
+flock -n 9 || {
+	printf 'wispr-flow-guard: another guard holds the lock, exiting\n'
+	exit 0
+}
+
+if ! command -v wispr-flow >/dev/null 2>&1; then
+	printf 'wispr-flow-guard: wispr-flow is not on PATH, exiting\n' >&2
+	exit 1
+fi
+
+# PID holding the single-instance lock, or nothing when the app is not
+# running. Electron writes "<hostname>-<pid>"; the launcher removes a lock
+# whose PID is gone.
+locked_pid() {
+	local target
+	target="$(readlink "$LOCK_FILE" 2>/dev/null)" || return 1
+	target="${target##*-}"
+	[[ $target =~ ^[0-9]+$ ]] || return 1
+	printf '%s' "$target"
+}
+
+# Live renderers of this app. The pattern is anchored to the binary path, so
+# nothing else carrying the same text — this script's own shell, for one —
+# can be counted.
+renderers() {
+	local count
+	count="$(pgrep -fc -- '^/usr/lib/wispr-flow/wispr-flow --type=renderer' 2>/dev/null)" || count=0
+	printf '%s' "${count:-0}"
+}
+
+# Seconds the process has been alive, or nothing when it is gone.
+uptime_of() {
+	local secs
+	secs="$(ps -o etimes= -p "$1" 2>/dev/null)" || return 1
+	secs="${secs// /}"
+	[[ $secs =~ ^[0-9]+$ ]] || return 1
+	printf '%s' "$secs"
+}
+
+# The launcher log ends in a shutdown that never finished. Only the text after
+# the last marker decides, so an earlier completed shutdown inside the same
+# window cannot mask a later stuck one.
+shutdown_unfinished() {
+	local seg after
+	seg="$(tail -n "$LOG_WINDOW" "$LAUNCHER_LOG" 2>/dev/null)" || return 1
+	after="${seg##*"$MARKER"}"
+	[[ $after != "$seg" ]] || return 1
+	[[ $after == *"$MARKER_DONE"* ]] && return 1
+	return 0
+}
+
+# All three signals agree.
+wedged() {
+	local pid="$1" age
+	age="$(uptime_of "$pid")" || return 1
+	(( age > MIN_UPTIME )) || return 1
+	(( $(renderers) == 0 )) || return 1
+	shutdown_unfinished
+}
+
+restart() {
+	local pid="$1" i
+	printf 'wispr-flow-guard: restarting wedged instance %s\n' "$pid"
+	kill -TERM "$pid" 2>/dev/null
+	for (( i = 0; i < TERM_GRACE; i++ )); do
+		kill -0 "$pid" 2>/dev/null || break
+		sleep 1
+	done
+	if kill -0 "$pid" 2>/dev/null; then
+		printf 'wispr-flow-guard: %s ignored SIGTERM, sending SIGKILL\n' "$pid"
+		kill -KILL "$pid" 2>/dev/null
+	fi
+	sleep "$RESTART_SETTLE"
+	# The launcher clears the stale lock itself, and logs that it did.
+	# fd 9 must be closed for the child: an inherited descriptor would share
+	# this guard's flock, so the lock would stay held while the app lives and
+	# the next guard would refuse to start.
+	setsid wispr-flow --hidden >/dev/null 2>&1 </dev/null 9<&- &
+	printf 'wispr-flow-guard: relaunched\n'
+}
+
+strikes=0
+while :; do
+	if pid="$(locked_pid)" && kill -0 "$pid" 2>/dev/null; then
+		if wedged "$pid"; then
+			(( strikes++ ))
+			printf 'wispr-flow-guard: %s has no renderer and an unfinished shutdown (strike %d/%d)\n' \
+				"$pid" "$strikes" "$STRIKES"
+			if (( strikes >= STRIKES )); then
+				restart "$pid"
+				strikes=0
+			fi
+		else
+			strikes=0
+		fi
+	else
+		strikes=0
+	fi
+	sleep "$POLL_SECONDS"
+done
