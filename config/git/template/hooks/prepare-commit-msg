@@ -1,0 +1,36 @@
+#!/bin/sh
+# prepare-commit-msg — draft a commit message with the model.
+#
+# Installed into ~/.config/git/template/hooks by `./setup.sh install misc` and
+# picked up by new clones through init.templateDir. Repositories cloned before
+# that get the same result from the `gcai` shell function in config/zshrc.
+#
+# Never blocks a commit. Every failure path just leaves the message as git left
+# it, so a missing key, a missing tool, or an API outage costs nothing.
+#
+# Env:
+#   AI_COMMIT_MSG_OFF   set to 1 to disable
+#   FIREWORKS_API_KEY   required
+
+msg_file="$1"
+source="$2"
+
+[ -n "${AI_COMMIT_MSG_OFF:-}" ] && exit 0
+[ -n "${FIREWORKS_API_KEY:-}" ] || exit 0
+
+# A source means the message already came from somewhere: -m, -F, --amend,
+# a merge, a squash, or -t. Do not overwrite those.
+[ -n "${source:-}" ] && exit 0
+
+command -v ai >/dev/null 2>&1 || exit 0
+[ -n "$msg_file" ] && [ -f "$msg_file" ] || exit 0
+
+# Leave a message the user already wrote alone.
+if grep -qv '^#' "$msg_file" 2>/dev/null; then
+    exit 0
+fi
+
+draft="$(git diff --cached 2>/dev/null | ai commit-msg 2>/dev/null)" || exit 0
+[ -n "$draft" ] || exit 0
+
+printf '%s\n' "$draft" >"$msg_file"

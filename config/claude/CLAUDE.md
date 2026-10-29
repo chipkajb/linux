@@ -41,6 +41,7 @@
 
 ## Secret Hygiene
 
+- **Use Linear and GitLab through the helpers, never through a raw credential.** Linear: `linear-gql '<graphql>'` (add `--vars '<json>'` for variables). GitLab: `glab` (for example `glab api`, `glab mr create`). `git push` gets gitlab.com credentials from `glab auth git-credential`. Never type a credential variable name in a command.
 - **Never print a secret value** (API key, token, password) in command output, a file view, a diff, or a message.
 - **Never dump a config, env, or credentials file whole.** Select only the non-secret fields you need. To check whether two secrets match, compare a short sha256 prefix.
 - **Never put a token in a git remote URL**, clone URL, script, commit, doc, or tracker issue. Use a credential helper.

@@ -47,6 +47,21 @@ install_gedit_vim_mode() {
     fi
 }
 
+# Draft commit messages with the model. The hook lands in a git template
+# directory, so it reaches new clones without touching core.hooksPath — which
+# would silently disable every repository's own pre-commit and pre-push hooks.
+#
+# It needs `ai` on PATH, which the links step publishes.
+install_git_ai_commit_hook() {
+    local template="$HOME/.config/git/template"
+    ensure_dir "$template/hooks"
+    chmod +x "$REPO_ROOT/config/git/template/hooks/prepare-commit-msg"
+    symlink_force "$REPO_ROOT/config/git/template/hooks/prepare-commit-msg" \
+        "$template/hooks/prepare-commit-msg"
+    git config --global init.templateDir "$template"
+    ui::hint 'new clones draft commit messages; the gcai function covers existing repos'
+}
+
 step_misc() {
     apt_update
     apt_install \
@@ -60,4 +75,5 @@ step_misc() {
     install_hunk
     link_pi_skills
     install_gedit_vim_mode
+    install_git_ai_commit_hook
 }

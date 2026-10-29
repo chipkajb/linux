@@ -30,6 +30,7 @@ step_claude() {
     # onFailure: block, so a missing script would block every tool call.
     ensure_dir "$HOME/.local/bin" "$HOME/.pi/agent/extensions"
     symlink_force "$REPO_ROOT/bin/secret-guard" "$HOME/.local/bin/secret-guard"
+    symlink_force "$REPO_ROOT/bin/linear-gql" "$HOME/.local/bin/linear-gql"
     symlink_force "$REPO_ROOT/config/pi/extensions/secret-guard.ts" "$HOME/.pi/agent/extensions/secret-guard.ts"
 
     ensure_dir "$HOME/.claude/skills"

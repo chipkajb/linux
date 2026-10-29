@@ -1,0 +1,249 @@
+#!/usr/bin/env python3
+"""ai — small Fireworks-backed helpers for the shell and for git.
+
+  ai complete      complete the shell command line given by --buffer
+  ai commit-msg    draft a commit message for the staged diff on stdin
+  ai help          show this text
+
+`ai complete` takes the command line, the working directory, and the git branch
+as flags, and reads recent history from stdin, one command per line.
+
+Both subcommands print to stdout and write nothing to disk. The API key is read
+from the environment and never printed or logged.
+
+Environment:
+  FIREWORKS_API_KEY   required; both subcommands are no-ops without it
+  AI_MODEL            model id (default below)
+  AI_BASE             API base (default https://api.fireworks.ai/inference/v1)
+  AI_TIMEOUT          seconds to wait (default 4 for complete, 30 for commit-msg)
+  AI_NO_THINKING      set to 0 for models that reject disabling reasoning
+                      (default: 1; see the note below)
+  AI_HELP_BYTES       per-command `--help` context cap for complete (default 3000)
+  AI_DIFF_CHARS       staged-diff cap for commit-msg (default 12000)
+
+Reasoning is disabled by default. A reasoning model spends the token budget on
+chain-of-thought before it writes the answer, so a small max_tokens returns an
+empty reply. Models that are thinking-only (GLM-5.3, for one) reject the flag;
+set AI_NO_THINKING=0 for those.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+DEFAULT_MODEL = "accounts/fireworks/models/deepseek-v4p1-flash"
+DEFAULT_BASE = "https://api.fireworks.ai/inference/v1"
+HELP_CACHE = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "ai-cli" / "help"
+
+COMPLETE_SYSTEM = """You complete shell command lines.
+
+The user gives you a partial command line and context. Reply with the single
+full command line they most likely intend, starting with their exact input.
+
+Rules:
+- Output the command line only. No prose, no markdown, no code fence.
+- Output one line. Never a multi-line script.
+- Never wrap the command in quotes or a shell prompt.
+- Keep the user's exact input as the prefix. Do not rewrite or reorder it.
+- Prefer flags that are valid for the command. The reference text below, when
+  present, is the command's own --help output.
+- If you are not confident, output nothing at all."""
+
+COMMIT_SYSTEM = """You write git commit messages.
+
+Given a staged diff and the repository's recent commit subjects, write one
+commit message that matches the repository's existing style.
+
+Rules:
+- Match the length, capitalization, and tone of the recent subjects.
+- Subject line only. No body, no bullet points, no "This commit...".
+- Describe what the change does, not which files changed.
+- No trailing period. Under 72 characters.
+- Output the message only. No prose, no markdown, no code fence."""
+
+
+def _fail(message: str) -> int:
+    print(f"ai: {message}", file=sys.stderr)
+    return 1
+
+
+def _api_key() -> str:
+    return os.environ.get("FIREWORKS_API_KEY", "").strip()
+
+
+def _request(system: str, user: str, *, max_tokens: int, timeout: float) -> str | None:
+    """Return the model's reply, or None when it is unavailable."""
+    key = _api_key()
+    if not key:
+        return None
+
+    base = os.environ.get("AI_BASE", DEFAULT_BASE).rstrip("/")
+    payload = {
+        "model": os.environ.get("AI_MODEL", DEFAULT_MODEL),
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "max_tokens": max_tokens,
+        "temperature": 0.0,
+    }
+    if os.environ.get("AI_NO_THINKING", "1") != "0":
+        payload["thinking"] = {"type": "disabled"}
+    request = urllib.request.Request(
+        f"{base}/chat/completions",
+        data=json.dumps(payload).encode(),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            body = json.load(response)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError, KeyError):
+        return None
+
+    try:
+        return body["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError):
+        return None
+
+
+def _command_help(command: str) -> str:
+    """`<command> --help`, cached on disk. Empty for anything path-like."""
+    if not command or "/" in command or command.startswith("-"):
+        return ""
+    if not command.replace("-", "").replace("_", "").isalnum():
+        return ""
+
+    cached = HELP_CACHE / command
+    if cached.is_file():
+        return cached.read_text(errors="replace")
+
+    try:
+        result = subprocess.run(
+            [command, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+    text = (result.stdout or "") + (result.stderr or "")
+    limit = int(os.environ.get("AI_HELP_BYTES", "3000"))
+    text = text[:limit]
+
+    try:
+        HELP_CACHE.mkdir(parents=True, exist_ok=True)
+        cached.write_text(text)
+    except OSError:
+        pass
+    return text
+
+
+def _git(*args: str) -> str:
+    try:
+        result = subprocess.run(
+            ["git", *args], capture_output=True, text=True, timeout=10, check=False
+        )
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return result.stdout if result.returncode == 0 else ""
+
+
+def cmd_complete(argv: list[str]) -> int:
+    """Print the completed command line, or nothing when unsure."""
+    parser = argparse.ArgumentParser(prog="ai complete", add_help=False)
+    parser.add_argument("--buffer", default="")
+    parser.add_argument("--cwd", default="")
+    parser.add_argument("--branch", default="")
+    args, _ = parser.parse_known_args(argv)
+
+    buffer = args.buffer
+    # too short to be worth a request, and a bare word has no flags to pick
+    if buffer and len(buffer) < 3:
+        return 0
+
+    sections = [f"Partial command line:\n{buffer}" if buffer else "The command line is empty."]
+
+    if args.cwd:
+        sections.append(f"Working directory: {args.cwd}")
+    if args.branch:
+        sections.append(f"Git branch: {args.branch}")
+
+    history = [line.rstrip("\n") for line in sys.stdin if line.strip()]
+    if history:
+        sections.append("Recent commands:\n" + "\n".join(history[-25:]))
+
+    first_word = buffer.split()[0] if buffer.split() else ""
+    help_text = _command_help(first_word)
+    if help_text:
+        sections.append(f"Reference (--help for {first_word}):\n{help_text}")
+
+    timeout = float(os.environ.get("AI_TIMEOUT", "4"))
+    reply = _request(COMPLETE_SYSTEM, "\n\n".join(sections), max_tokens=96, timeout=timeout)
+    if not reply:
+        return 0
+
+    line = reply.strip().splitlines()[0].strip() if reply.strip() else ""
+    # zsh-autosuggestions only shows a suggestion the buffer is a prefix of
+    if not line or not line.startswith(buffer) or line == buffer:
+        return 0
+
+    sys.stdout.write(line)
+    return 0
+
+
+def cmd_commit_msg() -> int:
+    """Read a staged diff on stdin, print a commit message."""
+    diff = sys.stdin.read()
+    if not diff.strip():
+        return 0
+
+    limit = int(os.environ.get("AI_DIFF_CHARS", "12000"))
+    sections = []
+    if len(diff) > limit:
+        sections.append(f"Staged diff (truncated to {limit} characters):\n{diff[:limit]}")
+    else:
+        sections.append(f"Staged diff:\n{diff}")
+
+    subjects = _git("log", "--format=%s", "-15")
+    if subjects.strip():
+        sections.append("Recent commit subjects in this repository:\n" + subjects.strip())
+
+    timeout = float(os.environ.get("AI_TIMEOUT", "30"))
+    reply = _request(COMMIT_SYSTEM, "\n\n".join(sections), max_tokens=96, timeout=timeout)
+    if not reply:
+        return 1
+
+    line = reply.strip().splitlines()[0].strip().strip('"').strip("'") if reply.strip() else ""
+    if not line:
+        return 1
+
+    print(line)
+    return 0
+
+
+USAGE = __doc__
+
+
+def main(argv: list[str]) -> int:
+    command = argv[1] if len(argv) > 1 else "help"
+    if command == "complete":
+        return cmd_complete(argv[2:])
+    if command == "commit-msg":
+        return cmd_commit_msg()
+    print(USAGE)
+    return 0 if command in ("help", "-h", "--help") else 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

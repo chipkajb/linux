@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""Call the Linear GraphQL API without the caller ever touching the API key.
+
+Usage:
+    linear-gql '{ viewer { name } }'
+    linear-gql 'query($id: String!) { issue(id: $id) { title } }' --vars '{"id": "CVA-123"}'
+    echo '{ viewer { name } }' | linear-gql
+    linear-gql --file query.graphql --vars-file vars.json
+
+The key comes from LINEAR_API_KEY in the environment. If a non-interactive shell does not
+have it, this script loads it from the login shell without printing it. The response is
+printed as JSON. If the key ever appears in a response, it is replaced with [REDACTED].
+Exit 0 on success, 1 on a GraphQL or HTTP error, 2 on bad usage or a missing key.
+"""
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+
+URL = "https://api.linear.app/graphql"
+VAR = "LINEAR_API_KEY"
+
+
+def key() -> str:
+    k = os.environ.get(VAR, "")
+    if not k:
+        # Ask a login zsh for the value; nothing is printed to the terminal.
+        out = subprocess.run(["zsh", "-lc", f"print -r -- ${{{VAR}-}}"], capture_output=True, text=True)
+        k = out.stdout.strip()
+    if not k:
+        sys.exit(f"linear-gql: {VAR} is not set. Ask Jordan to set it; do not look for it in files.")
+    return k
+
+
+def arg(flag: str) -> str | None:
+    if flag in sys.argv:
+        i = sys.argv.index(flag)
+        if i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+        sys.exit(f"linear-gql: {flag} needs a value")
+    return None
+
+
+def main() -> int:
+    if "-h" in sys.argv or "--help" in sys.argv:
+        print(__doc__)
+        return 0
+    positional = [a for i, a in enumerate(sys.argv[1:], 1)
+                  if not a.startswith("--") and sys.argv[i - 1] not in ("--vars", "--file", "--vars-file")]
+    if arg("--file"):
+        query = open(arg("--file")).read()
+    elif positional:
+        query = positional[0]
+    elif not sys.stdin.isatty():
+        query = sys.stdin.read()
+    else:
+        print(__doc__, file=sys.stderr)
+        return 2
+    variables = json.loads(arg("--vars") or (open(arg("--vars-file")).read() if arg("--vars-file") else "{}"))
+
+    k = key()
+    req = urllib.request.Request(URL, json.dumps({"query": query, "variables": variables}).encode(),
+                                 {"Authorization": k, "Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            body, ok = r.read().decode(), True
+    except urllib.error.HTTPError as e:
+        body, ok = e.read().decode(), False
+    body = body.replace(k, "[REDACTED]")
+    try:
+        data = json.loads(body)
+        print(json.dumps(data, indent=2))
+        return 0 if ok and not data.get("errors") else 1
+    except json.JSONDecodeError:
+        print(body[:2000])
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -294,12 +294,41 @@ local plugins = {
             },
         },
     },
-    -- Cursor-style multi-line ghost-text tab completion
+    -- Cursor-style multi-line ghost-text tab completion.
+    -- custom/configs/ai.lua picks exactly one of these; see that file for the
+    -- resolution rules. Two engines on one line would fight each other.
+    {
+        "milanglacier/minuet-ai.nvim",
+        event = "InsertEnter",
+        cond = function()
+            return require("custom.configs.ai").using "minuet"
+        end,
+        config = function()
+            require "custom.configs.minuet"
+        end,
+    },
     {
         "supermaven-inc/supermaven-nvim",
         event = "InsertEnter",
+        cond = function()
+            return require("custom.configs.ai").using "supermaven"
+        end,
         config = function()
             require "custom.configs.supermaven"
+        end,
+    },
+    -- Cursor-style next-edit prediction: rename a symbol here, fix the call
+    -- sites there. Shares FIREWORKS_API_KEY with minuet, so it is off unless
+    -- custom/ai_local.lua says otherwise.
+    {
+        "zenodea/nextedit.nvim",
+        build = "cd server && cargo build --release",
+        event = { "BufReadPost", "BufNewFile" },
+        cond = function()
+            return require("custom.configs.ai").nes
+        end,
+        config = function()
+            require "custom.configs.nextedit"
         end,
     },
     {

@@ -3,3 +3,20 @@
 # Copy to ~/.zsh_local and edit. Never commit the filled copy.
 #
 #   cp config/zsh_local.example ~/.zsh_local
+
+# --- AI completion ------------------------------------------------------------
+# Neovim picks its inline-completion backend on its own:
+#   FIREWORKS_API_KEY set  -> minuet (Fireworks, fill-in-the-middle)
+#   FIREWORKS_API_KEY unset -> supermaven (hosted, free tier)
+# Override with NVIM_AI_BACKEND when a machine needs the other one.
+#
+# export NVIM_AI_BACKEND="supermaven"
+
+# Silence the shell ghost-text strategy on this host (it stays on by default
+# wherever FIREWORKS_API_KEY is set, and is always off in SSH sessions).
+#
+# export AI_SUGGEST_OFF=1
+
+# Seconds between shell ghost-text requests.
+#
+# export AI_SUGGEST_THROTTLE=0.7

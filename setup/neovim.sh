@@ -94,6 +94,52 @@ configure_git_mergetool() {
     git config --global merge.conflictstyle diff3
 }
 
+# Pin the inline-completion backend for this machine.
+#
+# config/nvim/custom/configs/ai.lua reads this file, and it is gitignored, so
+# each host keeps its own answer without touching tracked files. Pinning is
+# optional: with no file, ai.lua picks minuet when FIREWORKS_API_KEY is set and
+# supermaven otherwise. A pin stops a machine from switching backend just
+# because a key is missing in the shell that launched Neovim.
+select_ai_backend() {
+    local target="$REPO_ROOT/config/nvim/custom/ai_local.lua"
+    local backend="${NVIM_AI_BACKEND:-}"
+    local model="${NVIM_AI_MODEL:-}"
+
+    if [[ -z "$backend" ]]; then
+        if [[ -n "${FIREWORKS_API_KEY:-}" ]]; then
+            backend="minuet"
+        else
+            ui::info "no FIREWORKS_API_KEY and no NVIM_AI_BACKEND; Neovim will use supermaven"
+            return 0
+        fi
+    fi
+
+    case "$backend" in
+        minuet | supermaven) ;;
+        *)
+            ui::err "NVIM_AI_BACKEND must be minuet or supermaven, got '$backend'"
+            return 1
+            ;;
+    esac
+
+    if [[ -f "$target" ]] && grep -q "backend = \"$backend\"" "$target" 2>/dev/null; then
+        ui::info "AI completion backend already pinned to $backend"
+        return 0
+    fi
+
+    {
+        echo "-- Machine-local inline-completion choice. Gitignored."
+        echo "-- Written by ./setup.sh install neovim. Rules: custom/configs/ai.lua"
+        echo "return {"
+        echo "  backend = \"$backend\","
+        [[ -n "$model" ]] && echo "  model = \"$model\","
+        echo "}"
+    } >"$target"
+
+    ui::kv "AI completion:" "$backend"
+}
+
 step_neovim() {
     apt_update
     apt_install snapd gcc g++ make git unzip
@@ -119,4 +165,5 @@ step_neovim() {
     install_neovim_treesitter_parsers
     install_neovim_mason_packages
     configure_git_mergetool
+    select_ai_backend
 }

@@ -320,6 +320,21 @@ else
     alias h='fc -l 1 | grep'
 fi
 
+# --- AI ghost text -----------------------------------------------------------
+# The model runs first, history second: this asks for a predicted next command
+# instead of replaying the last matching history entry. An empty answer falls
+# through, so atuin and plain history still cover the common cases.
+#
+# Right and Ctrl+Right need no binding. zsh-autosuggestions accepts the whole
+# suggestion on forward-char and one word on forward-word, and those are already
+# the default bindings for Right and Ctrl+Right.
+#
+# This must run after `atuin init`, which rewrites ZSH_AUTOSUGGEST_STRATEGY.
+ZSH_AUTOSUGGEST_STRATEGY=(ai atuin history)
+if [[ -f "${${(%):-%x}:A:h}/zsh/ai-suggest.zsh" ]]; then
+    source "${${(%):-%x}:A:h}/zsh/ai-suggest.zsh"
+fi
+
 # herdr
 alias hr='herdr'
 hr-remote() { herdr --remote-keybindings server --remote "$@" }
@@ -327,6 +342,23 @@ alias herdr-stop='herdr server stop'
 alias herdr-reload='herdr server reload-config'
 alias herdr-reset='~/.local/bin/herdr-reset 2>/dev/null || herdr server stop'
 export PATH="$HOME/.local/bin:$PATH"
+
+# --- git commit messages ------------------------------------------------------
+# Draft a message with the model and open it in $EDITOR. `gcai` is the opt-in
+# path: plain `git commit` stays untouched unless the prepare-commit-msg hook is
+# installed (see ./setup.sh install misc).
+#
+# Not named `gcm`: oh-my-zsh's git plugin already aliases that to `git commit -m`,
+# and a function cannot be defined over an alias.
+gcai() {
+    local draft
+    draft="$(git diff --cached 2>/dev/null | ai commit-msg 2>/dev/null)"
+    if [[ -z $draft ]]; then
+        git commit "$@"
+    else
+        git commit -e -m "$draft" "$@"
+    fi
+}
 
 # caveman
 export CAVEMAN_DEFAULT_MODE=lite
