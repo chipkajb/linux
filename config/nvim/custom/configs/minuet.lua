@@ -13,9 +13,8 @@
 
 local ai = require "custom.configs.ai"
 
-if not vim.env[ai.api_key_env] or vim.env[ai.api_key_env] == "" then
-  vim.notify(("minuet is the active backend but %s is unset"):format(ai.api_key_env), vim.log.levels.ERROR)
-end
+-- No key check here: custom/configs/ai.lua resolves the key and only selects
+-- minuet when one exists, so this file is never reached without one.
 
 --- Ghost text currently rendered by minuet, or nil.
 --- Reads minuet's extmark rather than its internal context table, which is

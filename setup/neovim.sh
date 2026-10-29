@@ -142,23 +142,26 @@ configure_git_mergetool() {
 # Pin the inline-completion backend for this machine.
 #
 # config/nvim/custom/configs/ai.lua reads this file, and it is gitignored, so
-# each host keeps its own answer without touching tracked files. Pinning is
-# optional: with no file, ai.lua picks minuet when FIREWORKS_API_KEY is set and
-# supermaven otherwise. A pin stops a machine from switching backend just
-# because a key is missing in the shell that launched Neovim.
+# each host keeps its own answer without touching tracked files.
+#
+# A pin is only written when asked for. Neovim otherwise chooses at runtime from
+# the key it can see, which is more reliable than the environment this script
+# runs in: a key visible here may be absent when Neovim starts from a desktop
+# launcher or a window-manager keybinding. Auto-pinning minuet from this shell
+# is what broke startup on the second laptop.
 select_ai_backend() {
     local target="$REPO_ROOT/config/nvim/custom/ai_local.lua"
     local backend="${NVIM_AI_BACKEND:-}"
     local model="${NVIM_AI_MODEL:-}"
 
-    if [[ -z "$backend" ]]; then
-        if [[ -n "${FIREWORKS_API_KEY:-}" ]]; then
-            backend="minuet"
-        else
-            ui::info "no FIREWORKS_API_KEY and no NVIM_AI_BACKEND; Neovim will use supermaven"
-            return 0
-        fi
+    if [[ -z "$backend" && -z "$model" ]]; then
+        ui::info "no NVIM_AI_BACKEND or NVIM_AI_MODEL; Neovim will choose at runtime"
+        ui::hint "to force one: NVIM_AI_BACKEND=minuet ./setup.sh install neovim"
+        return 0
     fi
+
+    # a model only means anything for minuet
+    [[ -n "$backend" ]] || backend="minuet"
 
     case "$backend" in
         minuet | supermaven) ;;

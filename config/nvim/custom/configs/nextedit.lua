@@ -15,15 +15,13 @@
 
 local ai = require "custom.configs.ai"
 
+-- No key check here: custom/configs/ai.lua clears ai.nes when no key exists, so
+-- this file is never reached without one.
 if not ai.nes then
   return
 end
 
-local key = vim.env[ai.api_key_env]
-if not key or key == "" then
-  vim.notify(("next-edit prediction is on but %s is unset"):format(ai.api_key_env), vim.log.levels.WARN)
-  return
-end
+local key = ai.api_key
 
 -- Read from the environment by the sidecar, not a Lua option. The model is a
 -- reasoning model; left at its default effort it spends the budget thinking and

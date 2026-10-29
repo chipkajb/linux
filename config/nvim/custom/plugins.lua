@@ -322,6 +322,24 @@ local plugins = {
         "nvchad/base46",
         commit = "d870ec89a7b2f28c4accce515f97b7bcc5b9d200",
     },
+    -- Kept even though NvChad is pinned above.
+    --
+    -- ~/.config/nvim is its own git repository, so `git pull` in this repo never
+    -- updates it; only `./setup.sh install neovim` moves it. A machine that has
+    -- only pulled still has the stale clone, which passes IblChar and
+    -- IblScopeChar — names current base46 no longer defines — so ibl.setup()
+    -- raises "No highlight group 'IblChar' found" and indent guides vanish.
+    --
+    -- This override makes that impossible whichever copy of nvchad.plugins
+    -- answers, and is a no-op once the clone is current.
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        opts = function(_, opts)
+            opts.indent = vim.tbl_deep_extend("force", opts.indent or {}, { highlight = "IblIndent" })
+            opts.scope = vim.tbl_deep_extend("force", opts.scope or {}, { highlight = "IblScope" })
+            return opts
+        end,
+    },
     -- Cursor-style multi-line ghost-text tab completion.
     -- custom/configs/ai.lua picks exactly one of these; see that file for the
     -- resolution rules. Two engines on one line would fight each other.
