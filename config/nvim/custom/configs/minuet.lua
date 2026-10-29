@@ -153,6 +153,11 @@ require("minuet").setup {
       "markdown",
       "gitcommit",
     },
+    -- Minuet hides its ghost text while the cmp menu is open. NvChad's cmp
+    -- offers buffer and path matches on most keystrokes, so leaving this false
+    -- hides the ghost text almost always. Supermaven drew over the menu, and
+    -- this matches that behaviour.
+    show_on_completion_menu = true,
     -- keymaps are set below, so they can fall through when nothing is shown
     keymap = {},
   },
@@ -165,7 +170,11 @@ require("minuet").setup {
       name = "Fireworks",
       stream = true,
       optional = {
-        max_tokens = 256,
+        -- Measured: at 256 tokens this model writes the rest of the file. A
+        -- blank line is the natural end of a code block, so stop there and cap
+        -- the length as a backstop.
+        max_tokens = 96,
+        stop = { "\n\n" },
         temperature = 0.1,
         top_p = 0.9,
         -- deepseek-v4p1-flash is a reasoning model. Left on, it spends the
@@ -188,7 +197,61 @@ vim.keymap.set("n", "<leader>cs", function()
   require("minuet.virtualtext").action.toggle_auto_trigger()
 end, { desc = "Toggle AI suggestions" })
 
-vim.keymap.set("n", "<leader>ci", ai.info, { desc = "Show AI completion backend" })
+-- minuet arms its auto-trigger from a FileType autocmd registered in its own
+-- setup(). A buffer whose FileType already fired never sees that autocmd, so
+-- vim.b.minuet_virtual_text_auto_trigger stays nil and should_auto_trigger() is
+-- false — no ghost text, no error, nothing to notice. Eager loading covers new
+-- buffers; this covers the one already open, and re-checks on every BufEnter.
+local function arm_auto_trigger(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+  local cfg = require("minuet").config.virtualtext
+  local ft = vim.bo[bufnr].filetype
+  if ft == "" or vim.tbl_contains(cfg.auto_trigger_ignore_ft, ft) then
+    return
+  end
+  if vim.tbl_contains(cfg.auto_trigger_ft, ft) then
+    vim.b[bufnr].minuet_virtual_text_auto_trigger = true
+  end
+end
+
+arm_auto_trigger()
+vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
+  callback = function(ev)
+    arm_auto_trigger(ev.buf)
+  end,
+  desc = "[custom.minuet] arm virtual text auto trigger",
+})
+
+--- Report why ghost text is or is not appearing. Bound to <leader>ci.
+local function diagnose()
+  local minuet = require "minuet"
+  local cfg = minuet.config
+  local ft = vim.bo.filetype
+  local key = vim.env[ai.api_key_env]
+  local lines = {
+    "backend:       " .. ai.backend,
+    "model:         " .. ai.model,
+    "api key set:   " .. tostring(key ~= nil and key ~= ""),
+    "filetype:      " .. (ft ~= "" and ft or "(none)"),
+    "ft in list:    " .. tostring(vim.tbl_contains(cfg.virtualtext.auto_trigger_ft, ft)),
+    "armed:         " .. tostring(vim.b.minuet_virtual_text_auto_trigger),
+    "menu visible:  " .. tostring(require("minuet.utils").completion_menu_visible()),
+    "shown on menu: " .. tostring(cfg.virtualtext.show_on_completion_menu),
+    "ghost visible: " .. tostring(require("minuet.virtualtext").action.is_visible()),
+    "debounce:      " .. cfg.debounce .. "ms, throttle: " .. cfg.throttle .. "ms",
+  }
+  vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO)
+end
+
+vim.keymap.set("n", "<leader>ci", diagnose, { desc = "Diagnose AI completion" })
+
+-- Force a request now. Useful for testing without waiting for the debounce.
+vim.keymap.set("i", "<M-y>", function()
+  require("minuet.virtualtext").action.next()
+end, { noremap = true, silent = true, desc = "Request AI completion now" })
 
 -- stale chunk state must not survive an insert session
 vim.api.nvim_create_autocmd("InsertLeave", {

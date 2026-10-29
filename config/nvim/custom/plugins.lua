@@ -297,9 +297,13 @@ local plugins = {
     -- Cursor-style multi-line ghost-text tab completion.
     -- custom/configs/ai.lua picks exactly one of these; see that file for the
     -- resolution rules. Two engines on one line would fight each other.
+    -- Loaded eagerly, not on InsertEnter. minuet arms its auto-trigger from a
+    -- FileType autocmd registered in setup(); a buffer that already fired
+    -- FileType never sees it, so the flag stays nil and no ghost text appears.
+    -- Eager loading registers the autocmd before the first file is opened.
     {
         "milanglacier/minuet-ai.nvim",
-        event = "InsertEnter",
+        lazy = false,
         cond = function()
             return require("custom.configs.ai").using "minuet"
         end,
