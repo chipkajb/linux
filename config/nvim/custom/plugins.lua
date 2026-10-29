@@ -294,6 +294,34 @@ local plugins = {
             },
         },
     },
+    -- --- Pinned NvChad stack -------------------------------------------------
+    -- setup.sh clones NvChad into ~/.config/nvim once and never updates it, but
+    -- base46 auto-updates on every `Lazy sync`. When base46 ran ahead of the
+    -- clone, indent-blankline broke: NvChad still asked for the highlight groups
+    -- IblChar and IblScopeChar, and base46 had stopped defining them, so
+    -- ibl.setup() raised "No highlight group 'IblChar' found".
+    --
+    -- These move together as one verified set:
+    --   NvChad  87d6a41  v2.5 tip, "fix: use ibl default highlight groups"
+    --   base46  d870ec8  v3.0 tip
+    --   ~/.config/nvim clone at 87d6a41
+    --
+    -- To move the pin deliberately:
+    --   1. git -C ~/.config/nvim fetch --depth 1 origin refs/heads/v2.5
+    --      git -C ~/.config/nvim reset --hard origin/v2.5
+    --   2. update both SHAs below so the clone and the NvChad plugin stay in step
+    --   3. :Lazy sync
+    --
+    -- NvChad's own spec lives in the clone and in init.lua; this merges a commit
+    -- onto it. base46 is declared by NvChad, so the pin has to live here.
+    {
+        "NvChad/NvChad",
+        commit = "87d6a41ec07ab995de912a892749b6b4805ad2b3",
+    },
+    {
+        "nvchad/base46",
+        commit = "d870ec89a7b2f28c4accce515f97b7bcc5b9d200",
+    },
     -- Cursor-style multi-line ghost-text tab completion.
     -- custom/configs/ai.lua picks exactly one of these; see that file for the
     -- resolution rules. Two engines on one line would fight each other.

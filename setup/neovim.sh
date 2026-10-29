@@ -61,6 +61,50 @@ install_neovim_mason_packages() {
     nvim --headless "+lua local pkgs=require('nvconfig').mason.pkgs; if #pkgs==0 then vim.cmd('qa!') else vim.cmd('MasonInstall '..table.concat(pkgs,' ')) end" +qa
 }
 
+# The NvChad commit pinned in custom/plugins.lua.
+#
+# ~/.config/nvim supplies lua/nvchad/*, so it is the copy that answers
+# `import = "nvchad.plugins"`. lazy pins its own NvChad checkout separately, so
+# without this the two drift: a fresh clone lands on whatever the v2.5 tip is
+# that day while base46 stays pinned. That mismatch is what broke
+# indent-blankline (NvChad asked for IblChar, base46 had renamed it).
+#
+# Reading the sha from the Lua pin keeps one source of truth.
+nvchad_pin() {
+    awk '
+        /"NvChad\/NvChad"/ { found = 1; next }
+        found && match($0, /[0-9a-f]{40}/) { print substr($0, RSTART, RLENGTH); exit }
+    ' "$REPO_ROOT/config/nvim/custom/plugins.lua"
+}
+
+# Put the clone on the pinned commit. Keeps the branch name so a deliberate move
+# is a plain `git pull` after updating the pin.
+pin_nvchad_clone() {
+    local pin current
+    pin="$(nvchad_pin)"
+    if [[ -z "$pin" ]]; then
+        ui::warn "no NvChad commit pinned in custom/plugins.lua; leaving the clone on v2.5"
+        return 0
+    fi
+
+    current="$(git -C "$HOME/.config/nvim" rev-parse HEAD 2>/dev/null || true)"
+    if [[ "$current" == "$pin" ]]; then
+        ui::info "NvChad clone already at pinned ${pin:0:7}"
+        return 0
+    fi
+
+    # depth 50 so the pinned commit is still reachable when the branch has moved on
+    if ! git -C "$HOME/.config/nvim" fetch --depth 50 --quiet origin refs/heads/v2.5; then
+        ui::warn "could not fetch NvChad; leaving the clone at ${current:0:7}"
+        return 0
+    fi
+    if ! git -C "$HOME/.config/nvim" checkout --quiet -B v2.5 "$pin"; then
+        ui::warn "could not check out pinned NvChad ${pin:0:7}"
+        return 0
+    fi
+    ui::kv "NvChad clone:" "pinned to ${pin:0:7}"
+}
+
 install_nvchad() {
     if [[ -d "$HOME/.config/nvim/.git" ]]; then
         ui::info "NvChad already present"
@@ -68,6 +112,7 @@ install_nvchad() {
         rm -rf "$HOME/.config/nvim" "$HOME/.local/share/nvim"
         git clone https://github.com/NvChad/NvChad "$HOME/.config/nvim" --depth 1
     fi
+    pin_nvchad_clone
     replace_with_symlink "$REPO_ROOT/config/nvim/after" "$HOME/.config/nvim/after"
     replace_with_symlink "$REPO_ROOT/config/nvim/custom" "$HOME/.config/nvim/lua/custom"
     symlink_force "$REPO_ROOT/config/nvim/init.lua" "$HOME/.config/nvim/init.lua"
