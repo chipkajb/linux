@@ -21,6 +21,19 @@ vim.keymap.set("n", "<leader>Y", "\"+Y", {desc='Yank to system clipboard'})
 vim.keymap.set("n", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 vim.keymap.set("v", "<leader>d", "\"_d", {desc='Delete to system clipboard'})
 
+--- paste from system clipboard on <C-v>
+--- Dictation tools (Wispr Flow) inject Ctrl+V, which nvim reads as literal-insert in
+--- insert mode and blockwise-visual in normal mode, so the transcript lands as
+--- garbage. Map it to a real paste instead; blockwise-visual stays on <C-q>.
+--- Only where the system clipboard is really reachable. Under OSC 52 (herdr, ssh) the
+--- "+ register is served from nvim's own unnamed register, so the mapping would paste
+--- stale text; there the terminal's own paste key is the way in.
+if not require("custom.clipboard").use_osc52() then
+  vim.keymap.set("i", "<C-v>", "<C-r>+", { desc = "Paste from system clipboard" })
+  vim.keymap.set("c", "<C-v>", "<C-r>+", { desc = "Paste from system clipboard" })
+  vim.keymap.set({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from system clipboard" })
+end
+
 --- make ctrl-c and esc the same
 vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape (same as Esc)" })
 

@@ -137,4 +137,9 @@ function M.setup()
   setup_yank_autocmd(copy_to_clipboard)
 end
 
+--- True when the system clipboard is out of reach and OSC 52 stands in for it.
+--- Callers use this to decide whether a system-clipboard key binding is honest:
+--- under OSC 52 the "+ register is served from nvim's own unnamed register.
+M.use_osc52 = use_osc52
+
 return M

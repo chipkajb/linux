@@ -173,7 +173,12 @@ assign [class="org.gnome.Nautilus"] $workspace5
 assign [class="Gedit"] $workspace6
 assign [class="obsidian"] $workspace6
 assign [class="obsidian-notes-scratch"] $workspace6
-assign [class="wispr-flow"] $workspace6
+# Keep the Wispr Flow hub parked on Notes, but never follow it there: showing a
+# Wispr window (it pushes dictation formatting info to the hub) must not move the
+# viewport off the workspace you are working on. no_focus stops i3 focusing the
+# window as it maps, which is what makes the assign switch workspaces.
+assign [class="^wispr-flow$"] $workspace6
+no_focus [class="^wispr-flow$"]
 assign [class="Pithos"] $workspace7
 assign [class="Pavucontrol"] $workspace7
 assign [class="Blueman-manager"] $workspace7

@@ -36,3 +36,14 @@ chars = "\u0017"
 key = "Delete"
 mods = "Control"
 chars = "\u001bd"
+
+# ctrl+v: paste the system clipboard into this terminal
+# Dictation tools (Wispr Flow) inject Ctrl+V, and only Alacritty can turn that into a
+# paste. Alacritty inserts the clipboard text as ordinary input, so the transcript
+# reaches the shell, nvim, a remote host over ssh, and any pane multiplexer. Without
+# this, the Ctrl+V is forwarded as 0x16 and the far end never sees the text.
+# Trade-off: ctrl+v no longer sends quoted-insert to the shell.
+[[keyboard.bindings]]
+key = "V"
+mods = "Control"
+action = "Paste"
