@@ -10,5 +10,13 @@
 ! *Text.translations: #override ~Shift ~Meta <Key>Delete: delete-next-character()
 
 ! Cursor
-Xcursor.size: 12
+!
+! Xcursor falls back to min(screen width, screen height) / 48 when no size is
+! set. The stacked 4-monitor layout makes the X screen 6560x3146, so that
+! fallback lands on 65 and the theme rounds it up to its 64px images. Pin the
+! size instead of relying on the heuristic.
+!
+! Yaru ships only 24, 32, 48, 64 and 96 px, so 24 is the smallest size any
+! theme lookup can reach. Values below 24 snap back up to 24.
+Xcursor.size: 24
 Xcursor.theme: Yaru

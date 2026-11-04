@@ -58,6 +58,11 @@ link_i3_config() {
         fi
     fi
     symlink_force "$REPO_ROOT/config/i3/config.local" "$HOME/.i3_local"
+
+    # GDM merges $HOME/.Xresources (test -f follows symlinks) but skips
+    # /etc/X11/Xresources entries that are symlinks, so the cursor size in
+    # config/i3/x11-common only reaches the session through this link.
+    symlink_force "$REPO_ROOT/config/i3/x11-common" "$HOME/.Xresources"
 }
 
 link_gtk_theme() {
@@ -92,7 +97,6 @@ install_i3blocks_scripts() {
     for script in gpu_memory wifi cpu_usage load_average battery temperature; do
         sudo ln -sfn "$REPO_ROOT/config/i3/$script" /usr/share/i3blocks/"$script"
     done
-    sudo ln -sfn "$REPO_ROOT/config/i3/x11-common" /etc/X11/Xresources
 }
 
 step_i3() {
